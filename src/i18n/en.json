@@ -1,0 +1,357 @@
+{
+  "common": {
+    "home": "Home",
+    "back": "Back",
+    "close": "Close",
+    "cancel": "Cancel",
+    "send": "Send",
+    "next": "Next",
+    "restart": "Start over",
+    "loading": "Loading...",
+    "error": "Oops, something got stuck. Try again in a moment.",
+    "offlineQueued": "No network right now: your request will be sent automatically as soon as the wifi is back.",
+    "offline": "Offline",
+    "largeText": "Large text",
+    "scanMe": "Scan with your phone",
+    "privacyLink": "Privacy policy",
+    "required": "required",
+    "optional": "optional",
+    "yes": "Yes",
+    "no": "No",
+    "demoMode": "Demo mode",
+    "photoSoon": "Photo coming soon"
+  },
+  "tiles": {
+    "concept": {
+      "title": "The concept",
+      "sub": "Barber, bar and meeting place"
+    },
+    "booking": {
+      "title": "Book an appointment",
+      "sub": "Book your next moment"
+    },
+    "events": {
+      "title": "Events",
+      "sub": "DJ, improv, stand up and more"
+    },
+    "battle": {
+      "title": "The Battle",
+      "sub": "Live quiz between tablets"
+    },
+    "stop10": {
+      "title": "Stop at 10 seconds",
+      "sub": "Test your inner clock"
+    },
+    "wheel": {
+      "title": "Wheel of fortune",
+      "sub": "Try your luck"
+    },
+    "kids": {
+      "title": "Kids corner",
+      "sub": "Games for the little ones"
+    },
+    "drinks": {
+      "title": "Beers and softs",
+      "sub": "The bar menu"
+    },
+    "products": {
+      "title": "Products made for you",
+      "sub": "Find your routine"
+    },
+    "gift": {
+      "title": "Gift vouchers",
+      "sub": "Give a moment"
+    },
+    "invoice": {
+      "title": "Business invoices",
+      "sub": "Freelancer or company"
+    },
+    "instagram": {
+      "title": "Follow us on Instagram",
+      "sub": "@cutshop_mons"
+    }
+  },
+  "home": {
+    "greeting": "Take a seat, your moment starts here.",
+    "nextEvent": "Next event",
+    "register": "Sign me up"
+  },
+  "screensaver": {
+    "hook": "Touch the screen, your moment starts here",
+    "next": "Next event",
+    "battleInvite": "Challenge the other customers in the Battle!",
+    "battleLive": "A Battle is starting, join in!"
+  },
+  "setup": {
+    "title": "Tablet setup",
+    "text": "Choose this tablet’s name. It is used for statistics and for the Battle. You can change it later in the admin area.",
+    "choose": "Tablet {{n}}"
+  },
+  "concept": {
+    "barber": "The barbershop",
+    "bar": "The bar",
+    "events": "The events",
+    "practical": "Practical info",
+    "address": "Address",
+    "hours": "Opening hours",
+    "contact": "Contact"
+  },
+  "booking": {
+    "title": "Book an appointment",
+    "text": "Scan and book your next moment in 30 seconds",
+    "sub": "Pick your barber, your service and your time slot directly on Salonkee, from your phone.",
+    "privacy": "No personal data is entered on this tablet."
+  },
+  "events": {
+    "title": "Events",
+    "subtitle": "Cutshop turns into a stage. Save your spot, it’s free.",
+    "seatsLeft_one": "{{count}} spot left",
+    "seatsLeft_other": "{{count}} spots left",
+    "full": "Full",
+    "register": "Sign me up",
+    "none": "No events scheduled right now. Check back soon!",
+    "at": "{{date}} at {{time}}",
+    "form": {
+      "title": "Registration",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "Email address",
+      "seats": "Number of spots",
+      "consent": "I agree that Cutshop may use this information solely to manage my registration for this event.",
+      "newsletter": "I want to receive the Cutshop newsletter (events and news). Unsubscribe at any time.",
+      "submit": "Confirm my registration"
+    },
+    "errors": {
+      "firstName": "Enter your first name",
+      "lastName": "Enter your last name",
+      "email": "This email address doesn’t look valid",
+      "consent": "Tick the consent box to continue"
+    },
+    "fullTitle": "A victim of its own success!",
+    "fullText": "This event is full. Have a look at the next dates, we’ll be waiting for you.",
+    "notEnough_one": "There is only one spot left for this event.",
+    "notEnough_other": "There are only {{count}} spots left for this event.",
+    "confirmTitle": "You’re in!",
+    "confirmText_one": "Your registration for {{event}} is confirmed for {{count}} person.",
+    "confirmText_other": "Your registration for {{event}} is confirmed for {{count}} people.",
+    "confirmWhen": "See you {{when}}.",
+    "confirmQueued": "Your registration for {{event}} will be sent as soon as the network is back.",
+    "cleared": "The form has been cleared from the tablet."
+  },
+  "battle": {
+    "title": "The Battle",
+    "intro": "Take on the other customers live on the shop’s tablets. 10 questions, 15 seconds each: accuracy and speed both count!",
+    "pseudo": "Your nickname",
+    "pseudoPh": "E.g. Blackbeard",
+    "pseudoErr": "Pick a nickname to play",
+    "launch": "Start a Battle",
+    "solo": "Play solo",
+    "theme": "Theme",
+    "themes": {
+      "mix": "Mix",
+      "mons": "Mons and folklore",
+      "beer": "Belgian beers",
+      "barber": "Barber culture",
+      "music": "Music",
+      "general": "General knowledge",
+      "kids": "Kids special"
+    },
+    "join": "Join",
+    "later": "Not now",
+    "invite": "A Battle is starting, join in!",
+    "inviteBy": "{{pseudo}} is starting a Battle from {{tablet}}",
+    "lobby": "Waiting room",
+    "waiting": "Waiting for opponents on the other tablets...",
+    "startsIn": "Starting in {{s}} s",
+    "players": "Players: {{n}} of 4",
+    "startNow": "Let’s go!",
+    "alone": "Nobody joined this time.",
+    "soloOffer": "Play solo against the clock",
+    "relaunch": "Send a new invitation",
+    "getReady": "Get ready, here we go!",
+    "question": "Question {{n}} of {{total}}",
+    "answered": "Answer saved, waiting for the others...",
+    "correct": "Correct!",
+    "wrong": "Missed!",
+    "tooLate": "Too late!",
+    "theAnswer": "The right answer: {{answer}}",
+    "ranking": "Leaderboard",
+    "points": "{{n}} pts",
+    "plus": "+{{n}}",
+    "gone": "left the game",
+    "you": "you",
+    "podium": "The podium",
+    "winner": "{{pseudo}} wins the Battle!",
+    "youWin": "Well done, you win the Battle!",
+    "spinWon": "You won a spin of the wheel!",
+    "spinGo": "Spin the wheel",
+    "playAgain": "Play again",
+    "soloTitle": "Solo game",
+    "soloScore": "Your score: {{n}} points",
+    "soloCorrect": "{{n}} correct answers out of {{total}}",
+    "busy": "A Battle is already running on the tablets. Join the next one!",
+    "full": "This Battle is full (4 players).",
+    "missed": "This Battle has already started. Start your own!",
+    "quit": "Leave the game",
+    "liveNow": "Live",
+    "range": "2 to 4 players",
+    "format": "10 questions of 15 s",
+    "maxPoints": "Up to 1000 pts per question"
+  },
+  "stop10": {
+    "title": "Stop at 10 seconds",
+    "intro": "Start the timer: it disappears after 3 seconds. Stop it at exactly 10 seconds by counting in your head!",
+    "start": "Start",
+    "stop": "Stop",
+    "counting": "Count in your head...",
+    "result": "Your time",
+    "delta": "Gap: {{delta}}",
+    "perfect": "Exactly 10.00 s! Legendary!",
+    "great": "Amazing, nearly perfect!",
+    "good": "Not bad at all!",
+    "meh": "Your inner clock needs a little tuning.",
+    "saveScore": "Save your score",
+    "save": "Save",
+    "saved": "Score saved!",
+    "leaderboard": "Today’s leaderboard",
+    "resets": "Reset every night",
+    "empty": "Nobody yet. Get the party started!",
+    "again": "Play again"
+  },
+  "wheel": {
+    "title": "Wheel of fortune",
+    "locked": "The wheel is activated by the team",
+    "lockedText": "Ask a staff member to enter their code. You can also win a spin by winning a Battle or hitting exactly 10.00 s.",
+    "staffPin": "Staff code",
+    "unlock": "Activate the wheel",
+    "pinWrong": "Wrong code",
+    "pinLocked": "Too many attempts. Try again in a few minutes.",
+    "spin": "Spin the wheel",
+    "spinning": "Spinning...",
+    "won": "You won!",
+    "yourCode": "Your code to show at the counter",
+    "codeHint": "Show this code at the counter to claim your prize. Feel free to take a photo of it.",
+    "lost": "No luck this time",
+    "lostText": "Next time’s the charm!",
+    "oneTurn": "One spin per customer.",
+    "disabled": "The wheel is not available right now.",
+    "rate": "The wheel has just been spun on this tablet. Try again in a few minutes.",
+    "empty": "No prizes available right now.",
+    "reason": {
+      "battle": "Free spin for winning the Battle",
+      "stop10": "Free spin for your perfect 10.00 s",
+      "staff": "Spin activated by the team"
+    },
+    "done": "Done"
+  },
+  "kids": {
+    "title": "Kids corner",
+    "barber": "Little Barber",
+    "memory": "Memory",
+    "tools": {
+      "clipper": "Clippers",
+      "scissors": "Scissors",
+      "comb": "Comb",
+      "color": "Colours",
+      "grow": "Regrow"
+    },
+    "levels": {
+      "easy": "Easy",
+      "medium": "Medium",
+      "hard": "Hard"
+    },
+    "win": "Well done!",
+    "moves": "{{n}} moves"
+  },
+  "drinks": {
+    "title": "Beers and softs",
+    "categories": {
+      "beer": "Local Belgian beers",
+      "soft": "Soft drinks",
+      "other": "Other drinks"
+    },
+    "abv": "{{abv}}% ABV",
+    "noAlcohol": "Alcohol free",
+    "pairingTitle": "Your cut, your beer",
+    "pairingIntro": "Tell us which cut you’re getting today, and we’ll tell you what to drink.",
+    "pairingFor": "For a {{cut}}",
+    "order": "Order at the counter or ask your barber.",
+    "moderation": "Alcohol abuse is dangerous for your health. Please drink responsibly."
+  },
+  "products": {
+    "title": "Products made for you",
+    "intro": "Four questions, and we put together a selection tailored to you.",
+    "step": "Question {{n}} of 4",
+    "start": "Get started",
+    "q": {
+      "hair": "What is your hair type?",
+      "scalp": "And your scalp?",
+      "beard": "Do you have a beard?",
+      "effect": "Which effect are you after?"
+    },
+    "hair": {
+      "fine": "Fine",
+      "thick": "Thick",
+      "curly": "Curly",
+      "coily": "Coily"
+    },
+    "scalp": {
+      "normal": "Normal",
+      "dry": "Dry",
+      "oily": "Oily"
+    },
+    "effect": {
+      "volume": "Volume",
+      "hold": "Hold",
+      "shine": "Shine",
+      "natural": "Natural",
+      "care": "Care"
+    },
+    "resultTitle": "Your selection",
+    "resultIntro": "Products picked for your profile, tried and approved at the shop.",
+    "benefit": "Benefit",
+    "usage": "How to use",
+    "talk": "I’ll talk to my barber",
+    "firstName": "Your first name",
+    "firstNameHint": "Your barber will receive your selection to prepare their advice.",
+    "sendToBarber": "Send to my barber",
+    "sent": "Sent!",
+    "final": "Talk about it with your barber during your cut, they’ll tell you everything.",
+    "restart": "Take the quiz again",
+    "none": "The catalogue is on its way. Ask your barber for advice!"
+  },
+  "gift": {
+    "amounts": "Available amounts",
+    "validity": "Validity",
+    "conditions": "Terms",
+    "ask": "Ask at the front desk",
+    "asked": "Got it! A team member is coming over to you."
+  },
+  "invoice": {
+    "formTitle": "Your billing details",
+    "optionalNote": "This form is optional: you can also just mention it at the counter.",
+    "company": "Company name",
+    "vat": "VAT number",
+    "vatPh": "BE0123456789",
+    "vatErr": "VAT format not recognised (e.g. BE0123456789)",
+    "vatChecksum": "This Belgian VAT number is not valid, check the digits",
+    "address": "Billing address",
+    "email": "Email address for the invoice",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "companyErr": "Enter the company name",
+    "addressErr": "Enter the billing address",
+    "consent": "I agree that Cutshop may use this information solely to issue my invoice.",
+    "submit": "Send my request",
+    "sentTitle": "Request sent!",
+    "sentText": "We’re preparing your invoice, it will arrive by email. The fields have been cleared from the tablet."
+  },
+  "instagram": {
+    "title": "Follow us on Instagram",
+    "text": "Behind the scenes, new cuts, nights out and giveaways: join the Cutshop community.",
+    "handle": "@cutshop_mons"
+  },
+  "privacy": {
+    "title": "Privacy policy"
+  }
+}

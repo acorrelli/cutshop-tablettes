@@ -1,0 +1,120 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Taille de base pensée pour une tablette tenue à bout de bras. Tout le reste est en rem,
+   le mode « grand texte » agrandit donc l'ensemble de l'interface. */
+html {
+  font-size: 17px;
+  -webkit-tap-highlight-color: transparent;
+  background: #0a2219;
+}
+html.large-text {
+  font-size: 21px;
+}
+@media (min-width: 1200px) and (min-height: 760px) {
+  html {
+    font-size: 18px;
+  }
+  html.large-text {
+    font-size: 22px;
+  }
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  color: #f4ebd9;
+  font-family: Arial, Helvetica, sans-serif;
+  background:
+    radial-gradient(1200px 700px at 12% -10%, rgba(38, 114, 85, 0.55), transparent 60%),
+    radial-gradient(900px 600px at 110% 110%, rgba(212, 168, 75, 0.12), transparent 60%),
+    linear-gradient(180deg, #0e2f23 0%, #0a2219 100%);
+  background-attachment: fixed;
+  overscroll-behavior: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+input,
+textarea,
+select {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+#root {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex min-h-[56px] items-center justify-center gap-3 whitespace-nowrap rounded-2xl px-6 text-lg font-bold transition duration-150 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-40;
+  }
+  .btn-gold {
+    @apply btn bg-gold text-bottle-950 shadow-[0_8px_24px_rgba(212,168,75,0.25)] hover:bg-gold-400;
+  }
+  .btn-ghost {
+    @apply btn border border-cream/15 bg-white/[0.06] text-cream hover:bg-white/10;
+  }
+  .btn-cream {
+    @apply btn bg-cream text-bottle-900 hover:bg-cream-100;
+  }
+  .card {
+    @apply rounded-3xl border border-cream/10 bg-bottle-800/70 shadow-tile backdrop-blur-sm;
+  }
+  .eyebrow {
+    @apply text-sm font-bold uppercase tracking-[0.2em] text-gold;
+  }
+  .h1 {
+    @apply text-4xl font-black uppercase leading-tight tracking-wide text-cream;
+  }
+  .h2 {
+    @apply text-2xl font-black uppercase tracking-wide text-cream;
+  }
+  .field {
+    @apply block min-h-[60px] w-full rounded-2xl border-2 border-cream/15 bg-bottle-950/60 px-5 text-xl text-cream outline-none transition placeholder:text-cream/35 focus:border-gold;
+  }
+  .label {
+    @apply mb-2 block text-base font-bold text-cream/85;
+  }
+  .chip {
+    @apply inline-flex min-h-[56px] items-center justify-center rounded-2xl border-2 border-cream/15 bg-white/[0.04] px-5 text-lg font-bold text-cream transition active:scale-[0.97];
+  }
+  .chip-on {
+    @apply border-gold bg-gold/15 text-gold-300;
+  }
+}
+
+/* Barre de défilement discrète (admin sur ordinateur). */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(244, 235, 217, 0.18);
+  border-radius: 10px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@keyframes confetti {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(520px) rotate(540deg);
+    opacity: 0;
+  }
+}

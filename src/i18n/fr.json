@@ -1,0 +1,357 @@
+{
+  "common": {
+    "home": "Accueil",
+    "back": "Retour",
+    "close": "Fermer",
+    "cancel": "Annuler",
+    "send": "Envoyer",
+    "next": "Suivant",
+    "restart": "Recommencer",
+    "loading": "Chargement...",
+    "error": "Oups, quelque chose a coincé. Réessaie dans un instant.",
+    "offlineQueued": "Pas de réseau pour le moment : ta demande part automatiquement dès le retour du wifi.",
+    "offline": "Hors ligne",
+    "largeText": "Grand texte",
+    "scanMe": "Scanne avec ton téléphone",
+    "privacyLink": "Politique de confidentialité",
+    "required": "obligatoire",
+    "optional": "facultatif",
+    "yes": "Oui",
+    "no": "Non",
+    "demoMode": "Mode démonstration",
+    "photoSoon": "Photo à venir"
+  },
+  "tiles": {
+    "concept": {
+      "title": "Le concept",
+      "sub": "Barber, bar et lieu de vie"
+    },
+    "booking": {
+      "title": "Prendre rendez vous",
+      "sub": "Réserve ton prochain moment"
+    },
+    "events": {
+      "title": "Les événements",
+      "sub": "DJ, impro, stand up et plus"
+    },
+    "battle": {
+      "title": "La Battle",
+      "sub": "Quiz en direct entre tablettes"
+    },
+    "stop10": {
+      "title": "Stop à 10 secondes",
+      "sub": "Teste ton horloge interne"
+    },
+    "wheel": {
+      "title": "La roue de la fortune",
+      "sub": "Tente ta chance"
+    },
+    "kids": {
+      "title": "Le coin des kids",
+      "sub": "Jeux pour les petits"
+    },
+    "drinks": {
+      "title": "Bières et softs",
+      "sub": "La carte du bar"
+    },
+    "products": {
+      "title": "Les produits faits pour toi",
+      "sub": "Trouve ta routine"
+    },
+    "gift": {
+      "title": "Chèques cadeaux",
+      "sub": "Offre un moment"
+    },
+    "invoice": {
+      "title": "Factures pros",
+      "sub": "Indépendant ou société"
+    },
+    "instagram": {
+      "title": "Suis nous sur Instagram",
+      "sub": "@cutshop_mons"
+    }
+  },
+  "home": {
+    "greeting": "Installe toi, ton moment commence ici.",
+    "nextEvent": "Prochain événement",
+    "register": "Je m’inscris"
+  },
+  "screensaver": {
+    "hook": "Touche l’écran, ton moment commence ici",
+    "next": "Prochain événement",
+    "battleInvite": "Défie les autres clients à la Battle !",
+    "battleLive": "Une Battle commence, rejoins la !"
+  },
+  "setup": {
+    "title": "Configuration de la tablette",
+    "text": "Choisis le nom de cette tablette. Il sert aux statistiques et à la Battle. Tu pourras le modifier plus tard dans l’espace admin.",
+    "choose": "Tablette {{n}}"
+  },
+  "concept": {
+    "barber": "Le barbershop",
+    "bar": "Le bar",
+    "events": "Les événements",
+    "practical": "Infos pratiques",
+    "address": "Adresse",
+    "hours": "Horaires",
+    "contact": "Contact"
+  },
+  "booking": {
+    "title": "Prendre rendez vous",
+    "text": "Scanne et réserve ton prochain moment en 30 secondes",
+    "sub": "Choisis ton barbier, ta prestation et ton créneau directement sur Salonkee, depuis ton téléphone.",
+    "privacy": "Aucune donnée personnelle n’est saisie sur cette tablette."
+  },
+  "events": {
+    "title": "Les événements",
+    "subtitle": "Le Cutshop se transforme en scène. Réserve ta place, c’est gratuit.",
+    "seatsLeft_one": "{{count}} place restante",
+    "seatsLeft_other": "{{count}} places restantes",
+    "full": "Complet",
+    "register": "Je m’inscris",
+    "none": "Pas d’événement programmé pour le moment. Repasse bientôt !",
+    "at": "{{date}} à {{time}}",
+    "form": {
+      "title": "Inscription",
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "email": "Adresse mail",
+      "seats": "Nombre de places",
+      "consent": "J’accepte que le Cutshop utilise ces informations uniquement pour gérer mon inscription à cet événement.",
+      "newsletter": "Je veux recevoir la newsletter du Cutshop (événements et nouveautés). Désinscription possible à tout moment.",
+      "submit": "Valider mon inscription"
+    },
+    "errors": {
+      "firstName": "Indique ton prénom",
+      "lastName": "Indique ton nom",
+      "email": "Cette adresse mail ne semble pas valide",
+      "consent": "Coche la case de consentement pour continuer"
+    },
+    "fullTitle": "Victime de son succès !",
+    "fullText": "Cet événement est complet. Jette un oeil aux prochaines dates, on t’y attend.",
+    "notEnough_one": "Il ne reste qu’une place pour cet événement.",
+    "notEnough_other": "Il ne reste que {{count}} places pour cet événement.",
+    "confirmTitle": "C’est dans la boîte !",
+    "confirmText_one": "Ton inscription à {{event}} est confirmée pour {{count}} personne.",
+    "confirmText_other": "Ton inscription à {{event}} est confirmée pour {{count}} personnes.",
+    "confirmWhen": "On t’attend {{when}}.",
+    "confirmQueued": "Ton inscription à {{event}} partira dès le retour du réseau.",
+    "cleared": "Le formulaire a été effacé de la tablette."
+  },
+  "battle": {
+    "title": "La Battle",
+    "intro": "Affronte les autres clients en direct sur les tablettes du salon. 10 questions, 15 secondes chacune : la justesse et la rapidité comptent !",
+    "pseudo": "Ton pseudo",
+    "pseudoPh": "Ex : Barbe Noire",
+    "pseudoErr": "Choisis un pseudo pour jouer",
+    "launch": "Lancer une Battle",
+    "solo": "Jouer en solo",
+    "theme": "Thème",
+    "themes": {
+      "mix": "Mélange",
+      "mons": "Mons et folklore",
+      "beer": "Bières belges",
+      "barber": "Culture barber",
+      "music": "Musique",
+      "general": "Culture générale",
+      "kids": "Spécial kids"
+    },
+    "join": "Rejoindre",
+    "later": "Pas maintenant",
+    "invite": "Une Battle commence, rejoins la !",
+    "inviteBy": "{{pseudo}} lance une Battle depuis {{tablet}}",
+    "lobby": "Salle d’attente",
+    "waiting": "En attente d’adversaires sur les autres tablettes...",
+    "startsIn": "Départ dans {{s}} s",
+    "players": "Joueurs : {{n}} sur 4",
+    "startNow": "C’est parti !",
+    "alone": "Personne n’a rejoint cette fois.",
+    "soloOffer": "Joue en solo contre le chrono",
+    "relaunch": "Relancer une invitation",
+    "getReady": "Attention, ça commence !",
+    "question": "Question {{n}} sur {{total}}",
+    "answered": "Réponse enregistrée, on attend les autres...",
+    "correct": "Bonne réponse !",
+    "wrong": "Raté !",
+    "tooLate": "Trop tard !",
+    "theAnswer": "La bonne réponse : {{answer}}",
+    "ranking": "Classement",
+    "points": "{{n}} pts",
+    "plus": "+{{n}}",
+    "gone": "a quitté la partie",
+    "you": "toi",
+    "podium": "Le podium",
+    "winner": "{{pseudo}} remporte la Battle !",
+    "youWin": "Bravo, tu remportes la Battle !",
+    "spinWon": "Tu as gagné un tour de roue !",
+    "spinGo": "Je tourne la roue",
+    "playAgain": "Rejouer",
+    "soloTitle": "Partie solo",
+    "soloScore": "Ton score : {{n}} points",
+    "soloCorrect": "{{n}} bonnes réponses sur {{total}}",
+    "busy": "Une Battle est déjà en cours sur les tablettes. Rejoins la suivante !",
+    "full": "Cette Battle est complète (4 joueurs).",
+    "missed": "Cette Battle a déjà commencé. Lance la tienne !",
+    "quit": "Quitter la partie",
+    "liveNow": "En direct",
+    "range": "2 à 4 joueurs",
+    "format": "10 questions de 15 s",
+    "maxPoints": "Jusqu’à 1000 pts par question"
+  },
+  "stop10": {
+    "title": "Stop à 10 secondes",
+    "intro": "Lance le chrono : il disparaît au bout de 3 secondes. À toi de l’arrêter pile à 10 secondes en comptant dans ta tête !",
+    "start": "Start",
+    "stop": "Stop",
+    "counting": "Compte dans ta tête...",
+    "result": "Ton temps",
+    "delta": "Écart : {{delta}}",
+    "perfect": "10,00 s pile ! Légendaire !",
+    "great": "Très fort, presque parfait !",
+    "good": "Pas mal du tout !",
+    "meh": "Ton horloge interne a besoin d’un petit réglage.",
+    "saveScore": "Enregistre ton score",
+    "save": "Enregistrer",
+    "saved": "Score enregistré !",
+    "leaderboard": "Classement du jour",
+    "resets": "Remis à zéro chaque nuit",
+    "empty": "Personne pour l’instant. Ouvre le bal !",
+    "again": "Rejouer"
+  },
+  "wheel": {
+    "title": "La roue de la fortune",
+    "locked": "La roue s’active avec l’équipe",
+    "lockedText": "Demande à un membre du staff de saisir son code. Tu peux aussi gagner un tour en remportant une Battle ou en réussissant un 10,00 s pile.",
+    "staffPin": "Code staff",
+    "unlock": "Activer la roue",
+    "pinWrong": "Code incorrect",
+    "pinLocked": "Trop d’essais. Réessaie dans quelques minutes.",
+    "spin": "Lancer la roue",
+    "spinning": "Ça tourne...",
+    "won": "Gagné !",
+    "yourCode": "Ton code à présenter au comptoir",
+    "codeHint": "Montre ce code au comptoir pour profiter de ton gain. Prends le en photo si tu veux.",
+    "lost": "Pas de chance cette fois",
+    "lostText": "La prochaine sera la bonne !",
+    "oneTurn": "Un tour par client.",
+    "disabled": "La roue n’est pas disponible pour le moment.",
+    "rate": "La roue vient déjà de tourner sur cette tablette. Réessaie dans quelques minutes.",
+    "empty": "Plus aucun gain disponible pour le moment.",
+    "reason": {
+      "battle": "Tour offert pour ta victoire à la Battle",
+      "stop10": "Tour offert pour ton 10,00 s pile",
+      "staff": "Tour activé par l’équipe"
+    },
+    "done": "Terminer"
+  },
+  "kids": {
+    "title": "Le coin des kids",
+    "barber": "Le Petit Barbier",
+    "memory": "Memory",
+    "tools": {
+      "clipper": "Tondeuse",
+      "scissors": "Ciseaux",
+      "comb": "Peigne",
+      "color": "Couleurs",
+      "grow": "Repousse"
+    },
+    "levels": {
+      "easy": "Facile",
+      "medium": "Moyen",
+      "hard": "Difficile"
+    },
+    "win": "Bravo !",
+    "moves": "{{n}} coups"
+  },
+  "drinks": {
+    "title": "Bières et softs",
+    "categories": {
+      "beer": "Bières du terroir belge",
+      "soft": "Softs",
+      "other": "Autres boissons"
+    },
+    "abv": "{{abv}} % vol.",
+    "noAlcohol": "Sans alcool",
+    "pairingTitle": "Ta coupe, ta bière",
+    "pairingIntro": "Dis nous quelle coupe tu fais aujourd’hui, on te dit quoi boire.",
+    "pairingFor": "Pour une coupe {{cut}}",
+    "order": "Commande au comptoir ou demande à ton barbier.",
+    "moderation": "L’abus d’alcool est dangereux pour la santé. À consommer avec modération."
+  },
+  "products": {
+    "title": "Les produits faits pour toi",
+    "intro": "Quatre questions, et on te prépare une sélection sur mesure.",
+    "step": "Question {{n}} sur 4",
+    "start": "Commencer",
+    "q": {
+      "hair": "Quel est ton type de cheveux ?",
+      "scalp": "Et ton cuir chevelu ?",
+      "beard": "Tu portes la barbe ?",
+      "effect": "Tu recherches quel effet ?"
+    },
+    "hair": {
+      "fine": "Fins",
+      "thick": "Épais",
+      "curly": "Bouclés",
+      "coily": "Crépus"
+    },
+    "scalp": {
+      "normal": "Normal",
+      "dry": "Sec",
+      "oily": "Gras"
+    },
+    "effect": {
+      "volume": "Volume",
+      "hold": "Tenue",
+      "shine": "Brillance",
+      "natural": "Naturel",
+      "care": "Soin"
+    },
+    "resultTitle": "Ta sélection",
+    "resultIntro": "Des produits choisis pour ton profil, testés et approuvés au salon.",
+    "benefit": "Bénéfice",
+    "usage": "Utilisation",
+    "talk": "J’en parle à mon coiffeur",
+    "firstName": "Ton prénom",
+    "firstNameHint": "Ton coiffeur recevra ta sélection pour préparer son conseil.",
+    "sendToBarber": "Envoyer à mon coiffeur",
+    "sent": "C’est transmis !",
+    "final": "Parles en avec ton coiffeur pendant ta coupe, il te dira tout.",
+    "restart": "Refaire le questionnaire",
+    "none": "Le catalogue se prépare. Demande conseil à ton coiffeur !"
+  },
+  "gift": {
+    "amounts": "Montants proposés",
+    "validity": "Validité",
+    "conditions": "Conditions",
+    "ask": "Je demande à l’accueil",
+    "asked": "C’est noté ! Un membre de l’équipe vient vers toi."
+  },
+  "invoice": {
+    "formTitle": "Tes coordonnées de facturation",
+    "optionalNote": "Formulaire facultatif : tu peux aussi simplement en parler au comptoir.",
+    "company": "Nom de la société",
+    "vat": "Numéro de TVA",
+    "vatPh": "BE0123456789",
+    "vatErr": "Format de TVA non reconnu (ex : BE0123456789)",
+    "vatChecksum": "Ce numéro de TVA belge n’est pas valide, vérifie les chiffres",
+    "address": "Adresse de facturation",
+    "email": "Adresse mail d’envoi",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "companyErr": "Indique le nom de la société",
+    "addressErr": "Indique l’adresse de facturation",
+    "consent": "J’accepte que le Cutshop utilise ces informations uniquement pour établir ma facture.",
+    "submit": "Envoyer ma demande",
+    "sentTitle": "Demande envoyée !",
+    "sentText": "On prépare ta facture, elle arrivera par mail. Les champs ont été effacés de la tablette."
+  },
+  "instagram": {
+    "title": "Suis nous sur Instagram",
+    "text": "Coulisses, nouvelles coupes, soirées et concours : rejoins la communauté Cutshop.",
+    "handle": "@cutshop_mons"
+  },
+  "privacy": {
+    "title": "Politique de confidentialité"
+  }
+}

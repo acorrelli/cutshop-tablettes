@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+# Lance un Postgres temporaire, applique la migration et les données d'exemple, puis exécute les tests SQL.
+# Prérequis : binaires PostgreSQL (initdb, pg_ctl, psql) dans le PATH ou dans /usr/lib/postgresql/*/bin.
+set -euo pipefail
+cd "$(dirname "$0")/.."
+
+PGBIN="$(ls -d /usr/lib/postgresql/*/bin 2>/dev/null | sort -V | tail -1 || true)"
+export PATH="${PGBIN:+$PGBIN:}$PATH"
+
+TMP="$(mktemp -d)"
+PORT=55432
+cleanup() { pg_ctl -D "$TMP/data" -m immediate stop >/dev/null 2>&1 || true; rm -rf "$TMP"; }
+trap cleanup EXIT
+
+RUN_AS=""
+if [ "$(id -u)" = "0" ]; then
+  id -u postgres >/dev/null 2>&1 || useradd -m postgres
+  chown -R postgres "$TMP"
+  RUN_AS="sudo -u postgres env PATH=$PATH"
+  command -v sudo >/dev/null || RUN_AS="runuser -u postgres -- env PATH=$PATH"
+fi
+
+$RUN_AS initdb -D "$TMP/data" -U postgres -A trust >/dev/null
+$RUN_AS pg_ctl -D "$TMP/data" -o "-p $PORT -k $TMP -c timezone=UTC" -l "$TMP/log" start >/dev/null
+sleep 1
+
+PSQL="psql -h $TMP -p $PORT -U postgres -v ON_ERROR_STOP=1 -q"
+$PSQL -c "create database cutshop" postgres
+$PSQL -f supabase/tests/supabase_stub.sql cutshop
+for f in supabase/migrations/*.sql; do $PSQL -f "$f" cutshop; done
+$PSQL -f supabase/seed.sql cutshop
+$PSQL -f supabase/tests/db_test.sql cutshop
