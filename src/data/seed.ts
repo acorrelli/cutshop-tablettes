@@ -103,122 +103,106 @@ export const DEFAULT_SETTINGS: AppSettings = {
 };
 
 // ---------------------------------------------------------------------------
-// Événements récurrents. Les dates sont calculées au moment du chargement des données
-// (en SQL comme en mode démo) pour être toujours dans le futur.
-// isoDow : 1 lundi ... 7 dimanche. everyWeeks : périodicité. count : occurrences créées.
+// Événements : programme officiel octobre, novembre, décembre 2026 (affiche du Cutshop).
+// Les heures sont celles de Bruxelles. Pour un nouveau programme, ajoute des lignes ici ou dans l'admin.
 
-export interface EventTemplate {
-  key: string;
+export interface EventType {
   kind: EventKind;
-  /** Photo de l'événement (photo:nom, voir src/assets/photos). */
-  image: string | null;
   title_fr: string;
   title_en: string;
   description_fr: string;
   description_en: string;
   recurrence_fr: string;
   recurrence_en: string;
-  isoDow: number;
   time: string;
   durationMin: number;
-  everyWeeks: number;
-  /** Décalage en semaines de la première occurrence. */
-  offsetWeeks: number;
-  count: number;
   capacity: number;
+  /** Affiche de l'événement (photo:nom, voir src/assets/photos). */
+  image: string | null;
 }
 
-export const EVENT_TEMPLATES: EventTemplate[] = [
-  {
-    key: 'cut-session',
-    image: 'photo:cutsession-carre-5',
+export const EVENT_TYPES: Record<'cutsession' | 'cutandtalk' | 'chut' | 'openmic', EventType> = {
+  cutsession: {
     kind: 'dj',
-    title_fr: 'Cut Session',
-    title_en: 'Cut Session',
-    description_fr: 'Soirée DJ et ambiance au salon. Les platines prennent le relais des tondeuses, on danse entre les fauteuils.',
-    description_en: 'DJ night and good vibes in the shop. The decks take over from the clippers and we dance between the chairs.',
+    title_fr: 'Cutsession',
+    title_en: 'Cutsession',
+    description_fr: 'Trois DJ filmés en direct, et toi dans le décor. Dès 18h.',
+    description_en: 'Three DJs filmed live, and you are part of the scene. From 6pm.',
     recurrence_fr: 'Un samedi sur deux',
     recurrence_en: 'Every other Saturday',
-    isoDow: 6,
-    time: '21:00',
+    time: '18:00',
     durationMin: 240,
-    everyWeeks: 2,
-    offsetWeeks: 0,
-    count: 4,
     capacity: 40,
+    image: 'photo:cutsession-carre-5',
   },
-  {
-    key: 'cut-and-talk',
-    image: 'photo:cut-and-talk-carre-5',
+  cutandtalk: {
     kind: 'talk',
     title_fr: 'Cut and Talk',
     title_en: 'Cut and Talk',
-    description_fr: 'Soirée discussion autour d’un thème. Premier thème : l’intelligence artificielle. On échange, on débat, on refait le monde.',
-    description_en: 'Talk night around a theme. First theme: artificial intelligence. We share, we debate, we put the world to rights.',
-    recurrence_fr: 'Le vendredi',
-    recurrence_en: 'On Fridays',
-    isoDow: 5,
+    description_fr: 'Une soirée pour débattre d’un sujet autour d’un verre.',
+    description_en: 'A night to debate a topic over a drink.',
+    recurrence_fr: 'Un vendredi sur deux',
+    recurrence_en: 'Every other Friday',
     time: '20:30',
     durationMin: 120,
-    everyWeeks: 1,
-    offsetWeeks: 0,
-    count: 6,
     capacity: 20,
+    image: 'photo:cut-and-talk-carre-5',
   },
-  {
-    key: 'chut',
-    image: 'photo:chut-carre-5',
+  chut: {
     kind: 'read',
     title_fr: 'Chut',
     title_en: 'Chut',
-    description_fr: 'Soirée lecture silencieuse avec DJ relax, un verre et un moment d’échange. Apporte ton livre, on s’occupe du reste.',
-    description_en: 'Silent reading night with a chill DJ, a drink and a moment to share. Bring your book, we take care of the rest.',
+    description_fr: 'Lecture en silence, DJ set relax, un verre à la main, puis on échange ensemble. Entrée libre, 20 places maximum.',
+    description_en: 'Silent reading, a chill DJ set, a drink in hand, then we share together. Free entry, 20 spots maximum.',
     recurrence_fr: 'Un vendredi sur deux',
     recurrence_en: 'Every other Friday',
-    isoDow: 5,
     time: '18:30',
     durationMin: 90,
-    everyWeeks: 2,
-    offsetWeeks: 1,
-    count: 4,
-    capacity: 15,
+    capacity: 20,
+    image: 'photo:chut-carre-5',
   },
-  {
-    key: 'open-mic',
-    image: 'photo:open-mic-carre-1',
+  openmic: {
     kind: 'mic',
     title_fr: 'Open Mic',
     title_en: 'Open Mic',
-    description_fr: 'Scène ouverte : stand up, impro, beatbox. Tu montes sur scène ou tu encourages, à toi de voir.',
-    description_en: 'Open stage: stand up, improv, beatbox. Jump on stage or cheer from the crowd, your call.',
-    recurrence_fr: 'Le samedi',
-    recurrence_en: 'On Saturdays',
-    isoDow: 6,
+    description_fr: 'Stand up, impro, beatbox, slam : le micro est à toi.',
+    description_en: 'Stand up, improv, beatbox, slam: the mic is yours.',
+    recurrence_fr: 'Un samedi sur deux',
+    recurrence_en: 'Every other Saturday',
     time: '18:00',
     durationMin: 150,
-    everyWeeks: 1,
-    offsetWeeks: 0,
-    count: 6,
     capacity: 40,
+    image: 'photo:open-mic-carre-1',
   },
-  {
-    key: 'cut-and-run',
-    image: null,
-    kind: 'run',
-    title_fr: 'Cut and Run',
-    title_en: 'Cut and Run',
-    description_fr: 'Course en groupe au départ du salon, tous niveaux. On court ensemble, on termine autour d’un verre.',
-    description_en: 'Group run starting from the shop, all levels welcome. We run together and finish with a drink.',
-    recurrence_fr: '+/ tous les deux mois',
-    recurrence_en: '+/ every two months',
-    isoDow: 7,
-    time: '10:00',
-    durationMin: 90,
-    everyWeeks: 9,
-    offsetWeeks: 2,
-    count: 2,
-    capacity: 25,
-  },
+};
+
+export interface ProgramEntry {
+  date: string; // AAAA MM JJ, heure de Bruxelles
+  type: keyof typeof EVENT_TYPES;
+  title_fr?: string;
+  title_en?: string;
+  description_fr?: string;
+  description_en?: string;
+}
+
+export const EVENT_PROGRAM: ProgramEntry[] = [
+  { date: '2026-10-17', type: 'cutsession' },
+  { date: '2026-10-31', type: 'cutsession', title_fr: 'Cutsession spécial Halloween', title_en: 'Cutsession Halloween special', description_fr: 'L’édition spéciale Halloween : trois DJ filmés en direct, et toi dans le décor. Déguisement bienvenu. Dès 18h.', description_en: 'The Halloween special: three DJs filmed live, and you are part of the scene. Costumes welcome. From 6pm.' },
+  { date: '2026-11-06', type: 'chut' },
+  { date: '2026-11-07', type: 'openmic' },
+  { date: '2026-11-13', type: 'cutandtalk', description_fr: 'Une soirée pour débattre d’un sujet autour d’un verre. Thème : l’intelligence artificielle.', description_en: 'A night to debate a topic over a drink. Theme: artificial intelligence.' },
+  { date: '2026-11-14', type: 'cutsession' },
+  { date: '2026-11-20', type: 'chut' },
+  { date: '2026-11-21', type: 'openmic' },
+  { date: '2026-11-27', type: 'cutandtalk' },
+  { date: '2026-11-28', type: 'cutsession' },
+  { date: '2026-12-04', type: 'chut' },
+  { date: '2026-12-05', type: 'openmic' },
+  { date: '2026-12-11', type: 'cutandtalk' },
+  { date: '2026-12-12', type: 'cutsession' },
+  { date: '2026-12-18', type: 'chut' },
+  { date: '2026-12-19', type: 'openmic' },
+  { date: '2026-12-26', type: 'cutsession', title_fr: 'Cutsession spécial fêtes', title_en: 'Cutsession holiday special', description_fr: 'L’édition spéciale fêtes : trois DJ filmés en direct pour finir l’année en beauté. Dès 18h.', description_en: 'The holiday special: three DJs filmed live to end the year in style. From 6pm.' },
 ];
 
 /** Convertit une heure locale de Bruxelles en instant ISO (gère l'heure d'été). */
@@ -243,43 +227,29 @@ export function brusselsToIso(year: number, month: number, day: number, hh: numb
   return new Date(guess - offsetAt(ts)).toISOString();
 }
 
-/** Calcule les occurrences des événements récurrents à partir d'aujourd'hui (même règle qu'en SQL). */
-export function buildSeedEvents(today: Date = new Date()): CutEvent[] {
-  const out: CutEvent[] = [];
-  const parts = new Intl.DateTimeFormat('en-GB', {
-    timeZone: 'Europe/Brussels',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).formatToParts(today);
-  const g = (t: string) => Number(parts.find((p) => p.type === t)?.value);
-  const base = new Date(Date.UTC(g('year'), g('month') - 1, g('day')));
-  const todayDow = ((base.getUTCDay() + 6) % 7) + 1;
-  for (const tpl of EVENT_TEMPLATES) {
-    // Première occurrence strictement après aujourd'hui.
-    const firstOffset = ((tpl.isoDow - todayDow + 6) % 7) + 1 + tpl.offsetWeeks * 7;
-    for (let i = 0; i < tpl.count; i++) {
-      const d = new Date(base.getTime() + (firstOffset + i * tpl.everyWeeks * 7) * 86400000);
-      const [hh, mm] = tpl.time.split(':').map(Number);
-      const starts = brusselsToIso(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate(), hh, mm);
-      out.push({
-        id: `demo-${tpl.key}-${i + 1}`,
-        kind: tpl.kind,
-        title_fr: tpl.title_fr,
-        title_en: tpl.title_en,
-        description_fr: tpl.description_fr,
-        description_en: tpl.description_en,
-        recurrence_fr: tpl.recurrence_fr,
-        recurrence_en: tpl.recurrence_en,
-        starts_at: starts,
-        ends_at: new Date(new Date(starts).getTime() + tpl.durationMin * 60000).toISOString(),
-        image_url: tpl.image,
-        capacity: tpl.capacity,
-        published: true,
-      });
-    }
-  }
-  return out.sort((a, b) => a.starts_at.localeCompare(b.starts_at));
+/** Événements du programme, avec date de début et de fin en ISO. */
+export function buildSeedEvents(): CutEvent[] {
+  return EVENT_PROGRAM.map((e, i) => {
+    const t = EVENT_TYPES[e.type];
+    const [y, m, d] = e.date.split('-').map(Number);
+    const [hh, mm] = t.time.split(':').map(Number);
+    const starts = brusselsToIso(y, m, d, hh, mm);
+    return {
+      id: `demo-${e.type}-${i + 1}`,
+      kind: t.kind,
+      title_fr: e.title_fr ?? t.title_fr,
+      title_en: e.title_en ?? t.title_en,
+      description_fr: e.description_fr ?? t.description_fr,
+      description_en: e.description_en ?? t.description_en,
+      recurrence_fr: e.title_fr ? '' : t.recurrence_fr,
+      recurrence_en: e.title_fr ? '' : t.recurrence_en,
+      starts_at: starts,
+      ends_at: new Date(new Date(starts).getTime() + t.durationMin * 60000).toISOString(),
+      image_url: t.image,
+      capacity: t.capacity,
+      published: true,
+    };
+  });
 }
 
 // ---------------------------------------------------------------------------

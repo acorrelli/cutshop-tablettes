@@ -6,7 +6,7 @@ test.describe('Formulaires et demandes', () => {
     const errors = watchConsole(page);
     await openTablet(page, 'Tablette 1', 'evenements');
     const chut = page.getByTestId('event-card').filter({ hasText: 'Chut' }).first();
-    await expect(chut).toContainText('15 places restantes');
+    await expect(chut).toContainText('20 places restantes');
     await chut.click();
 
     // Consentement obligatoire et mail valide.
@@ -32,14 +32,16 @@ test.describe('Formulaires et demandes', () => {
     await register(6, 'lina@example.com', true);
     await expect(page.getByTestId('event-list')).toBeVisible();
     const card = page.getByTestId('event-card').filter({ hasText: 'Chut' }).first();
-    await expect(card).toContainText('9 places restantes');
+    await expect(card).toContainText('14 places restantes');
     await card.click();
     // Le formulaire a bien été vidé.
     await expect(page.locator('input[name="first"]')).toHaveValue('');
     await register(6, 'tom@example.com');
     await page.getByTestId('event-card').filter({ hasText: 'Chut' }).first().click();
-    await expect(page.getByTestId('seats-left')).toContainText('3 places restantes');
-    await register(3, 'zoe@example.com');
+    await register(6, 'max@example.com');
+    await page.getByTestId('event-card').filter({ hasText: 'Chut' }).first().click();
+    await expect(page.getByTestId('seats-left')).toContainText('2 places restantes');
+    await register(2, 'zoe@example.com');
     const full = page.getByTestId('event-card').filter({ hasText: 'Chut' }).first();
     await expect(full).toContainText('Complet');
     await full.click();
@@ -52,7 +54,7 @@ test.describe('Formulaires et demandes', () => {
     await expect(page.getByText('tom@example.com')).toHaveCount(0);
     await page.getByTestId('nav-evenements').click();
     await page.getByRole('row').filter({ hasText: 'Chut' }).first().getByTestId('show-registrations').click();
-    await expect(page.getByText('15 / 15 places réservées')).toBeVisible();
+    await expect(page.getByText('20 / 20 places réservées')).toBeVisible();
     const download = page.waitForEvent('download');
     await page.getByRole('button', { name: 'Export CSV' }).click();
     const file = await download;

@@ -136,7 +136,9 @@
     "confirmText_other": "Ton inscription à {{event}} est confirmée pour {{count}} personnes.",
     "confirmWhen": "On t’attend {{when}}.",
     "confirmQueued": "Ton inscription à {{event}} partira dès le retour du réseau.",
-    "cleared": "Le formulaire a été effacé de la tablette."
+    "cleared": "Le formulaire a été effacé de la tablette.",
+    "program": "Voir le programme",
+    "programTitle": "Le programme"
   },
   "battle": {
     "title": "La Battle",

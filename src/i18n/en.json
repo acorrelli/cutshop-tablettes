@@ -136,7 +136,9 @@
     "confirmText_other": "Your registration for {{event}} is confirmed for {{count}} people.",
     "confirmWhen": "See you {{when}}.",
     "confirmQueued": "Your registration for {{event}} will be sent as soon as the network is back.",
-    "cleared": "The form has been cleared from the tablet."
+    "cleared": "The form has been cleared from the tablet.",
+    "program": "See the programme",
+    "programTitle": "The programme"
   },
   "battle": {
     "title": "The Battle",

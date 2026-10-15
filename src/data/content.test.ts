@@ -4,7 +4,8 @@ import fr from '../i18n/fr.json';
 import en from '../i18n/en.json';
 import {
   DEFAULT_SETTINGS,
-  EVENT_TEMPLATES,
+  EVENT_PROGRAM,
+  EVENT_TYPES,
   SEED_DRINKS,
   SEED_PAIRINGS,
   SEED_PRIZES,
@@ -23,7 +24,7 @@ function strings(value: unknown, path = ''): [string, string][] {
 }
 
 // Champs techniques jamais affichés tels quels.
-const TECHNICAL = /(^|\.)(id|url|image_url|salonkee_url|instagram_url|color|kind|key|category|theme|time|email|image|concept_photo_hero|concept_photo_1|concept_photo_2|concept_photo_3|facebook_url|tiktok_url|website)$|hair_types|scalp_types|effects/;
+const TECHNICAL = /(^|\.)(id|url|image_url|salonkee_url|instagram_url|color|kind|key|category|theme|time|email|date|type|image|concept_photo_hero|concept_photo_1|concept_photo_2|concept_photo_3|facebook_url|tiktok_url|website)$|hair_types|scalp_types|effects/;
 
 function displayed(value: unknown) {
   return strings(value).filter(([p]) => !TECHNICAL.test(p));
@@ -37,7 +38,8 @@ describe('règle des tirets', () => {
   it('aucun tiret dans les contenus d’exemple', () => {
     const all = displayed({
       settings: DEFAULT_SETTINGS,
-      events: EVENT_TEMPLATES,
+      events: EVENT_TYPES,
+      program: EVENT_PROGRAM,
       drinks: SEED_DRINKS,
       pairings: SEED_PAIRINGS,
       products: SEED_PRODUCTS,
@@ -70,16 +72,21 @@ describe('données d’exemple', () => {
     }
   });
 
-  it('génère les événements récurrents dans le futur, le bon jour', () => {
-    const now = new Date('2026-10-15T08:00:00Z');
-    const events = buildSeedEvents(now);
-    expect(events.length).toBe(EVENT_TEMPLATES.reduce((s, t) => s + t.count, 0));
-    for (const e of events) expect(new Date(e.starts_at).getTime()).toBeGreaterThan(now.getTime());
-    const cutSession = events.find((e) => e.title_fr === 'Cut Session')!;
-    const local = new Intl.DateTimeFormat('fr-BE', { timeZone: 'Europe/Brussels', weekday: 'long', hour: '2-digit', minute: '2-digit' }).format(new Date(cutSession.starts_at));
-    expect(local).toBe('samedi 21:00');
-    const cutTalk = events.find((e) => e.title_fr === 'Cut and Talk')!;
-    expect(new Date(cutTalk.starts_at).toISOString()).toBe('2026-10-16T18:30:00.000Z');
+  it('reprend le programme officiel avec les bons jours et horaires', () => {
+    const events = buildSeedEvents();
+    expect(events).toHaveLength(17);
+    const fmt = (iso: string) =>
+      new Intl.DateTimeFormat('fr-BE', { timeZone: 'Europe/Brussels', weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }).format(new Date(iso));
+    expect(fmt(events[0].starts_at)).toBe('samedi 17 octobre à 18:00');
+    expect(events[1].title_fr).toBe('Cutsession spécial Halloween');
+    expect(fmt(events[16].starts_at)).toBe('samedi 26 décembre à 18:00');
+    for (const e of events) {
+      const day = new Intl.DateTimeFormat('fr-BE', { timeZone: 'Europe/Brussels', weekday: 'long' }).format(new Date(e.starts_at));
+      expect(['vendredi', 'samedi']).toContain(day);
+      if (e.kind === 'read' || e.kind === 'talk') expect(day).toBe('vendredi');
+      else expect(day).toBe('samedi');
+    }
+    expect(events.find((e) => e.title_fr === 'Chut')!.capacity).toBe(20);
   });
 
   it('prévoit une case perdante et des gains positifs', () => {

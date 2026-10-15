@@ -19,9 +19,9 @@ end $$;
 -- Événements : bon jour et bonne heure à Bruxelles.
 do $$ declare r record; begin
   for r in select title_fr, starts_at from public.events loop
-    if r.title_fr = 'Cut Session' then
-      assert extract(isodow from r.starts_at at time zone 'Europe/Brussels') = 6, 'Cut Session le samedi';
-      assert to_char(r.starts_at at time zone 'Europe/Brussels', 'HH24:MI') = '21:00', 'Cut Session à 21h';
+    if r.title_fr = 'Cutsession' then
+      assert extract(isodow from r.starts_at at time zone 'Europe/Brussels') = 6, 'Cutsession le samedi';
+      assert to_char(r.starts_at at time zone 'Europe/Brussels', 'HH24:MI') = '18:00', 'Cutsession à 18h';
     elsif r.title_fr = 'Cut and Talk' then
       assert extract(isodow from r.starts_at at time zone 'Europe/Brussels') = 5, 'Cut and Talk le vendredi';
     end if;

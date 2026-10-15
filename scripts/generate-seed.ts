@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import {
   DEFAULT_SETTINGS,
-  EVENT_TEMPLATES,
+  buildSeedEvents,
   SEED_DRINKS,
   SEED_PAIRINGS,
   SEED_PRIZES,
@@ -30,17 +30,10 @@ out.push('-- Réglages');
 out.push(`update public.settings set data = ${s(JSON.stringify(DEFAULT_SETTINGS))}::jsonb, updated_at = now() where id = 1;`);
 out.push('');
 
-out.push('-- Événements récurrents : dates calculées à partir du jour d\'exécution (heure de Bruxelles).');
-for (const t of EVENT_TEMPLATES) {
-  // Première occurrence strictement après aujourd'hui, puis une tous les everyWeeks semaines.
-  const first = `(current_date + (((${t.isoDow} - extract(isodow from current_date)::int + 6) % 7) + 1 + ${t.offsetWeeks * 7}))`;
+out.push('-- Programme des événements (dates fixes, heure de Bruxelles).');
+for (const e of buildSeedEvents()) {
   out.push(
-    `insert into public.events (kind, title_fr, title_en, description_fr, description_en, recurrence_fr, recurrence_en, image_url, starts_at, ends_at, capacity, published)
-select ${s(t.kind)}, ${s(t.title_fr)}, ${s(t.title_en)}, ${s(t.description_fr)}, ${s(t.description_en)}, ${s(t.recurrence_fr)}, ${s(t.recurrence_en)}, ${s(t.image)},
-       ((${first} + i * ${t.everyWeeks * 7}) + time '${t.time}') at time zone 'Europe/Brussels',
-       ((${first} + i * ${t.everyWeeks * 7}) + time '${t.time}') at time zone 'Europe/Brussels' + interval '${t.durationMin} minutes',
-       ${t.capacity}, true
-from generate_series(0, ${t.count - 1}) as i;`,
+    `insert into public.events (kind, title_fr, title_en, description_fr, description_en, recurrence_fr, recurrence_en, image_url, starts_at, ends_at, capacity, published) values (${s(e.kind)}, ${s(e.title_fr)}, ${s(e.title_en)}, ${s(e.description_fr)}, ${s(e.description_en)}, ${s(e.recurrence_fr)}, ${s(e.recurrence_en)}, ${s(e.image_url)}, ${s(e.starts_at)}, ${s(e.ends_at)}, ${e.capacity}, true);`,
   );
 }
 out.push('');
