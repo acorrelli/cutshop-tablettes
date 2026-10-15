@@ -154,6 +154,25 @@ function demoChannel(name: string, key: string): BusChannel {
   };
 }
 
+/** Canal local seul (navigateur sans BroadcastChannel) : la tablette se voit elle même, rien d'autre. */
+function localChannel(key: string): BusChannel {
+  const reg = createRegistry();
+  return {
+    track(meta) {
+      reg.emitPresence([{ ...meta, key }]);
+    },
+    onPresence: reg.onPresence,
+    on: reg.on,
+    send() {},
+    close() {},
+  };
+}
+
 export function openChannel(name: string, key: string, events: string[]): BusChannel {
-  return supabase ? supabaseChannel(name, key, events) : demoChannel(name, key);
+  if (supabase) return supabaseChannel(name, key, events);
+  try {
+    return demoChannel(name, key);
+  } catch {
+    return localChannel(key);
+  }
 }
