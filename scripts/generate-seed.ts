@@ -55,7 +55,7 @@ out.push('');
 out.push('-- Produits');
 for (const p of SEED_PRODUCTS) {
   out.push(
-    `insert into public.products (name, brand, benefit_fr, benefit_en, usage_fr, usage_en, price, hair_types, scalp_types, for_beard, effects, sort, active) values (${s(p.name)}, ${s(p.brand)}, ${s(p.benefit_fr)}, ${s(p.benefit_en)}, ${s(p.usage_fr)}, ${s(p.usage_en)}, ${p.price}, ${arr(p.hair_types)}, ${arr(p.scalp_types)}, ${b(p.for_beard)}, ${arr(p.effects)}, ${p.sort}, ${b(p.active)});`,
+    `insert into public.products (name, brand, benefit_fr, benefit_en, usage_fr, usage_en, price, hair_types, scalp_types, for_beard, effects, image_url, sort, active) values (${s(p.name)}, ${s(p.brand)}, ${s(p.benefit_fr)}, ${s(p.benefit_en)}, ${s(p.usage_fr)}, ${s(p.usage_en)}, ${p.price}, ${arr(p.hair_types)}, ${arr(p.scalp_types)}, ${b(p.for_beard)}, ${arr(p.effects)}, ${s(p.image_url)}, ${p.sort}, ${b(p.active)});`,
   );
 }
 out.push('');

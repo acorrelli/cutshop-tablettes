@@ -137,7 +137,7 @@ export default function Products() {
             <div className="grid gap-5 md:grid-cols-2">
               {selection.map((p, i) => (
                 <article key={p.id} className="card flex overflow-hidden" style={{ animation: `fade-up 0.4s ease-out ${i * 0.06}s both` }} data-testid="product-card">
-                  <PhotoSlot src={p.image_url} alt={p.name} icon={<SprayCan size={52} />} tone={i % 2 ? 'dark' : 'gold'} className="w-32 shrink-0 sm:w-40" />
+                  <PhotoSlot src={p.image_url} alt={p.name} icon={<SprayCan size={52} />} tone={i % 2 ? 'dark' : 'gold'} contain containBg="bg-[#f5f5f7]" className="w-32 shrink-0 sm:w-40" />
                   <div className="flex-1 p-6">
                     <div className="flex items-start justify-between gap-3">
                       <h3 className="text-xl font-black uppercase leading-tight tracking-wide">{p.name}</h3>

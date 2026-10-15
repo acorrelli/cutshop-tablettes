@@ -12,6 +12,7 @@ export function PhotoSlot({
   className = '',
   tone = 'green',
   contain = false,
+  containBg = 'bg-bottle-800',
 }: {
   src?: string | null;
   alt: string;
@@ -20,10 +21,12 @@ export function PhotoSlot({
   tone?: 'green' | 'gold' | 'dark';
   /** Affiche l'image entière (affiches carrées des événements) sur un fond vert. */
   contain?: boolean;
+  /** Fond affiché autour de l'image en mode contain (packshots produits sur fond clair). */
+  containBg?: string;
 }) {
   const url = resolvePhoto(src);
   if (url) {
-    return <img src={url} alt={alt} loading="lazy" draggable={false} className={`${contain ? 'bg-bottle-800 object-contain' : 'object-cover'} ${className}`} />;
+    return <img src={url} alt={alt} loading="lazy" draggable={false} className={`${contain ? `${containBg} object-contain` : 'object-cover'} ${className}`} />;
   }
   const bg =
     tone === 'gold'
