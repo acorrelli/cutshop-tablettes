@@ -3,6 +3,7 @@
 import { Copy, ImageUp, Pencil, Plus, Save, Trash2, X } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { api, type AdminTable, type AdminTableRow } from '../lib/api';
+import { resolvePhoto } from '../lib/photos';
 
 export type FieldDef =
   | { key: string; label: string; type: 'text' | 'textarea' | 'color'; required?: boolean; help?: string; half?: boolean }
@@ -161,7 +162,8 @@ function FieldInput({ def, value, onChange, row }: { def: FieldDef; value: unkno
               />
             </label>
           </div>
-          {typeof value === 'string' && value && <img src={value} alt="" className="h-28 rounded-xl object-cover" />}
+          {typeof value === 'string' && resolvePhoto(value) && <img src={resolvePhoto(value)!} alt="" className="h-28 rounded-xl object-cover" />}
+          {typeof value === 'string' && value.startsWith('photo:') && !resolvePhoto(value) && <span className="block text-xs text-cream/50">Photo « {value.slice(6)} » pas encore déposée dans src/assets/photos.</span>}
         </div>
       );
     case 'answers': {

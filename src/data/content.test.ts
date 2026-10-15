@@ -23,7 +23,7 @@ function strings(value: unknown, path = ''): [string, string][] {
 }
 
 // Champs techniques jamais affichés tels quels.
-const TECHNICAL = /(^|\.)(id|url|image_url|salonkee_url|instagram_url|color|kind|key|category|theme|time|email)$|hair_types|scalp_types|effects/;
+const TECHNICAL = /(^|\.)(id|url|image_url|salonkee_url|instagram_url|color|kind|key|category|theme|time|email|image|concept_photo_hero|concept_photo_1|concept_photo_2|concept_photo_3|facebook_url|tiktok_url|website)$|hair_types|scalp_types|effects/;
 
 function displayed(value: unknown) {
   return strings(value).filter(([p]) => !TECHNICAL.test(p));

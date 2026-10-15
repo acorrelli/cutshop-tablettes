@@ -18,7 +18,7 @@ export default function Events() {
 
   return (
     <Page>
-      <PageHeader title={t('events.title')} eyebrow={t('events.subtitle')} />
+      <PageHeader title={t('events.title')} eyebrow={t('events.subtitle')} back="/cutshop" />
       {events.length === 0 && <p className="card p-10 text-center text-2xl text-cream/80">{t('events.none')}</p>}
       <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3" data-testid="event-list">
         {events.map((e, i) => {

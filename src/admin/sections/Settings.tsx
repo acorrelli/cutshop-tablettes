@@ -12,6 +12,9 @@ const GROUPS: { title: string; fields: FieldDef[] }[] = [
     fields: [
       { key: 'salonkee_url', label: 'Lien de réservation Salonkee', type: 'text' },
       { key: 'instagram_url', label: 'Lien Instagram', type: 'text' },
+      { key: 'facebook_url', label: 'Lien Facebook', type: 'text' },
+      { key: 'tiktok_url', label: 'Lien TikTok', type: 'text' },
+      { key: 'website', label: 'Site web', type: 'text' },
       { key: 'address', label: 'Adresse', type: 'text' },
       { key: 'phone', label: 'Téléphone', type: 'text', half: true },
       { key: 'email', label: 'Adresse mail', type: 'text', half: true },
@@ -34,7 +37,8 @@ const GROUPS: { title: string; fields: FieldDef[] }[] = [
       { key: 'block_bar_en', label: 'Bloc bar (EN)', type: 'textarea', half: true },
       { key: 'block_events_fr', label: 'Bloc événements (FR)', type: 'textarea', half: true },
       { key: 'block_events_en', label: 'Bloc événements (EN)', type: 'textarea', half: true },
-      { key: 'concept_photo_1', label: 'Photo principale et barbershop', type: 'image' },
+      { key: 'concept_photo_hero', label: 'Photo principale (vitrine)', type: 'image' },
+      { key: 'concept_photo_1', label: 'Photo du barbershop', type: 'image' },
       { key: 'concept_photo_2', label: 'Photo du bar', type: 'image' },
       { key: 'concept_photo_3', label: 'Photo des événements', type: 'image' },
     ],
@@ -72,18 +76,18 @@ const GROUPS: { title: string; fields: FieldDef[] }[] = [
 ];
 
 const MODULE_LABELS: Record<ModuleKey, string> = {
-  concept: 'Le concept',
+  concept: 'L’histoire',
   booking: 'Prendre rendez vous',
   events: 'Les événements',
   battle: 'La Battle',
   stop10: 'Stop à 10 secondes',
   wheel: 'La roue de la fortune',
   kids: 'Le coin des kids',
-  drinks: 'Bières et softs',
+  drinks: 'La carte du bar',
   products: 'Les produits faits pour toi',
-  gift: 'Chèques cadeaux',
+  gift: 'Carte cadeau',
   invoice: 'Factures pros',
-  instagram: 'Instagram',
+  instagram: 'Nos réseaux',
 };
 
 function useSettings() {

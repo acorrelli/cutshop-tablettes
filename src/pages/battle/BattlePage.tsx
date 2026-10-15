@@ -52,14 +52,14 @@ export default function BattlePage() {
   if (!engine || !s) {
     return (
       <Page>
-        <PageHeader title={t('battle.title')} />
+        <PageHeader title={t('battle.title')} back="/jeux" />
       </Page>
     );
   }
 
   return (
     <Page>
-      {(phase === 'idle' || phase === 'lobby' || phase === 'alone') && <PageHeader title={t('battle.title')} eyebrow={t('tiles.battle.sub')} />}
+      {(phase === 'idle' || phase === 'lobby' || phase === 'alone') && <PageHeader title={t('battle.title')} eyebrow={t('tiles.battle.sub')} back="/jeux" />}
       {phase === 'idle' && <Start s={s} />}
       {phase === 'lobby' && <Lobby s={s} now={now} />}
       {phase === 'alone' && <Alone s={s} />}
@@ -377,7 +377,7 @@ function Podium({ s }: { s: BattleState }) {
       <div className="text-center">
         <p className="eyebrow">{t('battle.podium')}</p>
         <h2 className="mt-2 text-4xl font-black uppercase text-gold" data-testid="podium-title">
-          {s.solo ? t('battle.soloScore', { n: me?.total ?? 0 }) : iWon ? t('battle.youWin') : t('battle.winner', { pseudo: winner?.pseudo ?? '' })}
+          {s.solo ? t('battle.soloScore', { n: me?.total ?? 0 }) : !winner || winner.total === 0 ? t('battle.noWinner') : iWon ? t('battle.youWin') : t('battle.winner', { pseudo: winner.pseudo })}
         </h2>
         {s.solo && <p className="mt-2 text-xl text-cream/80">{t('battle.soloCorrect', { n: me?.correct ?? 0, total: s.questions.length })}</p>}
       </div>

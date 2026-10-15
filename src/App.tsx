@@ -12,7 +12,8 @@ import EventRegister from './pages/EventRegister';
 import Events from './pages/Events';
 import Gift from './pages/Gift';
 import Home from './pages/Home';
-import Instagram from './pages/Instagram';
+import Social from './pages/Social';
+import Category from './pages/Category';
 import Invoice from './pages/Invoice';
 import Privacy from './pages/Privacy';
 import Products from './pages/Products';
@@ -68,7 +69,11 @@ function Kiosk() {
             <Route path="/produits" element={<Gate module="products"><Products /></Gate>} />
             <Route path="/cheques" element={<Gate module="gift"><Gift /></Gate>} />
             <Route path="/factures" element={<Gate module="invoice"><Invoice /></Gate>} />
-            <Route path="/instagram" element={<Gate module="instagram"><Instagram /></Gate>} />
+            <Route path="/reseaux" element={<Gate module="instagram"><Social /></Gate>} />
+            <Route path="/instagram" element={<Navigate to="/reseaux" replace />} />
+            <Route path="/jeux" element={<Category category="games" />} />
+            <Route path="/boissons-produits" element={<Category category="shop" />} />
+            <Route path="/cutshop" element={<Category category="cutshop" />} />
             <Route path="/confidentialite" element={<Privacy />} />
             <Route
               path="/admin/*"

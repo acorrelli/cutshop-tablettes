@@ -33,7 +33,7 @@ export default function Gift() {
 
   return (
     <Page>
-      <PageHeader title={t('tiles.gift.title')} />
+      <PageHeader title={t('tiles.gift.title')} back="/boissons-produits" />
       <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
         <section className="card relative overflow-hidden p-8 animate-fade-up">
           <GiftIcon size={220} strokeWidth={0.8} className="pointer-events-none absolute -right-10 -top-10 text-gold opacity-10" />

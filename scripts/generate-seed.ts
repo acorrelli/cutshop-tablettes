@@ -35,8 +35,8 @@ for (const t of EVENT_TEMPLATES) {
   // Première occurrence strictement après aujourd'hui, puis une tous les everyWeeks semaines.
   const first = `(current_date + (((${t.isoDow} - extract(isodow from current_date)::int + 6) % 7) + 1 + ${t.offsetWeeks * 7}))`;
   out.push(
-    `insert into public.events (kind, title_fr, title_en, description_fr, description_en, recurrence_fr, recurrence_en, starts_at, ends_at, capacity, published)
-select ${s(t.kind)}, ${s(t.title_fr)}, ${s(t.title_en)}, ${s(t.description_fr)}, ${s(t.description_en)}, ${s(t.recurrence_fr)}, ${s(t.recurrence_en)},
+    `insert into public.events (kind, title_fr, title_en, description_fr, description_en, recurrence_fr, recurrence_en, image_url, starts_at, ends_at, capacity, published)
+select ${s(t.kind)}, ${s(t.title_fr)}, ${s(t.title_en)}, ${s(t.description_fr)}, ${s(t.description_en)}, ${s(t.recurrence_fr)}, ${s(t.recurrence_en)}, ${s(t.image)},
        ((${first} + i * ${t.everyWeeks * 7}) + time '${t.time}') at time zone 'Europe/Brussels',
        ((${first} + i * ${t.everyWeeks * 7}) + time '${t.time}') at time zone 'Europe/Brussels' + interval '${t.durationMin} minutes',
        ${t.capacity}, true

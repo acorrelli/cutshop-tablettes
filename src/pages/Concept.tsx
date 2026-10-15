@@ -1,4 +1,4 @@
-import { Beer, Clock, Mail, MapPin, Mic, Phone, Scissors } from 'lucide-react';
+import { Beer, Clock, Globe, Mail, MapPin, Mic, Phone, Scissors } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { PhotoSlot } from '../components/PhotoSlot';
 import { Page, PageHeader } from '../components/ui';
@@ -20,7 +20,7 @@ export default function Concept() {
 
   return (
     <Page>
-      <PageHeader title={t('tiles.concept.title')} eyebrow="Cutshop Mons" />
+      <PageHeader title={t('tiles.concept.title')} eyebrow="Cutshop Mons" back="/cutshop" />
       <section className="grid gap-6 lg:grid-cols-[1.25fr_1fr]">
         <article className="card p-8 animate-fade-up">
           <h2 className="mb-6 text-3xl font-black uppercase leading-tight tracking-wide text-gold">{loc(s, 'concept_title', lang)}</h2>
@@ -31,7 +31,7 @@ export default function Concept() {
           </div>
           <p className="mt-8 text-2xl font-black uppercase tracking-wide text-cream">{loc(s, 'concept_tagline', lang)}</p>
         </article>
-        <PhotoSlot src={s.concept_photo_1} alt="Cutshop" icon={<Scissors size={110} strokeWidth={1.2} />} className="min-h-[320px] w-full rounded-3xl shadow-tile" />
+        <PhotoSlot src={s.concept_photo_hero} alt="Cutshop" icon={<Scissors size={110} strokeWidth={1.2} />} className="min-h-[320px] w-full rounded-3xl shadow-tile" />
       </section>
 
       <section className="mt-6 grid gap-5 md:grid-cols-3">
@@ -70,6 +70,11 @@ export default function Concept() {
             <p className="mt-1 flex items-center gap-2 text-xl">
               <Mail size={20} className="text-gold" /> {s.email}
             </p>
+            {s.website && (
+              <p className="mt-1 flex items-center gap-2 text-xl">
+                <Globe size={20} className="text-gold" /> {s.website}
+              </p>
+            )}
           </div>
         </div>
       </section>

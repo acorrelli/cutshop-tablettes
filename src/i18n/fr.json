@@ -23,8 +23,8 @@
   },
   "tiles": {
     "concept": {
-      "title": "Le concept",
-      "sub": "Barber, bar et lieu de vie"
+      "title": "L’histoire",
+      "sub": "Barber, bar et lieu de vie depuis 2018"
     },
     "booking": {
       "title": "Prendre rendez vous",
@@ -51,24 +51,24 @@
       "sub": "Jeux pour les petits"
     },
     "drinks": {
-      "title": "Bières et softs",
-      "sub": "La carte du bar"
+      "title": "La carte du bar",
+      "sub": "Bières du terroir et softs"
     },
     "products": {
       "title": "Les produits faits pour toi",
       "sub": "Trouve ta routine"
     },
     "gift": {
-      "title": "Chèques cadeaux",
-      "sub": "Offre un moment"
+      "title": "Carte cadeau",
+      "sub": "Offre un moment Cutshop"
     },
     "invoice": {
       "title": "Factures pros",
       "sub": "Indépendant ou société"
     },
     "instagram": {
-      "title": "Suis nous sur Instagram",
-      "sub": "@cutshop_mons"
+      "title": "Nos réseaux",
+      "sub": "Instagram, Facebook, TikTok"
     }
   },
   "home": {
@@ -196,7 +196,8 @@
     "liveNow": "En direct",
     "range": "2 à 4 joueurs",
     "format": "10 questions de 15 s",
-    "maxPoints": "Jusqu’à 1000 pts par question"
+    "maxPoints": "Jusqu’à 1000 pts par question",
+    "noWinner": "Aucun point marqué cette fois. Revanche ?"
   },
   "stop10": {
     "title": "Stop à 10 secondes",
@@ -264,7 +265,7 @@
     "moves": "{{n}} coups"
   },
   "drinks": {
-    "title": "Bières et softs",
+    "title": "La carte du bar",
     "categories": {
       "beer": "Bières du terroir belge",
       "soft": "Softs",
@@ -346,12 +347,30 @@
     "sentTitle": "Demande envoyée !",
     "sentText": "On prépare ta facture, elle arrivera par mail. Les champs ont été effacés de la tablette."
   },
-  "instagram": {
-    "title": "Suis nous sur Instagram",
-    "text": "Coulisses, nouvelles coupes, soirées et concours : rejoins la communauté Cutshop.",
-    "handle": "@cutshop_mons"
-  },
   "privacy": {
     "title": "Politique de confidentialité"
+  },
+  "categories": {
+    "games": {
+      "title": "Les jeux",
+      "sub": "Défie les autres clients et amuse toi"
+    },
+    "shop": {
+      "title": "Boissons et produits",
+      "sub": "Le bar, tes produits, la carte cadeau"
+    },
+    "cutshop": {
+      "title": "Le concept Cutshop",
+      "sub": "Notre histoire et nos événements"
+    },
+    "social": {
+      "title": "Nos réseaux",
+      "sub": "Instagram, Facebook, TikTok"
+    }
+  },
+  "social": {
+    "title": "Nos réseaux",
+    "sub": "Instagram, Facebook et TikTok",
+    "text": "Coulisses, nouvelles coupes, soirées et concours : rejoins la communauté Cutshop."
   }
 }

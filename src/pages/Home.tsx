@@ -1,49 +1,11 @@
-import {
-  CalendarCheck,
-  FerrisWheel,
-  Gift,
-  Puzzle,
-  Receipt,
-  Sparkles,
-  SprayCan,
-  Swords,
-  Ticket,
-  Timer,
-  Beer,
-  ChevronRight,
-  type LucideIcon,
-} from 'lucide-react';
-import type { ComponentType } from 'react';
+import { ChevronRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { InstagramIcon } from '../components/Icons';
+import { Tile } from '../components/Tile';
 import { Page } from '../components/ui';
 import { useApp } from '../context/AppContext';
 import { formatEventDate, formatTime, loc } from '../lib/loc';
-import type { ModuleKey } from '../lib/types';
-
-interface TileDef {
-  key: ModuleKey;
-  to: string;
-  icon: LucideIcon | ComponentType<{ size?: number; strokeWidth?: number; className?: string }>;
-  tone: string;
-}
-
-// Chaque tuile a sa propre ambiance de couleur, dans la palette vert bouteille, or et crème.
-const TILES: TileDef[] = [
-  { key: 'battle', to: '/battle', icon: Swords, tone: 'from-gold-500 to-gold-700 text-bottle-950' },
-  { key: 'events', to: '/evenements', icon: Ticket, tone: 'from-bottle-500 to-bottle-700' },
-  { key: 'booking', to: '/rdv', icon: CalendarCheck, tone: 'from-cream-200 to-cream-400 text-bottle-900' },
-  { key: 'concept', to: '/concept', icon: Sparkles, tone: 'from-bottle-600 to-bottle-900' },
-  { key: 'stop10', to: '/stop10', icon: Timer, tone: 'from-bottle-700 to-bottle-950' },
-  { key: 'wheel', to: '/roue', icon: FerrisWheel, tone: 'from-gold-600 to-bottle-800' },
-  { key: 'drinks', to: '/boissons', icon: Beer, tone: 'from-gold-700 to-bottle-900' },
-  { key: 'products', to: '/produits', icon: SprayCan, tone: 'from-bottle-400 to-bottle-800' },
-  { key: 'kids', to: '/kids', icon: Puzzle, tone: 'from-[#2F8F6B] via-[#D4A84B] to-[#C2553F]' },
-  { key: 'gift', to: '/cheques', icon: Gift, tone: 'from-cream-300 to-gold-500 text-bottle-900' },
-  { key: 'invoice', to: '/factures', icon: Receipt, tone: 'from-bottle-800 to-bottle-950' },
-  { key: 'instagram', to: '/instagram', icon: InstagramIcon, tone: 'from-[#6B3A5E] via-[#B8573F] to-[#D4A84B]' },
-];
+import { CATEGORIES, MODULE_TILES } from '../lib/tiles';
 
 export default function Home() {
   const { t } = useTranslation();
@@ -51,7 +13,9 @@ export default function Home() {
   // En paysage sur tablette, l'accueil tient sur un seul écran (sauf en mode grand texte, où l'on fait défiler).
   const fit = !largeText;
   const modules = content?.settings.modules;
-  const tiles = TILES.filter((tile) => (modules ? modules[tile.key] : tile.key !== 'wheel'));
+  const on = (k: string) => (modules ? modules[k as keyof typeof modules] : k !== 'wheel');
+  const categories = CATEGORIES.map((c) => ({ ...c, visible: c.items.filter(on) })).filter((c) => c.visible.length > 0);
+  const direct = [MODULE_TILES.booking, MODULE_TILES.invoice].filter((d) => on(d.key));
   const next = modules?.events !== false ? content?.events.find((e) => e.seats_left > 0) ?? content?.events[0] : undefined;
 
   return (
@@ -80,28 +44,43 @@ export default function Home() {
         <p className="mb-4 shrink-0 text-2xl font-bold text-cream/80 animate-fade-up">{t('home.greeting')}</p>
       )}
 
-      <div className={`grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 ${fit ? 'min-h-0 flex-1 auto-rows-fr' : ''}`} data-testid="tiles">
-        {tiles.map((tile, i) => {
-          const Icon = tile.icon;
-          // Avec 11 tuiles, la Battle (module phare) prend deux cases pour remplir la grille.
-          const wide = tile.key === 'battle' && tiles.length % 4 === 3;
-          return (
-            <Link
-              key={tile.key}
-              to={tile.to}
-              data-testid={`tile-${tile.key}`}
-              className={`group relative flex min-h-[150px] flex-col justify-end overflow-hidden rounded-3xl bg-gradient-to-br p-4 lg:px-5 shadow-tile ring-1 ring-white/10 transition active:scale-[0.97] ${fit ? 'lg:landscape:min-h-0' : ''} ${wide ? 'lg:col-span-2' : ''} ${tile.tone} ${tile.tone.includes('text-') ? '' : 'text-cream'}`}
-              style={{ animation: `fade-up 0.45s ease-out ${i * 0.035}s both` }}
-            >
-              <Icon size={150} strokeWidth={1.1} className="pointer-events-none absolute -right-6 -top-6 opacity-[0.16] transition group-active:rotate-6" />
-              <span className="mb-auto grid h-12 w-12 place-items-center rounded-2xl bg-black/20 ring-1 ring-white/15">
-                <Icon size={28} strokeWidth={2} />
+      <div className={`grid grid-cols-2 gap-4 lg:grid-cols-3 ${fit ? 'min-h-0 flex-1 auto-rows-fr' : ''}`} data-testid="tiles">
+        {categories.map((c, i) => (
+          <Tile
+            key={c.key}
+            to={c.to}
+            icon={c.icon}
+            tone={c.tone}
+            title={t(`categories.${c.key}.title`)}
+            sub={t(`categories.${c.key}.sub`)}
+            index={i}
+            testId={`cat-${c.key}`}
+            className={fit ? 'lg:landscape:min-h-0' : ''}
+          >
+            {c.key !== 'social' && (
+              <span className="mt-2.5 flex flex-wrap gap-1.5">
+                {c.visible.map((k) => (
+                  <span key={k} className="rounded-full bg-black/20 px-2.5 py-0.5 text-[0.8rem] font-bold ring-1 ring-white/15">
+                    {t(`tiles.${k}.title`)}
+                  </span>
+                ))}
               </span>
-              <span className="mt-3 block text-[1.3rem] font-black uppercase leading-[1.1] tracking-wide">{t(`tiles.${tile.key}.title`)}</span>
-              <span className="mt-1 block text-[0.95rem] font-bold opacity-80">{t(`tiles.${tile.key}.sub`)}</span>
-            </Link>
-          );
-        })}
+            )}
+          </Tile>
+        ))}
+        {direct.map((d, i) => (
+          <Tile
+            key={d.key}
+            to={d.to}
+            icon={d.icon}
+            tone={d.tone}
+            title={t(`tiles.${d.key}.title`)}
+            sub={t(`tiles.${d.key}.sub`)}
+            index={categories.length + i}
+            testId={`tile-${d.key}`}
+            className={fit ? 'lg:landscape:min-h-0' : ''}
+          />
+        ))}
       </div>
     </Page>
   );

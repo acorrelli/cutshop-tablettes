@@ -29,7 +29,7 @@ import { generateCode, pickWeighted } from '../wheel';
 import { mergeSettings } from './supabaseApi';
 import type { AdminTable, AdminTableRow, Api, RegisterResult } from './types';
 
-const LS_KEY = 'cutshop.demo.v1';
+const LS_KEY = 'cutshop.demo.v2';
 export const DEMO_PASSWORD = 'demo';
 
 interface SharedState {

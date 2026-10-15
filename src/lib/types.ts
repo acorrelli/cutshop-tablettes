@@ -35,6 +35,9 @@ export const MODULE_KEYS: ModuleKey[] = [
 export interface AppSettings {
   salonkee_url: string;
   instagram_url: string;
+  facebook_url: string;
+  tiktok_url: string;
+  website: string;
   address: string;
   phone: string;
   email: string;
@@ -46,6 +49,7 @@ export interface AppSettings {
   concept_body_en: string;
   concept_tagline_fr: string;
   concept_tagline_en: string;
+  concept_photo_hero: string;
   concept_photo_1: string;
   concept_photo_2: string;
   concept_photo_3: string;

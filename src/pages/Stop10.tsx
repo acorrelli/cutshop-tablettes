@@ -88,7 +88,7 @@ export default function Stop10() {
 
   return (
     <Page>
-      <PageHeader title={t('stop10.title')} />
+      <PageHeader title={t('stop10.title')} back="/jeux" />
       <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
         <section className="card relative flex min-h-[460px] flex-col items-center justify-center overflow-hidden p-8 text-center">
           {phase === 'ready' && (

@@ -83,7 +83,7 @@ export default function Products() {
 
   return (
     <Page>
-      <PageHeader title={t('products.title')} />
+      <PageHeader title={t('products.title')} back="/boissons-produits" />
 
       {step === 'intro' && (
         <section className="card mx-auto max-w-3xl p-10 text-center animate-fade-up">
@@ -141,7 +141,7 @@ export default function Products() {
                   <div className="flex-1 p-6">
                     <div className="flex items-start justify-between gap-3">
                       <h3 className="text-xl font-black uppercase leading-tight tracking-wide">{p.name}</h3>
-                      <span className="shrink-0 rounded-xl bg-cream px-3 py-1 text-lg font-black text-bottle-900">{formatPrice(p.price, lang)}</span>
+                      {p.price > 0 && <span className="shrink-0 rounded-xl bg-cream px-3 py-1 text-lg font-black text-bottle-900">{formatPrice(p.price, lang)}</span>}
                     </div>
                     <p className="mt-1 text-sm font-bold uppercase tracking-wider text-gold">{p.brand}</p>
                     <p className="mt-3 text-base">

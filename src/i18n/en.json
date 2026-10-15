@@ -23,8 +23,8 @@
   },
   "tiles": {
     "concept": {
-      "title": "The concept",
-      "sub": "Barber, bar and meeting place"
+      "title": "Our story",
+      "sub": "Barber, bar and meeting place since 2018"
     },
     "booking": {
       "title": "Book an appointment",
@@ -51,24 +51,24 @@
       "sub": "Games for the little ones"
     },
     "drinks": {
-      "title": "Beers and softs",
-      "sub": "The bar menu"
+      "title": "The bar menu",
+      "sub": "Local beers and soft drinks"
     },
     "products": {
       "title": "Products made for you",
       "sub": "Find your routine"
     },
     "gift": {
-      "title": "Gift vouchers",
-      "sub": "Give a moment"
+      "title": "Gift card",
+      "sub": "Give a Cutshop moment"
     },
     "invoice": {
       "title": "Business invoices",
       "sub": "Freelancer or company"
     },
     "instagram": {
-      "title": "Follow us on Instagram",
-      "sub": "@cutshop_mons"
+      "title": "Our socials",
+      "sub": "Instagram, Facebook, TikTok"
     }
   },
   "home": {
@@ -196,7 +196,8 @@
     "liveNow": "Live",
     "range": "2 to 4 players",
     "format": "10 questions of 15 s",
-    "maxPoints": "Up to 1000 pts per question"
+    "maxPoints": "Up to 1000 pts per question",
+    "noWinner": "No points scored this time. Rematch?"
   },
   "stop10": {
     "title": "Stop at 10 seconds",
@@ -264,7 +265,7 @@
     "moves": "{{n}} moves"
   },
   "drinks": {
-    "title": "Beers and softs",
+    "title": "The bar menu",
     "categories": {
       "beer": "Local Belgian beers",
       "soft": "Soft drinks",
@@ -346,12 +347,30 @@
     "sentTitle": "Request sent!",
     "sentText": "We’re preparing your invoice, it will arrive by email. The fields have been cleared from the tablet."
   },
-  "instagram": {
-    "title": "Follow us on Instagram",
-    "text": "Behind the scenes, new cuts, nights out and giveaways: join the Cutshop community.",
-    "handle": "@cutshop_mons"
-  },
   "privacy": {
     "title": "Privacy policy"
+  },
+  "categories": {
+    "games": {
+      "title": "Games",
+      "sub": "Challenge the other customers and have fun"
+    },
+    "shop": {
+      "title": "Drinks and products",
+      "sub": "The bar, your products, the gift card"
+    },
+    "cutshop": {
+      "title": "The Cutshop concept",
+      "sub": "Our story and our events"
+    },
+    "social": {
+      "title": "Our socials",
+      "sub": "Instagram, Facebook, TikTok"
+    }
+  },
+  "social": {
+    "title": "Our socials",
+    "sub": "Instagram, Facebook and TikTok",
+    "text": "Behind the scenes, new cuts, nights out and giveaways: join the Cutshop community."
   }
 }

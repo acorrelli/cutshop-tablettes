@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { resolvePhoto } from '../lib/photos';
 
 /**
  * Emplacement photo : affiche l'image si une URL est renseignée dans l'admin,
@@ -17,8 +18,9 @@ export function PhotoSlot({
   className?: string;
   tone?: 'green' | 'gold' | 'dark';
 }) {
-  if (src) {
-    return <img src={src} alt={alt} loading="lazy" draggable={false} className={`object-cover ${className}`} />;
+  const url = resolvePhoto(src);
+  if (url) {
+    return <img src={url} alt={alt} loading="lazy" draggable={false} className={`object-cover ${className}`} />;
   }
   const bg =
     tone === 'gold'

@@ -7,7 +7,7 @@ export default function KidsHome() {
   const { t } = useTranslation();
   return (
     <Page>
-      <PageHeader title={t('kids.title')} />
+      <PageHeader title={t('kids.title')} back="/jeux" />
       <div className="grid gap-6 md:grid-cols-2">
         <Link
           to="/kids/barbier"

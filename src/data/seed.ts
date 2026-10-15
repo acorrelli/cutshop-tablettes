@@ -15,13 +15,16 @@ import type {
 } from '../lib/types';
 
 export const DEFAULT_SETTINGS: AppSettings = {
-  salonkee_url: 'https://salonkee.be',
+  salonkee_url: 'https://salonkee.be/salon/cutshop-mons',
   instagram_url: 'https://www.instagram.com/cutshop_mons/',
-  address: 'Rue d’exemple 1, 7000 Mons (exemple, à compléter)',
-  phone: '+32 65 00 00 00 (exemple)',
-  email: 'hello@cutshop.example (exemple)',
-  hours_fr: 'Mardi au vendredi : 10h à 19h (exemple)\nSamedi : 9h à 18h (exemple)\nDimanche et lundi : fermé (exemple)',
-  hours_en: 'Tuesday to Friday: 10am to 7pm (example)\nSaturday: 9am to 6pm (example)\nSunday and Monday: closed (example)',
+  facebook_url: 'https://www.facebook.com/cutshopmons/',
+  tiktok_url: 'https://www.tiktok.com/@cutshop_belgium',
+  website: 'www.cutshop.be',
+  address: 'Rue de la Chaussée 40, 7000 Mons',
+  phone: '065/67.60.66',
+  email: 'contact@cutshop.be',
+  hours_fr: 'Mardi et mercredi : 10h à 18h\nJeudi : 10h à 18h\nVendredi : 8h à 18h',
+  hours_en: 'Tuesday and Wednesday: 10am to 6pm\nThursday: 10am to 6pm\nFriday: 8am to 6pm',
   concept_title_fr: 'Cutshop, bien plus qu’une coupe',
   concept_title_en: 'Cutshop, much more than a haircut',
   concept_body_fr: [
@@ -38,9 +41,10 @@ export const DEFAULT_SETTINGS: AppSettings = {
   ].join('\n\n'),
   concept_tagline_fr: 'Le Cutshop, c’est ton moment.',
   concept_tagline_en: 'Cutshop is your moment.',
-  concept_photo_1: '',
-  concept_photo_2: '',
-  concept_photo_3: '',
+  concept_photo_hero: 'photo:vitrine-cutshop',
+  concept_photo_1: 'photo:le-barbershop',
+  concept_photo_2: 'photo:le-bar',
+  concept_photo_3: 'photo:les-events',
   block_barber_fr: 'Coupes, dégradés, barbes taillées et rasages à l’ancienne. Un savoir faire exigeant, dans une ambiance détendue.',
   block_barber_en: 'Cuts, fades, beard trims and old school shaves. Demanding craftsmanship in a relaxed atmosphere.',
   block_bar_fr: 'Des bières belges du terroir, des softs et un comptoir où l’on prend le temps de discuter.',
@@ -106,6 +110,8 @@ export const DEFAULT_SETTINGS: AppSettings = {
 export interface EventTemplate {
   key: string;
   kind: EventKind;
+  /** Photo de l'événement (photo:nom, voir src/assets/photos). */
+  image: string | null;
   title_fr: string;
   title_en: string;
   description_fr: string;
@@ -125,6 +131,7 @@ export interface EventTemplate {
 export const EVENT_TEMPLATES: EventTemplate[] = [
   {
     key: 'cut-session',
+    image: 'photo:cutsession-carre-5',
     kind: 'dj',
     title_fr: 'Cut Session',
     title_en: 'Cut Session',
@@ -142,6 +149,7 @@ export const EVENT_TEMPLATES: EventTemplate[] = [
   },
   {
     key: 'cut-and-talk',
+    image: 'photo:cut-and-talk-carre-5',
     kind: 'talk',
     title_fr: 'Cut and Talk',
     title_en: 'Cut and Talk',
@@ -159,6 +167,7 @@ export const EVENT_TEMPLATES: EventTemplate[] = [
   },
   {
     key: 'chut',
+    image: 'photo:chut-carre-5',
     kind: 'read',
     title_fr: 'Chut',
     title_en: 'Chut',
@@ -176,6 +185,7 @@ export const EVENT_TEMPLATES: EventTemplate[] = [
   },
   {
     key: 'open-mic',
+    image: 'photo:open-mic-carre-1',
     kind: 'mic',
     title_fr: 'Open Mic',
     title_en: 'Open Mic',
@@ -193,6 +203,7 @@ export const EVENT_TEMPLATES: EventTemplate[] = [
   },
   {
     key: 'cut-and-run',
+    image: null,
     kind: 'run',
     title_fr: 'Cut and Run',
     title_en: 'Cut and Run',
@@ -262,7 +273,7 @@ export function buildSeedEvents(today: Date = new Date()): CutEvent[] {
         recurrence_en: tpl.recurrence_en,
         starts_at: starts,
         ends_at: new Date(new Date(starts).getTime() + tpl.durationMin * 60000).toISOString(),
-        image_url: null,
+        image_url: tpl.image,
         capacity: tpl.capacity,
         published: true,
       });
@@ -307,19 +318,23 @@ export const SEED_PAIRINGS: Pairing[] = [
 // Produits : catalogue d'exemple avec étiquettes de correspondance.
 
 const PB = 'Marque premium (exemple)';
+const NM = 'Nishman';
 
+// Gamme coiffage et barbe Nishman, plus trois soins génériques pour les profils cuir chevelu.
+// Prix à 0 : non affichés tant qu'ils ne sont pas renseignés dans l'admin.
 export const SEED_PRODUCTS: Product[] = [
-  { id: 'pr01', name: 'Shampoing doux quotidien (exemple)', brand: PB, benefit_fr: 'Nettoie en douceur sans dessécher, pour un usage de tous les jours.', benefit_en: 'Gently cleanses without drying, for everyday use.', usage_fr: 'Masser sur cheveux mouillés, rincer abondamment.', usage_en: 'Massage into wet hair, rinse thoroughly.', price: 18, image_url: null, hair_types: [], scalp_types: ['normal'], for_beard: false, effects: ['natural', 'care'], sort: 1, active: true },
-  { id: 'pr02', name: 'Shampoing purifiant (exemple)', brand: PB, benefit_fr: 'Régule l’excès de sébum et apporte une sensation de fraîcheur durable.', benefit_en: 'Balances excess sebum and leaves a lasting fresh feeling.', usage_fr: 'Deux à trois fois par semaine, laisser poser une minute avant de rincer.', usage_en: 'Two to three times a week, leave on for one minute before rinsing.', price: 20, image_url: null, hair_types: [], scalp_types: ['oily'], for_beard: false, effects: ['volume', 'natural'], sort: 2, active: true },
-  { id: 'pr03', name: 'Shampoing hydratant intense (exemple)', brand: PB, benefit_fr: 'Nourrit en profondeur et apaise le cuir chevelu sec.', benefit_en: 'Deeply nourishes and soothes a dry scalp.', usage_fr: 'Appliquer sur cheveux mouillés, masser, rincer à l’eau tiède.', usage_en: 'Apply to wet hair, massage, rinse with lukewarm water.', price: 21, image_url: null, hair_types: ['thick', 'curly', 'coily'], scalp_types: ['dry'], for_beard: false, effects: ['care', 'shine'], sort: 3, active: true },
-  { id: 'pr04', name: 'Poudre texturisante volume (exemple)', brand: PB, benefit_fr: 'Donne instantanément du corps et de la texture aux cheveux fins.', benefit_en: 'Instantly adds body and texture to fine hair.', usage_fr: 'Saupoudrer sur racines sèches, puis travailler du bout des doigts.', usage_en: 'Sprinkle on dry roots, then work in with your fingertips.', price: 19, image_url: null, hair_types: ['fine'], scalp_types: [], for_beard: false, effects: ['volume', 'natural'], sort: 4, active: true },
-  { id: 'pr05', name: 'Argile coiffante mate (exemple)', brand: PB, benefit_fr: 'Tenue forte et fini mat, pour un style naturel qui dure toute la journée.', benefit_en: 'Strong hold and matte finish, for a natural look that lasts all day.', usage_fr: 'Chauffer une noisette entre les mains, appliquer sur cheveux secs.', usage_en: 'Warm a small amount between your hands, apply to dry hair.', price: 22, image_url: null, hair_types: ['fine', 'thick'], scalp_types: [], for_beard: false, effects: ['hold', 'natural'], sort: 5, active: true },
-  { id: 'pr06', name: 'Pommade brillance (exemple)', brand: PB, benefit_fr: 'Fini brillant et tenue souple, idéale pour les coiffures classiques.', benefit_en: 'Shiny finish and flexible hold, ideal for classic styles.', usage_fr: 'Appliquer sur cheveux secs ou légèrement humides, coiffer au peigne.', usage_en: 'Apply to dry or slightly damp hair, style with a comb.', price: 22, image_url: null, hair_types: ['thick', 'curly'], scalp_types: [], for_beard: false, effects: ['shine', 'hold'], sort: 6, active: true },
-  { id: 'pr07', name: 'Crème définition boucles (exemple)', brand: PB, benefit_fr: 'Définit les boucles, limite les frisottis et hydrate la fibre.', benefit_en: 'Defines curls, tames frizz and hydrates the hair fibre.', usage_fr: 'Répartir sur cheveux humides, laisser sécher à l’air libre.', usage_en: 'Spread through damp hair, let it air dry.', price: 24, image_url: null, hair_types: ['curly', 'coily'], scalp_types: [], for_beard: false, effects: ['care', 'natural', 'shine'], sort: 7, active: true },
-  { id: 'pr08', name: 'Huile à barbe signature (exemple)', brand: PB, benefit_fr: 'Nourrit la barbe et la peau, apporte douceur et brillance.', benefit_en: 'Nourishes beard and skin, adds softness and shine.', usage_fr: 'Quelques gouttes chaque matin, masser jusqu’à la peau.', usage_en: 'A few drops every morning, massage down to the skin.', price: 25, image_url: null, hair_types: [], scalp_types: [], for_beard: true, effects: ['care', 'shine', 'natural'], sort: 8, active: true },
-  { id: 'pr09', name: 'Baume à barbe sculptant (exemple)', brand: PB, benefit_fr: 'Discipline et sculpte la barbe tout en la nourrissant.', benefit_en: 'Tames and shapes the beard while nourishing it.', usage_fr: 'Chauffer entre les doigts, appliquer puis brosser.', usage_en: 'Warm between your fingers, apply then brush.', price: 23, image_url: null, hair_types: [], scalp_types: [], for_beard: true, effects: ['hold', 'care'], sort: 9, active: true },
-  { id: 'pr10', name: 'Lotion équilibrante cuir chevelu (exemple)', brand: PB, benefit_fr: 'Apaise, rééquilibre et prépare le cuir chevelu à une pousse saine.', benefit_en: 'Soothes, rebalances and prepares the scalp for healthy growth.', usage_fr: 'Appliquer raie par raie sur cuir chevelu propre, sans rincer.', usage_en: 'Apply section by section on a clean scalp, do not rinse.', price: 27, image_url: null, hair_types: [], scalp_types: ['dry', 'oily'], for_beard: false, effects: ['care'], sort: 10, active: true },
-  { id: 'pr11', name: 'Spray texturisant sel de mer (exemple)', brand: PB, benefit_fr: 'Effet décoiffé maîtrisé, volume et texture légère.', benefit_en: 'Controlled tousled look, volume and light texture.', usage_fr: 'Vaporiser sur cheveux humides, sécher en froissant.', usage_en: 'Spray onto damp hair, scrunch while drying.', price: 19, image_url: null, hair_types: ['fine', 'thick', 'curly'], scalp_types: [], for_beard: false, effects: ['volume', 'natural'], sort: 11, active: true },
+  { id: 'pr01', name: '01 Bubble Gum', brand: NM, benefit_fr: 'Cire à base d’eau au parfum bubble gum : brillance et coiffage facile, se rince sans effort.', benefit_en: 'Water based wax with a bubble gum scent: shine and easy styling, rinses out effortlessly.', usage_fr: 'Une noisette sur cheveux secs ou légèrement humides, coiffer au peigne ou avec les doigts.', usage_en: 'A small amount on dry or slightly damp hair, style with a comb or your fingers.', price: 0, image_url: null, hair_types: ['fine', 'thick'], scalp_types: [], for_beard: false, effects: ['shine', 'hold'], sort: 1, active: true },
+  { id: 'pr02', name: '03 Flaming', brand: NM, benefit_fr: 'Pommade crémeuse et gélifiée au parfum de pastèque : tenue moyenne à forte avec un fini brillant.', benefit_en: 'Creamy, gel like pomade with a watermelon scent: medium to strong hold with a shiny finish.', usage_fr: 'Répartir dans les cheveux secs, travailler la forme au peigne.', usage_en: 'Spread through dry hair, shape with a comb.', price: 0, image_url: null, hair_types: ['thick', 'curly'], scalp_types: [], for_beard: false, effects: ['shine', 'hold'], sort: 2, active: true },
+  { id: 'pr03', name: '04 Rugby Tropical Mango', brand: NM, benefit_fr: 'Cire à l’eau à forte tenue, idéale pour les cheveux courts à mi longs.', benefit_en: 'Strong hold water based wax, ideal for short to medium length hair.', usage_fr: 'Chauffer entre les mains, appliquer sur cheveux secs puis coiffer.', usage_en: 'Warm between your hands, apply to dry hair, then style.', price: 0, image_url: null, hair_types: ['fine', 'thick'], scalp_types: [], for_beard: false, effects: ['hold', 'shine'], sort: 3, active: true },
+  { id: 'pr04', name: '08 Matte Look', brand: NM, benefit_fr: 'Cire au fini mat, parfum vanille : un style naturel qui tient toute la journée.', benefit_en: 'Matte finish wax with a vanilla scent: a natural look that lasts all day.', usage_fr: 'Une petite quantité sur cheveux secs, travailler du bout des doigts pour texturer.', usage_en: 'A small amount on dry hair, work in with your fingertips to add texture.', price: 0, image_url: null, hair_types: ['fine', 'thick'], scalp_types: [], for_beard: false, effects: ['natural', 'hold'], sort: 4, active: true },
+  { id: 'pr05', name: 'M5 Pâte coiffante mate', brand: NM, benefit_fr: 'Pâte à texture mate et fixation forte, pensée pour les coiffures créatives.', benefit_en: 'Matte texture paste with strong hold, made for creative styles.', usage_fr: 'Émulsionner entre les paumes, appliquer sur cheveux secs et sculpter.', usage_en: 'Rub between your palms, apply to dry hair and sculpt.', price: 0, image_url: null, hair_types: ['thick', 'curly'], scalp_types: [], for_beard: false, effects: ['hold', 'natural'], sort: 5, active: true },
+  { id: 'pr06', name: 'M1 Argan', brand: NM, benefit_fr: 'Pâte matifiante enrichie à l’huile d’argan : fini mat et cheveux nourris.', benefit_en: 'Mattifying paste enriched with argan oil: matte finish and nourished hair.', usage_fr: 'Appliquer sur cheveux secs, coiffer avec les doigts pour un effet naturel.', usage_en: 'Apply to dry hair, style with your fingers for a natural effect.', price: 0, image_url: null, hair_types: ['fine', 'thick', 'curly'], scalp_types: [], for_beard: false, effects: ['natural', 'care'], sort: 6, active: true },
+  { id: 'pr07', name: 'P0 Light Control', brand: NM, benefit_fr: 'Poudre coiffante légère : volume instantané et fini mat, idéale pour les cheveux fins.', benefit_en: 'Light styling powder: instant volume and matte finish, ideal for fine hair.', usage_fr: 'Saupoudrer sur les racines sèches, puis travailler du bout des doigts.', usage_en: 'Sprinkle on dry roots, then work in with your fingertips.', price: 0, image_url: null, hair_types: ['fine'], scalp_types: [], for_beard: false, effects: ['volume', 'natural'], sort: 7, active: true },
+  { id: 'pr08', name: 'S1 Spider Wax', brand: NM, benefit_fr: 'Cire fibreuse pour des mèches texturées et du volume, avec une tenue souple.', benefit_en: 'Fibrous wax for textured strands and volume, with a flexible hold.', usage_fr: 'Étirer la cire entre les doigts, appliquer mèche par mèche.', usage_en: 'Stretch the wax between your fingers, apply strand by strand.', price: 0, image_url: null, hair_types: ['fine', 'thick'], scalp_types: [], for_beard: false, effects: ['volume', 'hold'], sort: 8, active: true },
+  { id: 'pr09', name: 'Cire barbe et moustache', brand: NM, benefit_fr: 'Discipline la barbe et sculpte la moustache, pour un contour net toute la journée.', benefit_en: 'Tames the beard and shapes the moustache for a sharp outline all day.', usage_fr: 'Chauffer une petite quantité entre les doigts, appliquer puis brosser ou peigner.', usage_en: 'Warm a small amount between your fingers, apply, then brush or comb.', price: 0, image_url: null, hair_types: [], scalp_types: [], for_beard: true, effects: ['hold', 'care'], sort: 9, active: true },
+  { id: 'pr10', name: 'Shampoing doux quotidien (exemple)', brand: PB, benefit_fr: 'Nettoie en douceur sans dessécher, pour un usage de tous les jours.', benefit_en: 'Gently cleanses without drying, for everyday use.', usage_fr: 'Masser sur cheveux mouillés, rincer abondamment.', usage_en: 'Massage into wet hair, rinse thoroughly.', price: 0, image_url: null, hair_types: [], scalp_types: ['normal'], for_beard: false, effects: ['natural', 'care'], sort: 10, active: true },
+  { id: 'pr11', name: 'Shampoing purifiant (exemple)', brand: PB, benefit_fr: 'Régule l’excès de sébum et apporte une sensation de fraîcheur durable.', benefit_en: 'Balances excess sebum and leaves a lasting fresh feeling.', usage_fr: 'Deux à trois fois par semaine, laisser poser une minute avant de rincer.', usage_en: 'Two to three times a week, leave on for one minute before rinsing.', price: 0, image_url: null, hair_types: [], scalp_types: ['oily'], for_beard: false, effects: ['volume', 'natural', 'care'], sort: 11, active: true },
+  { id: 'pr12', name: 'Shampoing hydratant intense (exemple)', brand: PB, benefit_fr: 'Nourrit en profondeur et apaise le cuir chevelu sec.', benefit_en: 'Deeply nourishes and soothes a dry scalp.', usage_fr: 'Appliquer sur cheveux mouillés, masser, rincer à l’eau tiède.', usage_en: 'Apply to wet hair, massage, rinse with lukewarm water.', price: 0, image_url: null, hair_types: [], scalp_types: ['dry'], for_beard: false, effects: ['care', 'shine'], sort: 12, active: true },
 ];
 
 // ---------------------------------------------------------------------------

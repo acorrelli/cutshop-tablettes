@@ -16,10 +16,15 @@ test.describe('Fonctionnement des tablettes', () => {
   test('accueil : tuiles, langue, grand texte et retour accueil', async ({ page }) => {
     const errors = watchConsole(page);
     await openTablet(page);
+    // Accueil : 4 catégories et 2 accès directs.
+    await expect(page.getByTestId('tiles').locator('a')).toHaveCount(6);
+    for (const c of ['games', 'shop', 'cutshop', 'social']) await expect(page.getByTestId(`cat-${c}`)).toBeVisible();
+    await page.getByTestId('cat-games').click();
     await expect(page.getByTestId('tile-battle')).toBeVisible();
     // La roue est masquée tant que l'équipe ne l'a pas activée.
     await expect(page.getByTestId('tile-wheel')).toHaveCount(0);
-    await expect(page.getByTestId('tiles').locator('a')).toHaveCount(11);
+    await expect(page.getByTestId('category-tiles').locator('a')).toHaveCount(3);
+    await page.getByTestId('back-button').click();
     await expect(page.getByTestId('next-event-banner')).toBeVisible();
     await expectNoDashes(page);
 
@@ -34,8 +39,10 @@ test.describe('Fonctionnement des tablettes', () => {
     const after = await page.evaluate(() => getComputedStyle(document.documentElement).fontSize);
     expect(parseFloat(after)).toBeGreaterThan(parseFloat(before));
 
+    await page.getByTestId('cat-cutshop').click();
     await page.getByTestId('tile-concept').click();
     await expect(page.getByText('Cutshop, bien plus qu’une coupe', { exact: false })).toBeVisible();
+    await expect(page.getByTestId('practical')).toContainText('Rue de la Chaussée 40');
     await expect(page.getByTestId('practical')).toContainText('Adresse');
     await page.getByTestId('home-button').click();
     await expect(page.getByTestId('tiles')).toBeVisible();
@@ -45,7 +52,7 @@ test.describe('Fonctionnement des tablettes', () => {
   test('chaque module s’affiche sans erreur ni tiret, en FR et en EN', async ({ page }) => {
     const errors = watchConsole(page);
     await openTablet(page);
-    const routes = ['concept', 'rdv', 'evenements', 'battle', 'stop10', 'kids', 'kids/barbier', 'kids/memory', 'boissons', 'produits', 'cheques', 'factures', 'instagram', 'confidentialite'];
+    const routes = ['concept', 'rdv', 'evenements', 'battle', 'stop10', 'kids', 'kids/barbier', 'kids/memory', 'boissons', 'produits', 'cheques', 'factures', 'reseaux', 'jeux', 'boissons-produits', 'cutshop', 'confidentialite'];
     for (const lang of ['fr', 'en']) {
       await page.getByTestId(`lang-${lang}`).click();
       for (const r of routes) {
@@ -65,10 +72,12 @@ test.describe('Fonctionnement des tablettes', () => {
 
   test('QR codes : rendez vous Salonkee et Instagram', async ({ page }) => {
     await openTablet(page, 'Tablette 1', 'rdv');
-    await expect(page.getByTestId('qrcode')).toHaveAttribute('data-value', 'https://salonkee.be');
+    await expect(page.getByTestId('qrcode')).toHaveAttribute('data-value', 'https://salonkee.be/salon/cutshop-mons');
     await expect(page.getByTestId('qrcode').locator('svg')).toBeVisible();
-    await page.goto('/#/instagram');
-    await expect(page.getByTestId('qrcode')).toHaveAttribute('data-value', 'https://www.instagram.com/cutshop_mons/');
+    await page.goto('/#/reseaux');
+    await expect(page.getByTestId('social-instagram').getByTestId('qrcode')).toHaveAttribute('data-value', 'https://www.instagram.com/cutshop_mons/');
+    await expect(page.getByTestId('social-facebook').getByTestId('qrcode')).toHaveAttribute('data-value', 'https://www.facebook.com/cutshopmons/');
+    await expect(page.getByTestId('social-tiktok').getByTestId('qrcode')).toHaveAttribute('data-value', 'https://www.tiktok.com/@cutshop_belgium');
   });
 
   test('veille après 60 secondes : formulaire effacé, langue et taille remises à zéro', async ({ page }) => {
@@ -139,6 +148,7 @@ test('admin : chaque rubrique s’ouvre sans erreur ni tiret', async ({ page }) 
   await title.fill('Cutshop, ton moment à Mons');
   await page.getByTestId('crud-save').click();
   await page.getByRole('button', { name: 'Retour tablette' }).click();
+  await page.getByTestId('cat-cutshop').click();
   await page.getByTestId('tile-concept').click();
   await expect(page.getByText('Cutshop, ton moment à Mons')).toBeVisible();
   expect(errors).toEqual([]);

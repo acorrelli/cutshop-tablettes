@@ -109,7 +109,7 @@ export default function Wheel() {
 
   return (
     <Page>
-      <PageHeader title={t('wheel.title')} />
+      <PageHeader title={t('wheel.title')} back="/jeux" />
       {!enabled ? (
         <p className="card p-10 text-center text-2xl">{t('wheel.disabled')}</p>
       ) : (

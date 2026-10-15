@@ -25,7 +25,7 @@ export default function Drinks() {
 
   return (
     <Page>
-      <PageHeader title={t('drinks.title')} />
+      <PageHeader title={t('drinks.title')} back="/boissons-produits" />
 
       {content.pairings.length > 0 && (
         <section className="card mb-6 overflow-hidden p-6 animate-fade-up" data-testid="pairing">
@@ -73,9 +73,11 @@ export default function Drinks() {
                   {[style, d.abv !== null ? (d.abv === 0 ? t('drinks.noAlcohol') : abvLabel(d.abv)) : null].filter(Boolean).join(' · ')}
                 </p>
                 <p className="mt-2 text-base text-cream/85">{loc(d, 'description', lang)}</p>
-                <span className="mt-auto self-end pt-3">
-                  <span className="inline-block rounded-xl bg-cream px-3 py-1 text-lg font-black text-bottle-900">{formatPrice(d.price, lang)}</span>
-                </span>
+                {d.price > 0 && (
+                  <span className="mt-auto self-end pt-3">
+                    <span className="inline-block rounded-xl bg-cream px-3 py-1 text-lg font-black text-bottle-900">{formatPrice(d.price, lang)}</span>
+                  </span>
+                )}
               </div>
             </article>
           );

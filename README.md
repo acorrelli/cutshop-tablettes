@@ -19,6 +19,8 @@ Application web installée sur les 4 tablettes Android de l'espace d'attente du 
 
 ## 1. Ce que fait l'application
 
+L'accueil regroupe les modules en quatre catégories (Les jeux, Boissons et produits, Le concept Cutshop, Nos réseaux) plus deux accès directs (Prendre rendez vous, Factures pros).
+
 | Module | Contenu |
 | --- | --- |
 | Le concept | Texte éditorial, 3 blocs visuels, infos pratiques (modifiables) |
@@ -32,7 +34,7 @@ Application web installée sur les 4 tablettes Android de l'espace d'attente du 
 | Les produits faits pour toi | Questionnaire en 4 questions, 2 à 4 produits proposés, envoi de la sélection au coiffeur |
 | Chèques cadeaux | Page informative et bouton « Je demande à l'accueil » |
 | Factures pros | Formulaire avec validation du numéro de TVA (belge avec clé de contrôle, et formats européens) |
-| Instagram | QR code vers instagram.com/cutshop_mons |
+| Nos réseaux | QR codes Instagram, Facebook et TikTok |
 
 Fonctionnement commun : bouton FR / EN et bouton grand texte toujours visibles, retour accueil en un geste, écran de veille animé après 60 secondes d'inactivité avec effacement de toutes les saisies, invitation à la Battle affichée sur toutes les tablettes, appui long de 5 secondes sur le logo pour ouvrir l'admin.
 
@@ -142,7 +144,9 @@ Tout se fait dans l'admin (appui long de 5 secondes sur le logo) :
 
 **Règle de rédaction** : aucun tiret dans les textes affichés. L'admin le rappelle quand un tiret est détecté. Pour une valeur approximative, écris `+/` (exemple : `+/ 30 minutes`).
 
-**Photos** : chaque champ image accepte une adresse web ou un envoi direct (bouton Envoyer), stocké dans Supabase Storage. Sans photo, un visuel aux couleurs du Cutshop s'affiche.
+**Photos livrées avec l'application** : dépose les photos dans `src/assets/photos/` avec les noms indiqués dans `src/assets/photos/LISEZMOI.md` (vitrine-cutshop, le-barbershop, le-bar, les-events, cut-and-talk-carre-5, open-mic-carre-1, cutsession-carre-5, chut-carre-5), puis relance le build. Elles s'affichent automatiquement aux bons emplacements.
+
+**Photos ajoutées depuis l'admin** : chaque champ image accepte une adresse web ou un envoi direct (bouton Envoyer), stocké dans Supabase Storage. Sans photo, un visuel aux couleurs du Cutshop s'affiche.
 
 **Logo** : dépose ton logo à la place de `public/logo_cutshop.png` (PNG noir sur fond transparent, format carré conseillé). Le fichier fourni est un emplacement provisoire. Pour régénérer les icônes d'installation à partir du nouveau logo : `node scripts/make-assets.mjs --icons-only`.
 

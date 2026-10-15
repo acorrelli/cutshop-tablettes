@@ -27,6 +27,7 @@ test.describe('Jeux', () => {
     for (const [i, p] of pages.entries()) await openTablet(p, `Tablette ${i + 1}`);
 
     const [host, ...others] = pages;
+    await host.getByTestId('cat-games').click();
     await host.getByTestId('tile-battle').click();
     await host.getByTestId('battle-pseudo').fill('Alpha');
     await host.getByTestId('theme-kids').click();
@@ -61,11 +62,15 @@ test.describe('Jeux', () => {
     // Un seul gagnant, reconnu par toutes les tablettes : il voit « tu remportes », les autres voient son pseudo.
     const norm = titles.map((t) => t.toLowerCase().replace(/\u00a0/g, ' '));
     const winnerIdx = norm.findIndex((t) => t.includes('tu remportes la battle'));
-    expect(winnerIdx, JSON.stringify(titles)).toBeGreaterThanOrEqual(0);
-    const winnerPseudo = ['alpha', 'bravo', 'charlie'][winnerIdx];
-    norm.forEach((t, i) => {
-      if (i !== winnerIdx) expect(t).toBe(`${winnerPseudo} remporte la battle !`);
-    });
+    if (winnerIdx < 0) {
+      // Cas rare : personne n'a marqué (tout le monde a répondu A et A était toujours faux).
+      for (const t of norm) expect(t).toContain('aucun point');
+    } else {
+      const winnerPseudo = ['alpha', 'bravo', 'charlie'][winnerIdx];
+      norm.forEach((t, i) => {
+        if (i !== winnerIdx) expect(t).toBe(`${winnerPseudo} remporte la battle !`);
+      });
+    }
     // Le classement est identique sur les trois tablettes.
     const boards = podiums.map((p) => p.split('\n').slice(3).join('|'));
     expect(new Set(boards).size, JSON.stringify(boards)).toBe(1);
@@ -121,13 +126,15 @@ test.describe('Jeux', () => {
     await adminLogin(page);
     await enableModule(page, 'wheel');
     await page.getByRole('button', { name: 'Retour tablette' }).click();
+    await page.getByTestId('cat-games').click();
     await expect(page.getByTestId('tile-wheel')).toBeVisible();
-    await expect(page.getByTestId('tiles').locator('a')).toHaveCount(12);
+    await expect(page.getByTestId('category-tiles').locator('a')).toHaveCount(4);
 
     // Plusieurs tours pour voir à la fois des gains et des pertes ; chaque tour demande le PIN.
     let codes: string[] = [];
     for (let round = 0; round < 6; round++) {
       await page.getByTestId('home-button').click();
+      await page.getByTestId('cat-games').click();
       await page.getByTestId('tile-wheel').click();
       await expect(page.getByTestId('wheel-locked')).toBeVisible();
       if (round === 0) {
