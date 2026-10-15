@@ -53,7 +53,7 @@ export default function Drinks() {
       )}
 
       <div className="mb-5 flex flex-wrap gap-3" role="tablist">
-        {CATS.map(({ key, icon: Icon }) => (
+        {CATS.filter(({ key }) => content.drinks.some((d) => d.category === key)).map(({ key, icon: Icon }) => (
           <button key={key} type="button" role="tab" aria-selected={cat === key} className={`chip gap-3 ${cat === key ? 'chip-on' : ''}`} onClick={() => setCat(key)} data-testid={`drinks-${key}`}>
             <Icon size={24} /> {t(`drinks.categories.${key}`)}
           </button>

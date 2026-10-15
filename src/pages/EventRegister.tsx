@@ -106,7 +106,7 @@ export default function EventRegister() {
       <PageHeader title={title} eyebrow={when} back="/evenements" />
       <div className="grid gap-6 lg:grid-cols-[1fr_1.3fr]">
         <aside className="card overflow-hidden animate-fade-up">
-          <PhotoSlot src={event.image_url} alt={title} icon={eventIcon(event.kind, 96)} tone={eventTone(event.kind)} className="h-56 w-full" />
+          <PhotoSlot src={event.image_url} alt={title} icon={eventIcon(event.kind, 96)} tone={eventTone(event.kind)} contain className="aspect-square w-full" />
           <div className="p-7">
             <p className="text-xl leading-relaxed text-cream/90">{loc(event, 'description', lang)}</p>
             <p className={`mt-6 inline-flex rounded-full px-5 py-2 text-lg font-bold ${isFull ? 'bg-red-900/80 text-red-100' : 'bg-cream text-bottle-900'}`} data-testid="seats-left">

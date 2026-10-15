@@ -11,16 +11,19 @@ export function PhotoSlot({
   icon,
   className = '',
   tone = 'green',
+  contain = false,
 }: {
   src?: string | null;
   alt: string;
   icon?: ReactNode;
   className?: string;
   tone?: 'green' | 'gold' | 'dark';
+  /** Affiche l'image entière (affiches carrées des événements) sur un fond vert. */
+  contain?: boolean;
 }) {
   const url = resolvePhoto(src);
   if (url) {
-    return <img src={url} alt={alt} loading="lazy" draggable={false} className={`object-cover ${className}`} />;
+    return <img src={url} alt={alt} loading="lazy" draggable={false} className={`${contain ? 'bg-bottle-800 object-contain' : 'object-cover'} ${className}`} />;
   }
   const bg =
     tone === 'gold'

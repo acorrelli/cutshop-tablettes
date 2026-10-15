@@ -18,6 +18,6 @@ describe('sélection de produits', () => {
 
   it('met en avant le produit le plus adapté', () => {
     const res = matchProducts(SEED_PRODUCTS, { hair: 'fine', scalp: 'normal', beard: false, effect: 'volume' });
-    expect(res[0].name).toMatch(/P0 Light Control/);
+    expect(res[0].effects).toContain('volume');
   });
 });

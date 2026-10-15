@@ -32,7 +32,7 @@ export default function Events() {
               data-testid="event-card"
             >
               <div className="relative">
-                <PhotoSlot src={e.image_url} alt={loc(e, 'title', lang)} icon={eventIcon(e.kind, 72)} tone={eventTone(e.kind)} className="h-40 w-full" />
+                <PhotoSlot src={e.image_url} alt={loc(e, 'title', lang)} icon={eventIcon(e.kind, 72)} tone={eventTone(e.kind)} contain className="h-56 w-full" />
                 <span className="absolute left-4 top-4 rounded-2xl bg-bottle-950/85 px-4 py-2 text-center backdrop-blur">
                   <span className="block text-sm font-bold uppercase tracking-wider text-gold">{formatEventDate(e.starts_at, lang).split(' ')[0]}</span>
                   <span className="block text-lg font-black">{formatTime(e.starts_at, lang)}</span>
