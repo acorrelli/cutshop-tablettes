@@ -41,7 +41,7 @@ out.push('');
 out.push('-- Boissons');
 for (const d of SEED_DRINKS) {
   out.push(
-    `insert into public.drinks (category, name, brand, style_fr, style_en, abv, description_fr, description_en, price, sort, active) values (${s(d.category)}, ${s(d.name)}, ${s(d.brand)}, ${s(d.style_fr)}, ${s(d.style_en)}, ${n(d.abv)}, ${s(d.description_fr)}, ${s(d.description_en)}, ${d.price}, ${d.sort}, ${b(d.active)});`,
+    `insert into public.drinks (category, name, brand, style_fr, style_en, abv, description_fr, description_en, price, image_url, sort, active) values (${s(d.category)}, ${s(d.name)}, ${s(d.brand)}, ${s(d.style_fr)}, ${s(d.style_en)}, ${n(d.abv)}, ${s(d.description_fr)}, ${s(d.description_en)}, ${d.price}, ${s(d.image_url)}, ${d.sort}, ${b(d.active)});`,
   );
 }
 out.push('');

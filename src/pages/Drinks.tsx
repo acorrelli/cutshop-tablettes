@@ -65,7 +65,7 @@ export default function Drinks() {
           const style = loc(d, 'style', lang);
           return (
             <article key={d.id} className="card flex overflow-hidden" style={{ animation: `fade-up 0.4s ease-out ${i * 0.03}s both` }}>
-              <PhotoSlot src={d.image_url} alt={d.name} icon={cat === 'beer' ? <Beer size={44} /> : cat === 'soft' ? <CupSoda size={44} /> : <Coffee size={44} />} tone={cat === 'beer' ? 'gold' : 'green'} className="w-28 shrink-0" />
+              <PhotoSlot src={d.image_url} alt={d.name} icon={cat === 'beer' ? <Beer size={44} /> : cat === 'soft' ? <CupSoda size={44} /> : <Coffee size={44} />} tone={cat === 'beer' ? 'gold' : 'green'} className="w-36 shrink-0 self-stretch object-center" />
               <div className="flex min-w-0 flex-1 flex-col p-5">
                 <h3 className="text-xl font-black uppercase leading-tight tracking-wide">{d.name}</h3>
                 <p className="mt-1 text-sm font-bold uppercase tracking-wider text-gold">{d.brand}</p>
