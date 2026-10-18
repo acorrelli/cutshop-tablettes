@@ -15,7 +15,8 @@ const body = html.match(/<body>([\s\S]*?)<\/body>/)[1];
 const styles = [...head.matchAll(/<style[^>]*>[\s\S]*?<\/style>/g)].map((m) => m[0]).join('\n');
 const scripts = [...head.matchAll(/<script[^>]*>[\s\S]*?<\/script>/g)].map((m) => m[0]).join('\n');
 
-const page = `<title>Cutshop Mons</title>
+const page = `<meta charset="utf-8">
+<title>Cutshop Mons</title>
 <meta name="theme-color" content="#164734">
 <link rel="icon" type="image/svg+xml" href="${favicon}">
 <style>:root{color-scheme:dark;background:#0a2219}body{background:#0a2219;color:#f4ebd9}</style>
