@@ -47,6 +47,7 @@ export default function Category({ category }: { category: CategoryKey }) {
           index={i + (featured ? 1 : 0)}
           testId={`tile-${m.key}`}
           center={!featured}
+          photo={m.photo}
           inline={Boolean(featured)}
           className={
             featured

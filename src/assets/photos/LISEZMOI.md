@@ -9,6 +9,8 @@ Une photo absente est remplacée par un visuel aux couleurs du Cutshop.
 | le-barbershop | Le concept, bloc Le barbershop |
 | le-bar | Le concept, bloc Le bar |
 | les-events | Le concept, bloc Les événements |
+| menu-histoire | Menu Le concept Cutshop, tuile L’histoire |
+| menu-evenements | Menu Le concept Cutshop, tuile Les événements (Cutsession) |
 | cut-and-talk-carre-5 | Événement Cut and Talk |
 | open-mic-carre-1 | Événement Open Mic |
 | cutsession-carre-5 | Événement Cut Session |

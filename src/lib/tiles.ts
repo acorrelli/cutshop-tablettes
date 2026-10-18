@@ -27,6 +27,8 @@ export interface TileDef {
   to: string;
   icon: IconType;
   tone: string;
+  /** Photo de fond de la tuile (« photo:nom », dossier src/assets/photos). */
+  photo?: string;
 }
 
 export const MODULE_TILES: Record<string, TileDef> = {
@@ -38,8 +40,8 @@ export const MODULE_TILES: Record<string, TileDef> = {
   drinks: { key: 'drinks', to: '/boissons', icon: Beer, tone: 'from-gold-700 to-bottle-900' },
   products: { key: 'products', to: '/produits', icon: SprayCan, tone: 'from-bottle-400 to-bottle-800' },
   gift: { key: 'gift', to: '/cheques', icon: Gift, tone: 'from-cream-300 to-gold-500 text-bottle-900' },
-  concept: { key: 'concept', to: '/concept', icon: History, tone: 'from-bottle-600 to-bottle-900' },
-  events: { key: 'events', to: '/evenements', icon: Ticket, tone: 'from-bottle-500 to-bottle-700' },
+  concept: { key: 'concept', to: '/concept', icon: History, tone: 'from-bottle-600 to-bottle-900', photo: 'photo:menu-histoire' },
+  events: { key: 'events', to: '/evenements', icon: Ticket, tone: 'from-bottle-500 to-bottle-700', photo: 'photo:menu-evenements' },
   services: { key: 'services', to: '/services', icon: Scissors, tone: 'from-gold-600 to-bottle-900' },
   booking: { key: 'booking', to: '/rdv', icon: CalendarCheck, tone: 'from-cream-200 to-cream-400 text-bottle-900' },
   invoice: { key: 'invoice', to: '/factures', icon: Receipt, tone: 'from-bottle-800 to-bottle-950' },
