@@ -64,7 +64,7 @@ test.describe('Fonctionnement des tablettes', () => {
     await expect(page.getByTestId('tile-booking')).toContainText('Book an appointment');
     await expectNoDashes(page);
     await page.getByTestId('lang-fr').click();
-    await expect(page.getByTestId('tile-booking')).toContainText('Prendre rendez vous');
+    await expect(page.getByTestId('tile-booking')).toContainText(/Prendre rendez.vous/);
     await page.getByTestId('back-button').click();
 
     const before = await page.evaluate(() => getComputedStyle(document.documentElement).fontSize);
@@ -103,7 +103,7 @@ test.describe('Fonctionnement des tablettes', () => {
     expect(errors).toEqual([]);
   });
 
-  test('QR codes : rendez vous Salonkee et Instagram', async ({ page }) => {
+  test('QR codes : rendez-vous Salonkee et Instagram', async ({ page }) => {
     await openTablet(page, 'Tablette 1', 'rdv');
     await expect(page.getByTestId('qrcode')).toHaveAttribute('data-value', 'https://salonkee.be/salon/cutshop-mons');
     await expect(page.getByTestId('qrcode').locator('svg')).toBeVisible();

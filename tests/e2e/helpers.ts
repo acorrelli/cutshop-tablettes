@@ -44,9 +44,9 @@ export async function enableModule(page: Page, key: string) {
   await expect(btn.locator('span.bg-gold')).toHaveCount(1);
 }
 
-/** Vérifie qu'aucun tiret n'est affiché dans la page. */
+/** Vérifie qu'aucun tiret isolé n'est affiché dans la page (le trait d'union dans un mot est permis). */
 export async function expectNoDashes(page: Page) {
   const text = await page.locator('body').innerText();
-  const found = text.split('\n').filter((l) => /[-‐-―−]/.test(l));
+  const found = text.split('\n').filter((l) => /[‐‒–—―−]|(^|[^\p{L}\p{N}}])-|-([^\p{L}\p{N}]|$)/u.test(l));
   expect(found, `Tirets visibles : ${found.join(' | ')}`).toEqual([]);
 }

@@ -67,7 +67,7 @@ test.describe('Formulaires et demandes', () => {
     await openTablet(page, 'Tablette 2', 'factures');
     await page.locator('input[name="company"]').fill('Studio Lumière SRL');
     await page.locator('input[name="vat"]').fill('BE0123456789');
-    await page.locator('input[name="address"]').fill('Grand Place 1, 7000 Mons');
+    await page.locator('input[name="address"]').fill('Grand-Place 1, 7000 Mons');
     await page.locator('input[name="email"]').fill('compta@studio.be');
     await page.locator('input[name="first"]').fill('Alex');
     await page.locator('input[name="last"]').fill('Martin');

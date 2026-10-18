@@ -147,7 +147,7 @@ Tout se fait dans l'admin (appui long de 5 secondes sur le logo) :
 | Réglages | Nom de la tablette, code PIN staff, lien Salonkee, adresse, horaires, contact, textes du concept, chèques cadeaux, factures pros, politique de confidentialité, photos, nettoyage RGPD |
 | Statistiques | Parties jouées, inscriptions par événement, tours de roue et demandes produits, par jour et par tablette |
 
-**Règle de rédaction** : aucun tiret dans les textes affichés. L'admin le rappelle quand un tiret est détecté. Pour une valeur approximative, écris `+/` (exemple : `+/ 30 minutes`).
+**Règle de rédaction** : aucun tiret isolé dans les textes affichés. Le trait d'union reste de mise dans les mots composés et les inversions (rendez-vous, as-tu, suis-nous, demande-nous). L'admin le rappelle quand un tiret isolé est détecté. Pour une valeur approximative, écris `+/` (exemple : `+/ 30 minutes`).
 
 **Photos livrées avec l'application** : dépose les photos dans `src/assets/photos/` avec les noms indiqués dans `src/assets/photos/LISEZMOI.md` (vitrine-cutshop, le-barbershop, le-bar, les-events, cut-and-talk-carre-5, open-mic-carre-1, cutsession-carre-5, chut-carre-5), puis relance le build. Elles s'affichent automatiquement aux bons emplacements.
 
@@ -169,7 +169,7 @@ Astuce : pour simuler plusieurs tablettes, ouvre plusieurs onglets avec `?tablet
 
 | Commande | Rôle |
 | --- | --- |
-| `npm test` | Tests unitaires : tirage pondéré de la roue, score de le Quiz Cutshop, chrono Stop à 10 secondes, remise à zéro après inactivité, moteur multijoueur simulé à 4 joueurs avec déconnexion, TVA, sélection produits, absence de tirets dans tous les textes |
+| `npm test` | Tests unitaires : tirage pondéré de la roue, score du Quiz Cutshop, chrono Stop à 10 secondes, remise à zéro après inactivité, moteur multijoueur simulé à 4 joueurs avec déconnexion, TVA, sélection produits, absence de tirets isolés dans tous les textes |
 | `npm run test:db` | Lance un Postgres temporaire, applique la migration et les données d'exemple, puis vérifie les politiques RLS, les inscriptions avec capacité, le PIN, le tirage de la roue sur 3000 tours, les stocks, la validation des codes et la purge RGPD |
 | `npm run test:e2e` | Tests de bout en bout dans Chromium sur le build : chaque module en FR et EN, formulaires, veille, admin, roue, kids et Quiz Cutshop à 4 onglets (lancer `npm run build` avant) |
 | `npm run seed` | Régénère `supabase/seed.sql` depuis `src/data/seed.ts` |

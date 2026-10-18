@@ -35,6 +35,8 @@ export function Tile({
   children?: ReactNode;
 }) {
   const bg = resolvePhoto(photo);
+  // Trait d'union insécable : « RENDEZ-VOUS » ne se coupe jamais en fin de ligne.
+  title = title.replace(/-/g, '\u2011');
   return (
     <Link
       to={to}
@@ -52,10 +54,13 @@ export function Tile({
       )}
       {center ? (
         <>
-          <span className={`grid h-20 w-20 shrink-0 place-items-center rounded-3xl ring-1 ring-white/15 ${bg ? "bg-black/45 backdrop-blur-sm" : "bg-black/20"}`}>
-            <Icon size={42} strokeWidth={1.75} />
-          </span>
-          <span className="mt-4 block text-[1.7rem] font-black uppercase leading-[1.1] tracking-wide">{title}</span>
+          {/* Sur une photo, l'image suffit : pas d'icône. */}
+          {!bg && (
+            <span className="mb-4 grid h-20 w-20 shrink-0 place-items-center rounded-3xl bg-black/20 ring-1 ring-white/15">
+              <Icon size={42} strokeWidth={1.75} />
+            </span>
+          )}
+          <span className={`block font-black uppercase leading-[1.1] tracking-wide ${bg ? 'text-[2rem] drop-shadow-[0_2px_10px_rgba(0,0,0,0.7)]' : 'text-[1.7rem]'}`}>{title}</span>
         </>
       ) : inline ? (
         <span className="flex items-center gap-3">

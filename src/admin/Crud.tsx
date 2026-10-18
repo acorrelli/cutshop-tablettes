@@ -200,14 +200,14 @@ function FieldInput({ def, value, onChange, row }: { def: FieldDef; value: unkno
   }
 }
 
-/** Vérifie la règle de rédaction : aucun tiret dans les textes affichés. */
+/** Vérifie la règle de rédaction : aucun tiret isolé dans les textes affichés (le trait d'union dans un mot est permis). */
 export function findDashes(row: Record<string, unknown>, fields: FieldDef[]): string[] {
   const bad: string[] = [];
   for (const f of fields) {
     if (f.type === 'image' || f.type === 'color') continue;
     const v = row[f.key];
     const values = Array.isArray(v) ? v : [v];
-    if (values.some((x) => typeof x === 'string' && /[‐-―−-]/.test(x))) bad.push(f.label);
+    if (values.some((x) => typeof x === 'string' && /[‐‒–—―−]|(^|[^\p{L}\p{N}}])-|-([^\p{L}\p{N}]|$)/u.test(x))) bad.push(f.label);
   }
   return bad;
 }
@@ -265,7 +265,7 @@ export function EditDrawer({
         <div className="space-y-3 border-t border-cream/10 p-5">
           {dashes.length > 0 && (
             <p className="rounded-xl bg-gold/15 p-3 text-sm font-bold text-gold-300">
-              Rappel de la charte : pas de tiret dans les textes affichés ({dashes.join(', ')}). Utilise un espace, ou +/ pour une valeur approximative.
+              Rappel de la charte : pas de tiret isolé dans les textes affichés ({dashes.join(', ')}). Le trait d’union reste permis dans les mots (rendez-vous, as-tu). Pour une valeur approximative, utilise +/.
             </p>
           )}
           {error && <p className="rounded-xl bg-red-900/50 p-3 text-sm font-bold">{error}</p>}

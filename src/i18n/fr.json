@@ -27,12 +27,12 @@
       "sub": "Barber, bar et lieu de vie depuis 2018"
     },
     "booking": {
-      "title": "Prendre rendez vous",
+      "title": "Prendre rendez-vous",
       "sub": "Réserve ton prochain moment"
     },
     "events": {
       "title": "Les événements",
-      "sub": "DJ, impro, stand up et plus"
+      "sub": "DJ, impro, stand-up et plus"
     },
     "arcade": {
       "title": "Cutshop Arcade",
@@ -76,21 +76,21 @@
     },
     "services": {
       "title": "Nos prestations",
-      "sub": "Tarifs, durées et tarifs étudiants"
+      "sub": "Tarifs et durées"
     }
   },
   "home": {
-    "greeting": "Installe toi, ton moment commence ici.",
+    "greeting": "Installe-toi, ton moment commence ici.",
     "nextEvent": "Prochain événement",
     "register": "Je m’inscris",
-    "socialTitle": "Suis nous sur nos réseaux sociaux",
-    "socialSub": "Scanne et abonne toi"
+    "socialTitle": "Suis-nous sur nos réseaux sociaux",
+    "socialSub": "Scanne et abonne-toi"
   },
   "screensaver": {
     "hook": "Touche l’écran, ton moment commence ici",
     "next": "Prochain événement",
     "battleInvite": "Défie les autres clients au Quiz Cutshop !",
-    "battleLive": "Un Quiz Cutshop commence, rejoins le !"
+    "battleLive": "Un Quiz Cutshop commence, rejoins-le !"
   },
   "setup": {
     "title": "Configuration de la tablette",
@@ -107,7 +107,7 @@
     "contact": "Contact"
   },
   "booking": {
-    "title": "Prendre rendez vous",
+    "title": "Prendre rendez-vous",
     "text": "Scanne et réserve ton prochain moment en 30 secondes",
     "sub": "Choisis ton barbier, ta prestation et ton créneau directement sur Salonkee, depuis ton téléphone.",
     "privacy": "Aucune donnée personnelle n’est saisie sur cette tablette."
@@ -170,7 +170,7 @@
     },
     "join": "Rejoindre",
     "later": "Pas maintenant",
-    "invite": "Un Quiz Cutshop commence, rejoins le !",
+    "invite": "Un Quiz Cutshop commence, rejoins-le !",
     "inviteBy": "{{pseudo}} lance un Quiz Cutshop depuis {{tablet}}",
     "lobby": "Salle d’attente",
     "waiting": "En attente d’adversaires sur les autres tablettes...",
@@ -243,7 +243,7 @@
     "spinning": "Ça tourne...",
     "won": "Gagné !",
     "yourCode": "Ton code à présenter au comptoir",
-    "codeHint": "Montre ce code au comptoir pour profiter de ton gain. Prends le en photo si tu veux.",
+    "codeHint": "Montre ce code au comptoir pour profiter de ton gain. Prends-le en photo si tu veux.",
     "lost": "Pas de chance cette fois",
     "lostText": "La prochaine sera la bonne !",
     "oneTurn": "Un tour par client.",
@@ -286,7 +286,7 @@
     "abv": "{{abv}} % vol.",
     "noAlcohol": "Sans alcool",
     "pairingTitle": "Ta coupe, ta bière",
-    "pairingIntro": "Dis nous quelle coupe tu fais aujourd’hui, on te dit quoi boire.",
+    "pairingIntro": "Dis-nous quelle coupe tu fais aujourd’hui, on te dit quoi boire.",
     "pairingFor": "Pour une coupe {{cut}}",
     "order": "Commande au comptoir ou demande à ton barbier.",
     "moderation": "L’abus d’alcool est dangereux pour la santé. À consommer avec modération."
@@ -373,7 +373,7 @@
     },
     "services": {
       "title": "Nos services",
-      "sub": "As tu déjà pris le temps de découvrir tous nos services ? Indépendant ou société, demande nous une facture."
+      "sub": "As-tu déjà pris le temps de découvrir tous nos services ? Indépendant ou société, demande-nous une facture."
     },
     "games": {
       "title": "Les jeux",
@@ -412,7 +412,7 @@
     "yourTurn": "À toi de jouer.",
     "table": "Table {{n}}",
     "unavailable": "Ce jeu arrive très bientôt.",
-    "getReady": "Prépare toi",
+    "getReady": "Prépare-toi",
     "timeUp": "Temps écoulé !",
     "howTo": "Comment jouer",
     "difficulty": "Difficulté",
@@ -459,7 +459,7 @@
       "ok": "C’est parti",
       "anonymous": "Jouer en anonyme",
       "empty": "Choisis un pseudo d’au moins 2 caractères.",
-      "offensive": "Ce pseudo n’est pas accepté. Choisis en un autre.",
+      "offensive": "Ce pseudo n’est pas accepté. Choisis-en un autre.",
       "label": "Pseudo",
       "none": "Choisir",
       "hint": "Tu choisiras ton pseudo juste avant de jouer."
@@ -484,7 +484,7 @@
     "rules": {
       "pour": [
         "Maintiens le bouton ou le verre pour tirer la bière, relâche pour arrêter.",
-        "Vise la zone verte : la mousse retombe un peu après le service, relâche juste au dessus.",
+        "Vise la zone verte : la mousse retombe un peu après le service, relâche juste au-dessus.",
         "Chaque type de verre a son niveau idéal. Enchaîne les verres parfaits pour un bonus de série.",
         "Attention : si ça déborde, le verre est perdu !"
       ],

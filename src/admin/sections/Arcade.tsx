@@ -14,7 +14,7 @@ import { AdminCard } from '../Crud';
 
 const btn = 'flex min-h-[48px] items-center gap-2 rounded-xl px-4 font-bold disabled:opacity-40';
 const input = 'w-full rounded-xl border-2 border-cream/15 bg-bottle-950/60 px-3 py-2.5 outline-none focus:border-gold';
-const DASH = /[-–—]/;
+const DASH = /[‐‒–—―−]|(^|[^\p{L}\p{N}}])-|-([^\p{L}\p{N}]|$)/u;
 const fmt = (ms: number) => new Date(ms).toLocaleString('fr-BE', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
 
 function errText(e: unknown) {
@@ -282,7 +282,7 @@ function ChallengesCard() {
           <label className="flex items-center gap-3 font-bold">
             <input type="checkbox" className="h-6 w-6 accent-[#D4A84B]" checked={edit.active} onChange={(e) => setEdit({ ...edit, active: e.target.checked })} /> Challenge actif
           </label>
-          {dashes.length > 0 && <p className="text-sm font-bold text-gold-300">Tiret détecté : {dashes.join(', ')}. La charte évite les tirets.</p>}
+          {dashes.length > 0 && <p className="text-sm font-bold text-gold-300">Tiret détecté : {dashes.join(', ')}. La charte évite les tirets isolés (le trait d’union dans un mot est permis).</p>}
           <div className="flex gap-2">
             <button
               type="button"

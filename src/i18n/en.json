@@ -32,7 +32,7 @@
     },
     "events": {
       "title": "Events",
-      "sub": "DJ, improv, stand up and more"
+      "sub": "DJ, improv, stand-up and more"
     },
     "arcade": {
       "title": "Cutshop Arcade",
@@ -76,7 +76,7 @@
     },
     "services": {
       "title": "Our price list",
-      "sub": "Prices, durations and student rates"
+      "sub": "Prices and durations"
     }
   },
   "home": {
@@ -583,7 +583,7 @@
       "raceHint": "Score race: everyone plays the same scene, the best score wins.",
       "huntHint": "Competitive hunt: objects are shared, the first to tap an object wins it.",
       "sendDuel": "Send the challenge",
-      "sendBattle": "Start a {{n}} player battle"
+      "sendBattle": "Start a {{n}}-player battle"
     },
     "room": {
       "none": "No game in progress.",
@@ -600,7 +600,7 @@
         "joined": "Accepted"
       },
       "duel": "Duel",
-      "battle": "{{n}} player battle",
+      "battle": "{{n}}-player battle",
       "hostReady": "Everyone is ready. Start the game!",
       "hostWaiting": "Waiting for answers and players to get ready...",
       "hostAlone": "Nobody has joined the game yet.",

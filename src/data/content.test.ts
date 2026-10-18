@@ -1,4 +1,5 @@
-// Règle de rédaction absolue : aucun tiret (ni court ni long) dans les textes affichés.
+// Règle de rédaction : aucun tiret isolé (court ou long) dans les textes affichés. Seul le trait d'union entre deux lettres
+// est permis (rendez-vous, as-tu, suis-nous).
 import { describe, expect, it } from 'vitest';
 import fr from '../i18n/fr.json';
 import en from '../i18n/en.json';
@@ -15,7 +16,7 @@ import {
   buildSeedEvents,
 } from './seed';
 
-const DASHES = /[-‐‑‒–—―−]/;
+const DASHES = /[‐‒–—―−]|(^|[^\p{L}\p{N}}])-|-([^\p{L}\p{N}]|$)/u;
 
 function strings(value: unknown, path = ''): [string, string][] {
   if (typeof value === 'string') return [[path, value]];
@@ -49,6 +50,12 @@ describe('règle des tirets', () => {
       questions: SEED_QUESTIONS,
     });
     for (const [path, s] of all) expect(`${path}: ${s}`).not.toMatch(DASHES);
+  });
+
+  it('garde le trait d’union dans les mots composés et les inversions', () => {
+    const all = strings(fr).map(([, s]) => s).join('\n');
+    for (const w of ['Prendre rendez-vous', 'As-tu', 'demande-nous', 'Suis-nous', 'Installe-toi', 'abonne-toi']) expect(all).toContain(w);
+    for (const w of ['rendez vous', 'As tu ', 'demande nous', 'Suis nous']) expect(all).not.toContain(w);
   });
 
   it('les clés FR et EN sont identiques', () => {

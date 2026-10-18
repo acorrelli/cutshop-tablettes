@@ -77,7 +77,7 @@ const GROUPS: { title: string; fields: FieldDef[] }[] = [
 
 const MODULE_LABELS: Record<ModuleKey, string> = {
   concept: 'L’histoire',
-  booking: 'Prendre rendez vous',
+  booking: 'Prendre rendez-vous',
   services: 'Nos prestations',
   events: 'Les événements',
   arcade: 'Cutshop Arcade',

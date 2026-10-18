@@ -4,7 +4,7 @@ import { QrCode } from '../components/QrCode';
 import { Page, PageHeader } from '../components/ui';
 import { useApp } from '../context/AppContext';
 
-/** Prise de rendez vous via Salonkee : un QR code, aucune donnée saisie sur la tablette. */
+/** Prise de rendez-vous via Salonkee : un QR code, aucune donnée saisie sur la tablette. */
 export default function Booking() {
   const { t } = useTranslation();
   const { content } = useApp();

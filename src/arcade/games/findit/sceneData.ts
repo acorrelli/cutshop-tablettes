@@ -29,7 +29,7 @@ export const OBJECT_NAMES: Record<ObjectKey, { fr: string; en: string }> = {
   pint: { fr: 'Pinte', en: 'Pint' },
   bottle: { fr: 'Bouteille', en: 'Beer bottle' },
   opener: { fr: 'Décapsuleur', en: 'Bottle opener' },
-  coaster: { fr: 'Sous bock', en: 'Coaster' },
+  coaster: { fr: 'Sous-bock', en: 'Coaster' },
   hops: { fr: 'Houblon', en: 'Hops' },
   keg: { fr: 'Fût', en: 'Keg' },
   pretzel: { fr: 'Bretzel', en: 'Pretzel' },

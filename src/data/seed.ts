@@ -1,6 +1,6 @@
 // Données d'exemple : elles servent au mode démonstration et sont converties en SQL
 // (supabase/seed.sql) par scripts/generate-seed.mjs. Une seule source de vérité.
-// Règle de rédaction : aucun tiret dans les textes affichés.
+// Règle de rédaction : aucun tiret isolé dans les textes affichés (le trait d'union dans un mot est permis).
 
 import type {
   AppSettings,
@@ -33,13 +33,13 @@ export const DEFAULT_SETTINGS: AppSettings = {
     'Tout commence en 2018, au coeur de Mons, avec une idée simple : et si passer chez le barbier devenait un vrai moment ? Le Cutshop naît de cette envie de mélanger trois univers qui vont parfaitement ensemble : un barbershop exigeant, un bar convivial et un lieu de vie ouvert à la culture.',
     'Ici, on vient pour une coupe ou une barbe taillée dans les règles de l’art, et on reste pour l’ambiance. Une bière du terroir belge à la main, on discute, on rencontre, on prend son temps.',
     'Depuis deux ans, une nouvelle équipe a repris le flambeau avec la même passion. Le concept a été relancé et renforcé, avec toujours plus de services, de soins et d’événements.',
-    'Car le Cutshop se transforme aussi régulièrement en scène : DJ sets, artistes locaux, impro, stand up, soirées discussion, soirées lecture... Un lieu où chacun trouve sa place, que tu viennes pour ta coupe du mois ou pour passer une bonne soirée.',
+    'Car le Cutshop se transforme aussi régulièrement en scène : DJ sets, artistes locaux, impro, stand-up, soirées discussion, soirées lecture... Un lieu où chacun trouve sa place, que tu viennes pour ta coupe du mois ou pour passer une bonne soirée.',
   ].join('\n\n'),
   concept_body_en: [
     'It all started in 2018, in the heart of Mons, with a simple idea: what if going to the barber became a real moment? Cutshop was born from the urge to blend three worlds that go perfectly together: a demanding barbershop, a friendly bar and a place open to culture.',
     'Here, you come for a cut or a beard trimmed by the book, and you stay for the vibe. A local Belgian beer in hand, you chat, you meet people, you take your time.',
     'For the past two years, a new team has carried the torch with the same passion. The concept has been relaunched and strengthened, with ever more services, treatments and events.',
-    'Because Cutshop also regularly turns into a stage: DJ sets, local artists, improv, stand up, discussion nights, reading nights... A place where everyone finds their spot, whether you come for your monthly cut or for a great night out.',
+    'Because Cutshop also regularly turns into a stage: DJ sets, local artists, improv, stand-up, discussion nights, reading nights... A place where everyone finds their spot, whether you come for your monthly cut or for a great night out.',
   ].join('\n\n'),
   concept_tagline_fr: 'Le Cutshop, c’est ton moment.',
   concept_tagline_en: 'Cutshop is your moment.',
@@ -47,12 +47,12 @@ export const DEFAULT_SETTINGS: AppSettings = {
   concept_photo_1: 'photo:le-barbershop',
   concept_photo_2: 'photo:le-bar',
   concept_photo_3: 'photo:les-events',
-  block_barber_fr: 'Coupes, dégradés, barbes taillées et rasages à l’ancienne. Un savoir faire exigeant, dans une ambiance détendue.',
-  block_barber_en: 'Cuts, fades, beard trims and old school shaves. Demanding craftsmanship in a relaxed atmosphere.',
+  block_barber_fr: 'Coupes, dégradés, barbes taillées et rasages à l’ancienne. Un savoir-faire exigeant, dans une ambiance détendue.',
+  block_barber_en: 'Cuts, fades, beard trims and old-school shaves. Demanding craftsmanship in a relaxed atmosphere.',
   block_bar_fr: 'Des bières belges du terroir, des softs et un comptoir où l’on prend le temps de discuter.',
   block_bar_en: 'Local Belgian beers, soft drinks and a counter where people take the time to talk.',
-  block_events_fr: 'DJ sets, scène ouverte, impro, stand up, soirées discussion et lecture. Le salon devient une scène.',
-  block_events_en: 'DJ sets, open mic, improv, stand up, talk nights and reading nights. The shop becomes a stage.',
+  block_events_fr: 'DJ sets, scène ouverte, impro, stand-up, soirées discussion et lecture. Le salon devient une scène.',
+  block_events_en: 'DJ sets, open mic, improv, stand-up, talk nights and reading nights. The shop becomes a stage.',
   gift_title_fr: 'Offre un moment Cutshop',
   gift_title_en: 'Give a Cutshop moment',
   gift_body_fr:
@@ -63,7 +63,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   gift_validity_fr: 'Valable 12 mois à partir de la date d’achat (exemple)',
   gift_validity_en: 'Valid for 12 months from the purchase date (example)',
   gift_conditions_fr: 'Utilisable en une ou plusieurs fois, non remboursable, valable sur toutes les prestations et au bar (exemple, à compléter)',
-  gift_conditions_en: 'Can be used in one or several visits, non refundable, valid on all services and at the bar (example, to be completed)',
+  gift_conditions_en: 'Can be used in one or several visits, non-refundable, valid on all services and at the bar (example, to be completed)',
   invoice_title_fr: 'Indépendant ou société ? On te fait ta facture',
   invoice_title_en: 'Freelancer or company? We’ll make you an invoice',
   invoice_body_fr:
@@ -171,8 +171,8 @@ export const EVENT_TYPES: Record<'cutsession' | 'cutandtalk' | 'chut' | 'openmic
     kind: 'mic',
     title_fr: 'Open Mic',
     title_en: 'Open Mic',
-    description_fr: 'Stand up, impro, beatbox, slam : le micro est à toi.',
-    description_en: 'Stand up, improv, beatbox, slam: the mic is yours.',
+    description_fr: 'Stand-up, impro, beatbox, slam : le micro est à toi.',
+    description_en: 'Stand-up, improv, beatbox, slam: the mic is yours.',
     recurrence_fr: 'Un samedi sur deux',
     recurrence_en: 'Every other Saturday',
     time: '18:00',
@@ -492,7 +492,7 @@ export const SEED_DRINKS: Drink[] = [
   { id: 'b07', category: 'beer', name: 'Boriner Vice', brand: 'Brasserie du Borinage', style_fr: 'Blanche acidulée houblonnée', style_en: 'Hoppy sour white', abv: null, description_fr: 'Une blanche acidulée généreusement houblonnée à cru. Vive, fruitée, surprenante.', description_en: 'A sour white beer, generously dry hopped. Lively, fruity and surprising.', price: 4, image_url: 'photo:boisson-boriner-vice', sort: 7, active: true },
   { id: 'b08', category: 'beer', name: 'Cosmic Rainbow', brand: 'Brasserie Surréaliste', style_fr: 'Double India Porter', style_en: 'Double India Porter', abv: null, description_fr: 'Un porter houblonné aux Vic Secret et Simcoe : torréfié et aromatique à la fois.', description_en: 'A hoppy porter with Vic Secret and Simcoe: roasty and aromatic at once.', price: 4.2, image_url: 'photo:boisson-cosmic-rainbow', sort: 8, active: true },
   { id: 'b09', category: 'beer', name: 'Dance Rave Dance', brand: 'Brasserie Surréaliste', style_fr: 'Session IPA', style_en: 'Session IPA', abv: null, description_fr: 'Session IPA houblonnée à cru aux Citra, Motueka et Nelson. Légère, fruitée, primée au Brussels Beer Challenge.', description_en: 'A session IPA dry hopped with Citra, Motueka and Nelson. Light, fruity and an award winner at the Brussels Beer Challenge.', price: 4, image_url: 'photo:boisson-dance-rave-dance', sort: 9, active: true },
-  { id: 'b12', category: 'beer', name: 'Django', brand: 'Brasserie Racine Carrée', style_fr: '', style_en: '', abv: null, description_fr: 'Une bière de caractère de la Brasserie Racine Carrée. Laisse toi surprendre.', description_en: 'A beer with character from Brasserie Racine Carrée. Let yourself be surprised.', price: 4.2, image_url: 'photo:boisson-django', sort: 12, active: true },
+  { id: 'b12', category: 'beer', name: 'Django', brand: 'Brasserie Racine Carrée', style_fr: '', style_en: '', abv: null, description_fr: 'Une bière de caractère de la Brasserie Racine Carrée. Laisse-toi surprendre.', description_en: 'A beer with character from Brasserie Racine Carrée. Let yourself be surprised.', price: 4.2, image_url: 'photo:boisson-django', sort: 12, active: true },
   { id: 'b13', category: 'beer', name: 'Dominicains Double', brand: 'Brasserie 3F', style_fr: 'Double', style_en: 'Dubbel', abv: 6.9, description_fr: 'Brassée à Mons par la Brasserie 3F. Une double brune aux notes de caramel et de fruits secs.', description_en: 'Brewed in Mons by Brasserie 3F. A brown dubbel with notes of caramel and dried fruit.', price: 4, image_url: 'photo:boisson-dominicains-2', sort: 13, active: true },
   { id: 'b14', category: 'beer', name: 'Dominicains Quadruple', brand: 'Brasserie 3F', style_fr: 'Quadruple', style_en: 'Quadrupel', abv: 9.2, description_fr: 'La plus intense de la gamme Dominicains : sombre, riche et puissante. Brassée à Mons.', description_en: 'The boldest of the Dominicains range: dark, rich and powerful. Brewed in Mons.', price: 4.5, image_url: 'photo:boisson-dominicains-4', sort: 14, active: true },
   { id: 'b15', category: 'beer', name: 'Dominicains Triple', brand: 'Brasserie 3F', style_fr: 'Triple', style_en: 'Tripel', abv: 8.2, description_fr: 'Triple blonde montoise, épicée et aromatique, primée aux World Beer Awards.', description_en: 'A golden tripel from Mons, spicy and aromatic, awarded at the World Beer Awards.', price: 4.3, image_url: 'photo:boisson-dominicains-3', sort: 15, active: true },
@@ -554,7 +554,7 @@ export const SEED_PAIRINGS: Pairing[] = [
   { id: 'p4', cut_fr: 'Boule à zéro', cut_en: 'Buzz cut', drink_fr: 'La Placebo', drink_en: 'Placebo', line_fr: 'Tête légère, bière légère, esprit libre.', line_en: 'Light head, light beer, free mind.', sort: 4, active: true },
   { id: 'p5', cut_fr: 'Boucles assumées', cut_en: 'Proud curls', drink_fr: 'La Béatific Ecstasy', drink_en: 'Béatific Ecstasy', line_fr: 'Du volume, du peps et un brin de folie fruitée.', line_en: 'Volume, pep and a touch of fruity madness.', sort: 5, active: true },
   { id: 'p6', cut_fr: 'Coupe mulet', cut_en: 'Mullet', drink_fr: 'La Mulet Pils', drink_en: 'Mulet Pils', line_fr: 'Business devant, pils derrière. Évidemment.', line_en: 'Business in the front, pils in the back. Obviously.', sort: 6, active: true },
-  { id: 'p7', cut_fr: 'Rasage à l’ancienne', cut_en: 'Old school shave', drink_fr: 'La Dominicains Triple', drink_en: 'Dominicains Triple', line_fr: 'Un rituel de tradition appelle une triple brassée à Mons.', line_en: 'A traditional ritual calls for a tripel brewed in Mons.', sort: 7, active: true },
+  { id: 'p7', cut_fr: 'Rasage à l’ancienne', cut_en: 'Old-school shave', drink_fr: 'La Dominicains Triple', drink_en: 'Dominicains Triple', line_fr: 'Un rituel de tradition appelle une triple brassée à Mons.', line_en: 'A traditional ritual calls for a tripel brewed in Mons.', sort: 7, active: true },
 ];
 
 // ---------------------------------------------------------------------------
@@ -565,7 +565,7 @@ const NM = 'Nishman';
 // Produits Nishman vendus au salon (liste fournie par le Cutshop, octobre 2026).
 // Les articles en rupture de stock sont masqués (active: false) et se réactivent dans l'admin.
 export const SEED_PRODUCTS: Product[] = [
-  { id: 'n01', name: 'Aftershave 4', brand: NM, benefit_fr: 'Lotion après rasage qui rafraîchit et apaise la peau.', benefit_en: 'After shave lotion that refreshes and soothes the skin.', usage_fr: 'Quelques gouttes sur la peau après le rasage, en tapotant.', usage_en: 'A few drops on the skin after shaving, patting gently.', price: 12, image_url: 'photo:produit-cream-cologne-4', hair_types: [], scalp_types: [], for_beard: false, effects: ['care'], sort: 1, active: true },
+  { id: 'n01', name: 'Aftershave 4', brand: NM, benefit_fr: 'Lotion après-rasage qui rafraîchit et apaise la peau.', benefit_en: 'After shave lotion that refreshes and soothes the skin.', usage_fr: 'Quelques gouttes sur la peau après le rasage, en tapotant.', usage_en: 'A few drops on the skin after shaving, patting gently.', price: 12, image_url: 'photo:produit-cream-cologne-4', hair_types: [], scalp_types: [], for_beard: false, effects: ['care'], sort: 1, active: true },
   { id: 'n02', name: 'Barber Talc', brand: NM, benefit_fr: 'Talc de barbier qui absorbe l’humidité et laisse la nuque nette et sèche.', benefit_en: 'Barber talc that absorbs moisture and leaves the neck clean and dry.', usage_fr: 'Appliquer au pinceau sur la nuque et les contours.', usage_en: 'Apply with a brush on the neck and outlines.', price: 10, image_url: 'photo:produit-barber-talc', hair_types: [], scalp_types: [], for_beard: false, effects: ['care', 'natural'], sort: 2, active: true },
   { id: 'n03', name: 'Beard Brush', brand: NM, benefit_fr: 'Brosse à barbe qui démêle, discipline et répartit les soins.', benefit_en: 'Beard brush that detangles, tames and spreads your care products.', usage_fr: 'Brosser la barbe dans le sens de la pousse, chaque matin.', usage_en: 'Brush your beard in the direction of growth every morning.', price: 14, image_url: 'photo:produit-beard-brush', hair_types: [], scalp_types: [], for_beard: true, effects: ['care', 'natural'], sort: 3, active: true },
   { id: 'n04', name: 'Cire agrumes', brand: NM, benefit_fr: 'Cire coiffante au parfum d’agrumes, tenue et brillance.', benefit_en: 'Citrus scented styling wax, hold and shine.', usage_fr: 'Une noisette sur cheveux secs, coiffer au peigne.', usage_en: 'A small amount on dry hair, style with a comb.', price: 8, image_url: null, hair_types: ['fine', 'thick'], scalp_types: [], for_beard: false, effects: ['hold', 'shine'], sort: 4, active: false },
@@ -574,18 +574,18 @@ export const SEED_PRODUCTS: Product[] = [
   { id: 'n07', name: 'Cire Gold Million', brand: NM, benefit_fr: 'Cire coiffante pour une tenue fiable et un fini brillant.', benefit_en: 'Styling wax for reliable hold and a shiny finish.', usage_fr: 'Une noisette sur cheveux secs, coiffer au peigne.', usage_en: 'A small amount on dry hair, style with a comb.', price: 8, image_url: 'photo:produit-cire-07', hair_types: ['fine', 'thick'], scalp_types: [], for_beard: false, effects: ['hold', 'shine'], sort: 7, active: false },
   { id: 'n08', name: 'Cire melon', brand: NM, benefit_fr: 'Cire coiffante au parfum de melon, tenue et brillance.', benefit_en: 'Melon scented styling wax, hold and shine.', usage_fr: 'Une noisette sur cheveux secs, coiffer au peigne.', usage_en: 'A small amount on dry hair, style with a comb.', price: 8, image_url: null, hair_types: ['fine', 'thick'], scalp_types: [], for_beard: false, effects: ['hold', 'shine'], sort: 8, active: false },
   { id: 'n09', name: 'Cire Milky', brand: NM, benefit_fr: 'Cire coiffante crémeuse pour une tenue souple et un joli brillant.', benefit_en: 'Creamy styling wax for flexible hold and a nice shine.', usage_fr: 'Une noisette sur cheveux secs ou légèrement humides, coiffer au peigne.', usage_en: 'A small amount on dry or slightly damp hair, style with a comb.', price: 8, image_url: 'photo:produit-cire-milky', hair_types: ['fine', 'thick'], scalp_types: [], for_beard: false, effects: ['hold', 'shine'], sort: 9, active: true },
-  { id: 'n10', name: 'Conditioner 1', brand: NM, benefit_fr: 'Après shampoing qui adoucit et facilite le coiffage.', benefit_en: 'Conditioner that softens and makes styling easier.', usage_fr: 'Après le shampoing, laisser poser une minute puis rincer.', usage_en: 'After shampooing, leave on for one minute, then rinse.', price: 10, image_url: 'photo:produit-conditioner-1', hair_types: [], scalp_types: ['normal', 'dry'], for_beard: false, effects: ['care', 'shine'], sort: 10, active: true },
-  { id: 'n11', name: 'Conditioner 2', brand: NM, benefit_fr: 'Après shampoing qui nourrit et apporte de la souplesse.', benefit_en: 'Conditioner that nourishes and adds suppleness.', usage_fr: 'Après le shampoing, laisser poser une minute puis rincer.', usage_en: 'After shampooing, leave on for one minute, then rinse.', price: 10, image_url: 'photo:produit-conditioner-2', hair_types: [], scalp_types: ['normal', 'dry'], for_beard: false, effects: ['care', 'shine'], sort: 11, active: true },
-  { id: 'n12', name: 'Conditioner 3', brand: NM, benefit_fr: 'Après shampoing qui démêle et prend soin des cheveux épais ou bouclés.', benefit_en: 'Conditioner that detangles and cares for thick or curly hair.', usage_fr: 'Après le shampoing, laisser poser une minute puis rincer.', usage_en: 'After shampooing, leave on for one minute, then rinse.', price: 10, image_url: 'photo:produit-conditioner-3', hair_types: ['thick', 'curly', 'coily'], scalp_types: ['dry'], for_beard: false, effects: ['care'], sort: 12, active: true },
+  { id: 'n10', name: 'Conditioner 1', brand: NM, benefit_fr: 'Après-shampoing qui adoucit et facilite le coiffage.', benefit_en: 'Conditioner that softens and makes styling easier.', usage_fr: 'Après le shampoing, laisser poser une minute puis rincer.', usage_en: 'After shampooing, leave on for one minute, then rinse.', price: 10, image_url: 'photo:produit-conditioner-1', hair_types: [], scalp_types: ['normal', 'dry'], for_beard: false, effects: ['care', 'shine'], sort: 10, active: true },
+  { id: 'n11', name: 'Conditioner 2', brand: NM, benefit_fr: 'Après-shampoing qui nourrit et apporte de la souplesse.', benefit_en: 'Conditioner that nourishes and adds suppleness.', usage_fr: 'Après le shampoing, laisser poser une minute puis rincer.', usage_en: 'After shampooing, leave on for one minute, then rinse.', price: 10, image_url: 'photo:produit-conditioner-2', hair_types: [], scalp_types: ['normal', 'dry'], for_beard: false, effects: ['care', 'shine'], sort: 11, active: true },
+  { id: 'n12', name: 'Conditioner 3', brand: NM, benefit_fr: 'Après-shampoing qui démêle et prend soin des cheveux épais ou bouclés.', benefit_en: 'Conditioner that detangles and cares for thick or curly hair.', usage_fr: 'Après le shampoing, laisser poser une minute puis rincer.', usage_en: 'After shampooing, leave on for one minute, then rinse.', price: 10, image_url: 'photo:produit-conditioner-3', hair_types: ['thick', 'curly', 'coily'], scalp_types: ['dry'], for_beard: false, effects: ['care'], sort: 12, active: true },
   { id: 'n13', name: 'Crème modelante M3', brand: NM, benefit_fr: 'Crème modelante pour sculpter la coiffure avec un rendu naturel.', benefit_en: 'Shaping cream to sculpt your style with a natural look.', usage_fr: 'Émulsionner entre les mains, appliquer sur cheveux secs.', usage_en: 'Rub between your hands, apply to dry hair.', price: 12, image_url: 'photo:produit-creme-modelante-m3', hair_types: ['thick', 'curly'], scalp_types: [], for_beard: false, effects: ['hold', 'natural'], sort: 13, active: true },
   { id: 'n14', name: 'Crème modelante M5', brand: NM, benefit_fr: 'Texture mate et fixation forte, pensée pour les coiffures créatives.', benefit_en: 'Matte texture and strong hold, made for creative styles.', usage_fr: 'Émulsionner entre les mains, appliquer sur cheveux secs et sculpter.', usage_en: 'Rub between your hands, apply to dry hair and sculpt.', price: 12, image_url: 'photo:produit-creme-modelante-m5', hair_types: ['thick', 'curly'], scalp_types: [], for_beard: false, effects: ['hold', 'natural'], sort: 14, active: true },
   { id: 'n15', name: 'Crème modelante M8', brand: NM, benefit_fr: 'Crème modelante pour une tenue maîtrisée et un rendu naturel.', benefit_en: 'Shaping cream for controlled hold and a natural look.', usage_fr: 'Émulsionner entre les mains, appliquer sur cheveux secs.', usage_en: 'Rub between your hands, apply to dry hair.', price: 12, image_url: 'photo:produit-creme-modelante-m8', hair_types: ['thick', 'curly'], scalp_types: [], for_beard: false, effects: ['hold', 'natural'], sort: 15, active: false },
   { id: 'n16', name: 'Fade Brush', brand: NM, benefit_fr: 'Brosse de barbier pour entretenir un dégradé net entre deux coupes.', benefit_en: 'Barber brush to keep a sharp fade between cuts.', usage_fr: 'Brosser les côtés et la nuque après le coiffage.', usage_en: 'Brush the sides and neck after styling.', price: 8, image_url: null, hair_types: ['fine', 'thick'], scalp_types: [], for_beard: false, effects: ['natural'], sort: 16, active: true },
   { id: 'n17', name: 'Hair Removal Wax', brand: NM, benefit_fr: 'Cire d’épilation pour les petites zones du visage.', benefit_en: 'Hair removal wax for small areas of the face.', usage_fr: 'Appliquer en fine couche, puis retirer d’un geste sec.', usage_en: 'Apply a thin layer, then remove in one quick motion.', price: 8, image_url: null, hair_types: [], scalp_types: [], for_beard: false, effects: [], sort: 17, active: true },
   { id: 'n18', name: 'Huile à barbe', brand: NM, benefit_fr: 'Nourrit la barbe et la peau, apporte douceur et brillance.', benefit_en: 'Nourishes beard and skin, adds softness and shine.', usage_fr: 'Quelques gouttes chaque matin, masser jusqu’à la peau.', usage_en: 'A few drops every morning, massage down to the skin.', price: 15, image_url: 'photo:produit-huile-de-barbe', hair_types: [], scalp_types: [], for_beard: true, effects: ['care', 'shine'], sort: 18, active: false },
-  { id: 'n19', name: 'Lotion n°1', brand: NM, benefit_fr: 'Lotion après rasage parfumée, fraîcheur immédiate.', benefit_en: 'Scented after shave lotion, instant freshness.', usage_fr: 'Appliquer sur la peau après le rasage.', usage_en: 'Apply to the skin after shaving.', price: 12, image_url: 'photo:produit-lotion-1', hair_types: [], scalp_types: [], for_beard: false, effects: ['care'], sort: 19, active: true },
-  { id: 'n20', name: 'Lotion n°7', brand: NM, benefit_fr: 'Lotion après rasage parfumée, fraîcheur immédiate.', benefit_en: 'Scented after shave lotion, instant freshness.', usage_fr: 'Appliquer sur la peau après le rasage.', usage_en: 'Apply to the skin after shaving.', price: 12, image_url: 'photo:produit-lotion-7', hair_types: [], scalp_types: [], for_beard: false, effects: ['care'], sort: 20, active: true },
-  { id: 'n21', name: 'Lotion n°8', brand: NM, benefit_fr: 'Lotion après rasage parfumée, fraîcheur immédiate.', benefit_en: 'Scented after shave lotion, instant freshness.', usage_fr: 'Appliquer sur la peau après le rasage.', usage_en: 'Apply to the skin after shaving.', price: 12, image_url: 'photo:produit-lotion-8', hair_types: [], scalp_types: [], for_beard: false, effects: ['care'], sort: 21, active: true },
+  { id: 'n19', name: 'Lotion n°1', brand: NM, benefit_fr: 'Lotion après-rasage parfumée, fraîcheur immédiate.', benefit_en: 'Scented after shave lotion, instant freshness.', usage_fr: 'Appliquer sur la peau après le rasage.', usage_en: 'Apply to the skin after shaving.', price: 12, image_url: 'photo:produit-lotion-1', hair_types: [], scalp_types: [], for_beard: false, effects: ['care'], sort: 19, active: true },
+  { id: 'n20', name: 'Lotion n°7', brand: NM, benefit_fr: 'Lotion après-rasage parfumée, fraîcheur immédiate.', benefit_en: 'Scented after shave lotion, instant freshness.', usage_fr: 'Appliquer sur la peau après le rasage.', usage_en: 'Apply to the skin after shaving.', price: 12, image_url: 'photo:produit-lotion-7', hair_types: [], scalp_types: [], for_beard: false, effects: ['care'], sort: 20, active: true },
+  { id: 'n21', name: 'Lotion n°8', brand: NM, benefit_fr: 'Lotion après-rasage parfumée, fraîcheur immédiate.', benefit_en: 'Scented after shave lotion, instant freshness.', usage_fr: 'Appliquer sur la peau après le rasage.', usage_en: 'Apply to the skin after shaving.', price: 12, image_url: 'photo:produit-lotion-8', hair_types: [], scalp_types: [], for_beard: false, effects: ['care'], sort: 21, active: true },
   { id: 'n22', name: 'Magic Brush', brand: NM, benefit_fr: 'Brosse pratique pour coiffer et discipliner au quotidien.', benefit_en: 'Handy brush to style and tame every day.', usage_fr: 'Brosser sur cheveux secs ou humides.', usage_en: 'Brush on dry or damp hair.', price: 6, image_url: 'photo:produit-magic-brush', hair_types: [], scalp_types: [], for_beard: false, effects: ['natural'], sort: 22, active: true },
   { id: 'n23', name: 'Mousse coiffante', brand: NM, benefit_fr: 'Mousse légère qui donne du corps et une tenue souple.', benefit_en: 'Light mousse that adds body and flexible hold.', usage_fr: 'Répartir sur cheveux humides, puis sécher.', usage_en: 'Spread through damp hair, then dry.', price: 12, image_url: null, hair_types: ['fine', 'curly'], scalp_types: [], for_beard: false, effects: ['volume', 'hold'], sort: 23, active: true },
   { id: 'n24', name: 'Mousse coiffante Sea Salt', brand: NM, benefit_fr: 'Effet sel de mer : texture décoiffée et volume naturel.', benefit_en: 'Sea salt effect: tousled texture and natural volume.', usage_fr: 'Répartir sur cheveux humides, sécher en froissant.', usage_en: 'Spread through damp hair, scrunch while drying.', price: 12, image_url: 'photo:produit-mousse-sea-salt', hair_types: ['fine', 'thick', 'curly'], scalp_types: [], for_beard: false, effects: ['volume', 'natural'], sort: 24, active: true },
@@ -634,14 +634,14 @@ function q(theme: QuizTheme, n: number, fr: QA, en: QA): QuizQuestion {
 export const SEED_QUESTIONS: QuizQuestion[] = [
   // Mons et son folklore
   q('mons', 1,
-    ['Comment s’appelle la grande fête de Mons, le week end de la Trinité ?', ['Le Doudou', 'Le Carnaval', 'La Ducasse d’Ath', 'Les Fêtes de Wallonie']],
+    ['Comment s’appelle la grande fête de Mons, le week-end de la Trinité ?', ['Le Doudou', 'Le Carnaval', 'La Ducasse d’Ath', 'Les Fêtes de Wallonie']],
     ['What is the name of the big Mons festival held on Trinity weekend?', ['The Doudou', 'The Carnival', 'The Ath Ducasse', 'The Wallonia Festival']]),
   q('mons', 2,
     ['Qui affronte le Dragon pendant le Combat dit Lumeçon ?', ['Saint Georges', 'Saint Michel', 'Saint Nicolas', 'Saint Martin']],
     ['Who fights the Dragon during the Lumeçon battle?', ['Saint George', 'Saint Michael', 'Saint Nicholas', 'Saint Martin']]),
   q('mons', 3,
-    ['Sur la Grand Place, on caresse la tête de quel animal pour avoir de la chance ?', ['Un petit singe', 'Un lion', 'Un chien', 'Un dragon']],
-    ['On the Grand Place, which animal’s head do people stroke for good luck?', ['A little monkey', 'A lion', 'A dog', 'A dragon']]),
+    ['Sur la Grand-Place, on caresse la tête de quel animal pour avoir de la chance ?', ['Un petit singe', 'Un lion', 'Un chien', 'Un dragon']],
+    ['On the Grand-Place, which animal’s head do people stroke for good luck?', ['A little monkey', 'A lion', 'A dog', 'A dragon']]),
   q('mons', 4,
     ['Mons a été Capitale européenne de la culture en quelle année ?', ['2015', '2010', '2018', '2005']],
     ['In which year was Mons a European Capital of Culture?', ['2015', '2010', '2018', '2005']]),
@@ -893,7 +893,7 @@ export const SEED_QUESTIONS: QuizQuestion[] = [
     ['Comment s’appelle le bébé de la grenouille ?', ['Le têtard', 'Le poussin', 'Le chaton', 'L’ourson']],
     ['What is a baby frog called?', ['A tadpole', 'A chick', 'A kitten', 'A cub']]),
   q('kids', 9,
-    ['Combien de couleurs compte un arc en ciel ?', ['7', '5', '3', '10']],
+    ['Combien de couleurs compte un arc-en-ciel ?', ['7', '5', '3', '10']],
     ['How many colours are there in a rainbow?', ['7', '5', '3', '10']]),
   q('kids', 10,
     ['Quel est le plus gros animal qui vit sur terre ?', ['L’éléphant', 'La girafe', 'Le rhinocéros', 'L’hippopotame']],

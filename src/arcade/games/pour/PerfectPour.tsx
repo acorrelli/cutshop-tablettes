@@ -1,5 +1,5 @@
 // Perfect Pour : maintenir pour verser, relâcher au bon moment. La mousse retombe après le service :
-// le bon barman relâche juste au dessus de la zone parfaite.
+// le bon barman relâche juste au-dessus de la zone parfaite.
 import { Star } from 'lucide-react';
 import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
 import { sfx } from '../../audio';
@@ -15,7 +15,7 @@ const TXT = {
     notEnough: 'Pas assez',
     hold: 'Maintiens pour verser',
     pouring: 'Ça coule...',
-    hint: 'La mousse retombe : relâche juste au dessus de la zone.',
+    hint: 'La mousse retombe : relâche juste au-dessus de la zone.',
     glass: 'Verre',
     streak: 'Série',
     grades: { perfect: 'PARFAIT !', great: 'TRÈS BIEN !', ok: 'PAS MAL', miss: 'RATÉ', overflow: 'ÇA DÉBORDE !' } as Record<Grade, string>,
