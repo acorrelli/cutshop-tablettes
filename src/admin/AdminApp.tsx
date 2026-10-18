@@ -9,6 +9,7 @@ import {
   Mail,
   MessageCircleHeart,
   Receipt,
+  Scissors,
   Settings,
   SprayCan,
   X,
@@ -20,7 +21,7 @@ import { useHoldAwake } from '../context/AppContext';
 import { api, type AdminSession } from '../lib/api';
 import { DEMO_PASSWORD } from '../lib/api/demoApi';
 import { IS_DEMO } from '../lib/env';
-import { DrinksSection, EventsSection, NewsletterSection, ProductsSection, QuizSection } from './sections/Content';
+import { DrinksSection, EventsSection, NewsletterSection, ProductsSection, QuizSection, ServicesSection } from './sections/Content';
 import { InvoiceRequestsSection, ProductRequestsSection } from './sections/Requests';
 import { ModulesSection, SettingsSection } from './sections/Settings';
 import { StatsSection } from './sections/Stats';
@@ -35,6 +36,7 @@ const NAV = [
   { to: 'roue', label: 'Roue', icon: FerrisWheel, el: <WheelSection /> },
   { to: 'newsletter', label: 'Newsletter', icon: Mail, el: <NewsletterSection /> },
   { to: 'quiz', label: 'Quiz', icon: CircleHelp, el: <QuizSection /> },
+  { to: 'prestations', label: 'Prestations', icon: Scissors, el: <ServicesSection /> },
   { to: 'boissons', label: 'Boissons', icon: Beer, el: <DrinksSection /> },
   { to: 'produits', label: 'Produits', icon: SprayCan, el: <ProductsSection /> },
   { to: 'modules', label: 'Modules', icon: LayoutGrid, el: <ModulesSection /> },

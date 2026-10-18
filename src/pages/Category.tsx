@@ -18,7 +18,8 @@ export default function Category({ category }: { category: CategoryKey }) {
 
   return (
     <Page className="flex flex-col lg:landscape:h-[calc(100dvh-76px)] lg:landscape:pb-4">
-      <PageHeader title={t(`categories.${category}.title`)} eyebrow={t(`categories.${category}.sub`)} />
+      <PageHeader title={t(`categories.${category}.title`)} />
+      <p className="-mt-2 mb-5 max-w-4xl text-xl text-cream/80">{t(`categories.${category}.sub`)}</p>
       <div className={`grid min-h-0 flex-1 auto-rows-fr grid-cols-1 gap-4 sm:grid-cols-2 ${cols}`} data-testid="category-tiles">
         {items.map((m, i) => (
           <Tile

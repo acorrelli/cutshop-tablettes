@@ -78,8 +78,9 @@ const GROUPS: { title: string; fields: FieldDef[] }[] = [
 const MODULE_LABELS: Record<ModuleKey, string> = {
   concept: 'L’histoire',
   booking: 'Prendre rendez vous',
+  services: 'Nos prestations',
   events: 'Les événements',
-  battle: 'La Battle',
+  battle: 'Le Cutshop Challenge',
   stop10: 'Stop à 10 secondes',
   wheel: 'La roue de la fortune',
   kids: 'Le coin des kids',
@@ -121,7 +122,7 @@ export function SettingsSection() {
   return (
     <div className="space-y-6">
       <AdminCard title="Cette tablette">
-        <p className="mb-3 text-sm text-cream/60">Nom enregistré sur l’appareil (statistiques et Battle). Actuellement : {tablet ?? 'non défini'}.</p>
+        <p className="mb-3 text-sm text-cream/60">Nom enregistré sur l’appareil (statistiques et Cutshop Challenge). Actuellement : {tablet ?? 'non défini'}.</p>
         <div className="flex flex-wrap gap-2">
           {TABLET_NAMES.map((n) => (
             <button key={n} type="button" onClick={() => setTablet(n)} className={`min-h-[48px] rounded-xl px-5 font-bold ${tablet === n ? 'bg-gold text-bottle-950' : 'bg-white/10'}`}>

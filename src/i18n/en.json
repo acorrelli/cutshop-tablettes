@@ -35,7 +35,7 @@
       "sub": "DJ, improv, stand up and more"
     },
     "battle": {
-      "title": "The Battle",
+      "title": "The Cutshop Challenge",
       "sub": "Live quiz between tablets"
     },
     "stop10": {
@@ -69,22 +69,28 @@
     "instagram": {
       "title": "Our socials",
       "sub": "Instagram, Facebook, TikTok"
+    },
+    "services": {
+      "title": "Our price list",
+      "sub": "Prices, durations and student rates"
     }
   },
   "home": {
     "greeting": "Take a seat, your moment starts here.",
     "nextEvent": "Next event",
-    "register": "Sign me up"
+    "register": "Sign me up",
+    "socialTitle": "Follow us on social media",
+    "socialSub": "Scan and follow"
   },
   "screensaver": {
     "hook": "Touch the screen, your moment starts here",
     "next": "Next event",
-    "battleInvite": "Challenge the other customers in the Battle!",
-    "battleLive": "A Battle is starting, join in!"
+    "battleInvite": "Challenge the other customers in the Cutshop Challenge!",
+    "battleLive": "A Cutshop Challenge is starting, join in!"
   },
   "setup": {
     "title": "Tablet setup",
-    "text": "Choose this tablet’s name. It is used for statistics and for the Battle. You can change it later in the admin area.",
+    "text": "Choose this tablet’s name. It is used for statistics and for the Cutshop Challenge. You can change it later in the admin area.",
     "choose": "Tablet {{n}}"
   },
   "concept": {
@@ -141,12 +147,12 @@
     "programTitle": "The programme"
   },
   "battle": {
-    "title": "The Battle",
+    "title": "The Cutshop Challenge",
     "intro": "Take on the other customers live on the shop’s tablets. 10 questions, 15 seconds each: accuracy and speed both count!",
     "pseudo": "Your nickname",
     "pseudoPh": "E.g. Blackbeard",
     "pseudoErr": "Pick a nickname to play",
-    "launch": "Start a Battle",
+    "launch": "Start a Cutshop Challenge",
     "solo": "Play solo",
     "theme": "Theme",
     "themes": {
@@ -160,8 +166,8 @@
     },
     "join": "Join",
     "later": "Not now",
-    "invite": "A Battle is starting, join in!",
-    "inviteBy": "{{pseudo}} is starting a Battle from {{tablet}}",
+    "invite": "A Cutshop Challenge is starting, join in!",
+    "inviteBy": "{{pseudo}} is starting a Cutshop Challenge from {{tablet}}",
     "lobby": "Waiting room",
     "waiting": "Waiting for opponents on the other tablets...",
     "startsIn": "Starting in {{s}} s",
@@ -183,17 +189,17 @@
     "gone": "left the game",
     "you": "you",
     "podium": "The podium",
-    "winner": "{{pseudo}} wins the Battle!",
-    "youWin": "Well done, you win the Battle!",
+    "winner": "{{pseudo}} wins the Cutshop Challenge!",
+    "youWin": "Well done, you win the Cutshop Challenge!",
     "spinWon": "You won a spin of the wheel!",
     "spinGo": "Spin the wheel",
     "playAgain": "Play again",
     "soloTitle": "Solo game",
     "soloScore": "Your score: {{n}} points",
     "soloCorrect": "{{n}} correct answers out of {{total}}",
-    "busy": "A Battle is already running on the tablets. Join the next one!",
-    "full": "This Battle is full (4 players).",
-    "missed": "This Battle has already started. Start your own!",
+    "busy": "A Cutshop Challenge is already running on the tablets. Join the next one!",
+    "full": "This Cutshop Challenge is full (4 players).",
+    "missed": "This Cutshop Challenge has already started. Start your own!",
     "quit": "Leave the game",
     "liveNow": "Live",
     "range": "2 to 4 players",
@@ -224,7 +230,7 @@
   "wheel": {
     "title": "Wheel of fortune",
     "locked": "The wheel is activated by the team",
-    "lockedText": "Ask a staff member to enter their code. You can also win a spin by winning a Battle or hitting exactly 10.00 s.",
+    "lockedText": "Ask a staff member to enter their code. You can also win a spin by winning a Cutshop Challenge or hitting exactly 10.00 s.",
     "staffPin": "Staff code",
     "unlock": "Activate the wheel",
     "pinWrong": "Wrong code",
@@ -241,7 +247,7 @@
     "rate": "The wheel has just been spun on this tablet. Try again in a few minutes.",
     "empty": "No prizes available right now.",
     "reason": {
-      "battle": "Free spin for winning the Battle",
+      "battle": "Free spin for winning the Cutshop Challenge",
       "stop10": "Free spin for your perfect 10.00 s",
       "staff": "Spin activated by the team"
     },
@@ -353,26 +359,48 @@
     "title": "Privacy policy"
   },
   "categories": {
-    "games": {
-      "title": "Games",
-      "sub": "Challenge the other customers and have fun"
+    "cutshop": {
+      "title": "The Cutshop concept",
+      "sub": "Discover our story. Join our events."
     },
     "shop": {
       "title": "Drinks and products",
-      "sub": "The bar, your products, the gift card"
+      "sub": "Discover our selection of craft beers and our full range of Nishman products. Which one is made for you?"
     },
-    "cutshop": {
-      "title": "The Cutshop concept",
-      "sub": "Our story and our events"
+    "services": {
+      "title": "Our services",
+      "sub": "Have you taken the time to discover all our services? Self employed or company, ask us for an invoice."
     },
-    "social": {
-      "title": "Our socials",
-      "sub": "Instagram, Facebook, TikTok"
+    "games": {
+      "title": "Games",
+      "sub": "Don’t wait for your turn on your phone, play our games. And try to win a gift."
     }
   },
   "social": {
     "title": "Our socials",
     "sub": "Instagram, Facebook and TikTok",
     "text": "Behind the scenes, new cuts, nights out and giveaways: join the Cutshop community."
+  },
+  "services": {
+    "title": "Our price list",
+    "intro": "All our services, with their duration and price. The student rate is shown next to the regular price.",
+    "categories": {
+      "cut": "Haircuts",
+      "cut_beard": "Cut and beard",
+      "care": "Care and extras",
+      "kids": "Kids"
+    },
+    "student": "Student",
+    "studentLegend": "Student rate",
+    "minutes": "{{n}} min",
+    "shampooNo": "Shampoo not included",
+    "shampooYes": "Shampoo included",
+    "book": "Book",
+    "bookTitle": "Book this service",
+    "bookText": "Scan the QR code, then pick “{{name}}” on Salonkee.",
+    "disclaimer": "Prices shown apply to the selected service. If a different, additional or adapted service is agreed at the salon, the price may be adjusted accordingly.",
+    "invoice": "Self employed or a company? Ask us for an invoice.",
+    "invoiceCta": "Request an invoice",
+    "none": "No services to show for now."
   }
 }

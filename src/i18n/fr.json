@@ -35,7 +35,7 @@
       "sub": "DJ, impro, stand up et plus"
     },
     "battle": {
-      "title": "La Battle",
+      "title": "Le Cutshop Challenge",
       "sub": "Quiz en direct entre tablettes"
     },
     "stop10": {
@@ -69,22 +69,28 @@
     "instagram": {
       "title": "Nos réseaux",
       "sub": "Instagram, Facebook, TikTok"
+    },
+    "services": {
+      "title": "Nos prestations",
+      "sub": "Tarifs, durées et tarifs étudiants"
     }
   },
   "home": {
     "greeting": "Installe toi, ton moment commence ici.",
     "nextEvent": "Prochain événement",
-    "register": "Je m’inscris"
+    "register": "Je m’inscris",
+    "socialTitle": "Suis nous sur nos réseaux sociaux",
+    "socialSub": "Scanne et abonne toi"
   },
   "screensaver": {
     "hook": "Touche l’écran, ton moment commence ici",
     "next": "Prochain événement",
-    "battleInvite": "Défie les autres clients à la Battle !",
-    "battleLive": "Une Battle commence, rejoins la !"
+    "battleInvite": "Défie les autres clients au Cutshop Challenge !",
+    "battleLive": "Un Cutshop Challenge commence, rejoins le !"
   },
   "setup": {
     "title": "Configuration de la tablette",
-    "text": "Choisis le nom de cette tablette. Il sert aux statistiques et à la Battle. Tu pourras le modifier plus tard dans l’espace admin.",
+    "text": "Choisis le nom de cette tablette. Il sert aux statistiques et au Cutshop Challenge. Tu pourras le modifier plus tard dans l’espace admin.",
     "choose": "Tablette {{n}}"
   },
   "concept": {
@@ -141,12 +147,12 @@
     "programTitle": "Le programme"
   },
   "battle": {
-    "title": "La Battle",
+    "title": "Le Cutshop Challenge",
     "intro": "Affronte les autres clients en direct sur les tablettes du salon. 10 questions, 15 secondes chacune : la justesse et la rapidité comptent !",
     "pseudo": "Ton pseudo",
     "pseudoPh": "Ex : Barbe Noire",
     "pseudoErr": "Choisis un pseudo pour jouer",
-    "launch": "Lancer une Battle",
+    "launch": "Lancer un Cutshop Challenge",
     "solo": "Jouer en solo",
     "theme": "Thème",
     "themes": {
@@ -160,8 +166,8 @@
     },
     "join": "Rejoindre",
     "later": "Pas maintenant",
-    "invite": "Une Battle commence, rejoins la !",
-    "inviteBy": "{{pseudo}} lance une Battle depuis {{tablet}}",
+    "invite": "Un Cutshop Challenge commence, rejoins le !",
+    "inviteBy": "{{pseudo}} lance un Cutshop Challenge depuis {{tablet}}",
     "lobby": "Salle d’attente",
     "waiting": "En attente d’adversaires sur les autres tablettes...",
     "startsIn": "Départ dans {{s}} s",
@@ -183,17 +189,17 @@
     "gone": "a quitté la partie",
     "you": "toi",
     "podium": "Le podium",
-    "winner": "{{pseudo}} remporte la Battle !",
-    "youWin": "Bravo, tu remportes la Battle !",
+    "winner": "{{pseudo}} remporte le Cutshop Challenge !",
+    "youWin": "Bravo, tu remportes le Cutshop Challenge !",
     "spinWon": "Tu as gagné un tour de roue !",
     "spinGo": "Je tourne la roue",
     "playAgain": "Rejouer",
     "soloTitle": "Partie solo",
     "soloScore": "Ton score : {{n}} points",
     "soloCorrect": "{{n}} bonnes réponses sur {{total}}",
-    "busy": "Une Battle est déjà en cours sur les tablettes. Rejoins la suivante !",
-    "full": "Cette Battle est complète (4 joueurs).",
-    "missed": "Cette Battle a déjà commencé. Lance la tienne !",
+    "busy": "Un Cutshop Challenge est déjà en cours sur les tablettes. Rejoins la suivante !",
+    "full": "Ce Cutshop Challenge est complet (4 joueurs).",
+    "missed": "Ce Cutshop Challenge a déjà commencé. Lance la tienne !",
     "quit": "Quitter la partie",
     "liveNow": "En direct",
     "range": "2 à 4 joueurs",
@@ -224,7 +230,7 @@
   "wheel": {
     "title": "La roue de la fortune",
     "locked": "La roue s’active avec l’équipe",
-    "lockedText": "Demande à un membre du staff de saisir son code. Tu peux aussi gagner un tour en remportant une Battle ou en réussissant un 10,00 s pile.",
+    "lockedText": "Demande à un membre du staff de saisir son code. Tu peux aussi gagner un tour en remportant un Cutshop Challenge ou en réussissant un 10,00 s pile.",
     "staffPin": "Code staff",
     "unlock": "Activer la roue",
     "pinWrong": "Code incorrect",
@@ -241,7 +247,7 @@
     "rate": "La roue vient déjà de tourner sur cette tablette. Réessaie dans quelques minutes.",
     "empty": "Plus aucun gain disponible pour le moment.",
     "reason": {
-      "battle": "Tour offert pour ta victoire à la Battle",
+      "battle": "Tour offert pour ta victoire au Cutshop Challenge",
       "stop10": "Tour offert pour ton 10,00 s pile",
       "staff": "Tour activé par l’équipe"
     },
@@ -353,26 +359,48 @@
     "title": "Politique de confidentialité"
   },
   "categories": {
-    "games": {
-      "title": "Les jeux",
-      "sub": "Défie les autres clients et amuse toi"
+    "cutshop": {
+      "title": "Le concept Cutshop",
+      "sub": "Découvre notre histoire. Participe à nos événements."
     },
     "shop": {
       "title": "Boissons et produits",
-      "sub": "Le bar, tes produits, la carte cadeau"
+      "sub": "Découvre notre sélection de bières artisanales et toute notre gamme de produits Nishman. Lequel est fait pour toi ?"
     },
-    "cutshop": {
-      "title": "Le concept Cutshop",
-      "sub": "Notre histoire et nos événements"
+    "services": {
+      "title": "Nos services",
+      "sub": "As tu déjà pris le temps de découvrir tous nos services ? Indépendant ou société, demande nous une facture."
     },
-    "social": {
-      "title": "Nos réseaux",
-      "sub": "Instagram, Facebook, TikTok"
+    "games": {
+      "title": "Les jeux",
+      "sub": "N’attends plus ton tour sur ton smartphone, joue à nos jeux. Et essaye de remporter un cadeau."
     }
   },
   "social": {
     "title": "Nos réseaux",
     "sub": "Instagram, Facebook et TikTok",
     "text": "Coulisses, nouvelles coupes, soirées et concours : rejoins la communauté Cutshop."
+  },
+  "services": {
+    "title": "Nos prestations",
+    "intro": "Toutes nos prestations, avec leur durée et leur prix. Le tarif étudiant est indiqué à côté du tarif classique.",
+    "categories": {
+      "cut": "Coupes",
+      "cut_beard": "Coupe et barbe",
+      "care": "Soins et services",
+      "kids": "Enfants"
+    },
+    "student": "Étudiant",
+    "studentLegend": "Tarif étudiant",
+    "minutes": "{{n}} min",
+    "shampooNo": "Shampoing non inclus",
+    "shampooYes": "Shampoing inclus",
+    "book": "Réserver",
+    "bookTitle": "Réserve cette prestation",
+    "bookText": "Scanne le QR code, puis choisis « {{name}} » sur Salonkee.",
+    "disclaimer": "Les prix affichés s’appliquent à la prestation choisie. Si une prestation différente, complémentaire ou adaptée est convenue au salon, le prix peut être ajusté en conséquence.",
+    "invoice": "Indépendant ou société ? Demande nous une facture.",
+    "invoiceCta": "Demander une facture",
+    "none": "Aucune prestation à afficher pour le moment."
   }
 }

@@ -68,7 +68,7 @@ export default function Invoice() {
 
   return (
     <Page>
-      <PageHeader title={t('tiles.invoice.title')} />
+      <PageHeader title={t('tiles.invoice.title')} back="/nos-services" />
       <div className="grid gap-6 lg:grid-cols-[1fr_1.5fr]">
         <section className="card relative overflow-hidden p-8 animate-fade-up">
           <Building2 size={200} strokeWidth={0.8} className="pointer-events-none absolute -bottom-8 -right-8 text-gold opacity-10" />

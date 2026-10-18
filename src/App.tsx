@@ -18,6 +18,7 @@ import Invoice from './pages/Invoice';
 import Privacy from './pages/Privacy';
 import Products from './pages/Products';
 import Screensaver from './pages/Screensaver';
+import Services from './pages/Services';
 import Setup from './pages/Setup';
 import Stop10 from './pages/Stop10';
 import Wheel from './pages/Wheel';
@@ -56,6 +57,7 @@ function Kiosk() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/concept" element={<Gate module="concept"><Concept /></Gate>} />
+            <Route path="/services" element={<Gate module="services"><Services /></Gate>} />
             <Route path="/rdv" element={<Gate module="booking"><Booking /></Gate>} />
             <Route path="/evenements" element={<Gate module="events"><Events /></Gate>} />
             <Route path="/evenements/:id" element={<Gate module="events"><EventRegister /></Gate>} />
@@ -74,6 +76,7 @@ function Kiosk() {
             <Route path="/jeux" element={<Category category="games" />} />
             <Route path="/boissons-produits" element={<Category category="shop" />} />
             <Route path="/cutshop" element={<Category category="cutshop" />} />
+            <Route path="/nos-services" element={<Category category="services" />} />
             <Route path="/confidentialite" element={<Privacy />} />
             <Route
               path="/admin/*"

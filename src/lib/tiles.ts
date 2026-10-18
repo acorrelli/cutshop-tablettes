@@ -1,4 +1,4 @@
-// Organisation de l'accueil : catégories regroupant les modules, plus deux accès directs.
+// Organisation de l'accueil : quatre grandes catégories regroupant les modules, puis les réseaux sociaux.
 import {
   Beer,
   CalendarCheck,
@@ -8,7 +8,7 @@ import {
   History,
   Puzzle,
   Receipt,
-  Share2,
+  Scissors,
   Sparkles,
   SprayCan,
   Swords,
@@ -38,29 +38,30 @@ export const MODULE_TILES: Record<string, TileDef> = {
   gift: { key: 'gift', to: '/cheques', icon: Gift, tone: 'from-cream-300 to-gold-500 text-bottle-900' },
   concept: { key: 'concept', to: '/concept', icon: History, tone: 'from-bottle-600 to-bottle-900' },
   events: { key: 'events', to: '/evenements', icon: Ticket, tone: 'from-bottle-500 to-bottle-700' },
+  services: { key: 'services', to: '/services', icon: Scissors, tone: 'from-gold-600 to-bottle-900' },
   booking: { key: 'booking', to: '/rdv', icon: CalendarCheck, tone: 'from-cream-200 to-cream-400 text-bottle-900' },
   invoice: { key: 'invoice', to: '/factures', icon: Receipt, tone: 'from-bottle-800 to-bottle-950' },
 };
 
-export type CategoryKey = 'games' | 'shop' | 'cutshop' | 'social';
+export type CategoryKey = 'cutshop' | 'shop' | 'services' | 'games';
 
 export interface CategoryDef {
   key: CategoryKey;
   to: string;
   icon: IconType;
   tone: string;
-  /** Modules regroupés (vide pour Nos réseaux, qui est une page directe). */
+  /** Modules regroupés dans la catégorie. */
   items: ModuleKey[];
 }
 
 export const CATEGORIES: CategoryDef[] = [
-  { key: 'games', to: '/jeux', icon: Gamepad2, tone: 'from-gold-500 to-gold-700 text-bottle-950', items: ['battle', 'stop10', 'wheel', 'kids'] },
-  { key: 'shop', to: '/boissons-produits', icon: Beer, tone: 'from-gold-700 to-bottle-900', items: ['drinks', 'products', 'gift'] },
   { key: 'cutshop', to: '/cutshop', icon: Sparkles, tone: 'from-bottle-500 to-bottle-800', items: ['concept', 'events'] },
-  { key: 'social', to: '/reseaux', icon: Share2, tone: 'from-[#6B3A5E] via-[#B8573F] to-[#D4A84B]', items: ['instagram'] },
+  { key: 'shop', to: '/boissons-produits', icon: Beer, tone: 'from-gold-700 to-bottle-900', items: ['drinks', 'products', 'gift'] },
+  { key: 'services', to: '/nos-services', icon: Scissors, tone: 'from-cream-200 to-gold-500 text-bottle-950', items: ['services', 'booking', 'invoice'] },
+  { key: 'games', to: '/jeux', icon: Gamepad2, tone: 'from-gold-500 to-gold-700 text-bottle-950', items: ['battle', 'stop10', 'wheel', 'kids'] },
 ];
 
 /** Catégorie d'un module, pour le bouton retour des pages. */
 export function backFor(module: ModuleKey): string {
-  return CATEGORIES.find((c) => c.items.includes(module) && c.key !== 'social')?.to ?? '/';
+  return CATEGORIES.find((c) => c.items.includes(module))?.to ?? '/';
 }

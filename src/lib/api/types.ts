@@ -4,6 +4,7 @@ import type {
   CutEventWithSeats,
   DeskRequest,
   Drink,
+  Service,
   GameKind,
   GamePlay,
   InvoiceRequest,
@@ -66,6 +67,7 @@ export type RedeemResult =
 /** Tables gérées par le CRUD générique de l'admin. */
 export type AdminTable =
   | 'events'
+  | 'services'
   | 'drinks'
   | 'drink_pairings'
   | 'products'
@@ -74,6 +76,7 @@ export type AdminTable =
 
 export interface AdminTableRow {
   events: CutEvent;
+  services: Service;
   drinks: Drink;
   drink_pairings: Pairing;
   products: Product;
@@ -101,6 +104,7 @@ export interface Api {
   // Contenus publics
   getSettings(): Promise<AppSettings>;
   getEvents(): Promise<CutEventWithSeats[]>;
+  getServices(): Promise<Service[]>;
   getDrinks(): Promise<Drink[]>;
   getPairings(): Promise<Pairing[]>;
   getProducts(): Promise<Product[]>;

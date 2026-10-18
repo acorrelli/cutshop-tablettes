@@ -170,6 +170,64 @@ export function EventsSection() {
   );
 }
 
+const SERVICE_CATS = [
+  { value: 'cut', label: 'Coupes' },
+  { value: 'cut_beard', label: 'Coupe et barbe' },
+  { value: 'care', label: 'Soins et services' },
+  { value: 'kids', label: 'Enfants' },
+];
+
+const euros = (v: number | null) => (v === null ? '' : `${Number(v).toFixed(2).replace('.', ',')} €`);
+
+export function ServicesSection() {
+  return (
+    <CrudSection
+      table="services"
+      title="Prestations"
+      sort={(a, b) => a.sort - b.sort}
+      fields={[
+        { key: 'name_fr', label: 'Nom (FR)', type: 'text', required: true, half: true },
+        { key: 'name_en', label: 'Nom (EN)', type: 'text', half: true },
+        { key: 'category', label: 'Catégorie', type: 'select', half: true, options: SERVICE_CATS },
+        { key: 'duration_min', label: 'Durée (minutes, vide si non précisée)', type: 'number', min: 1, nullable: true, half: true },
+        { key: 'price', label: 'Prix (€)', type: 'number', step: 0.5, min: 0, half: true },
+        { key: 'student_price', label: 'Prix étudiant (€, vide si aucun)', type: 'number', step: 0.5, min: 0, nullable: true, half: true },
+        {
+          key: 'shampoo_included',
+          label: 'Shampoing',
+          type: 'select',
+          half: true,
+          options: [
+            { value: '', label: 'Non précisé' },
+            { value: 'true', label: 'Inclus' },
+            { value: 'false', label: 'Non inclus' },
+          ],
+        },
+        { key: 'sort', label: 'Ordre d’affichage', type: 'number', half: true },
+        { key: 'description_fr', label: 'Description (FR)', type: 'textarea' },
+        { key: 'description_en', label: 'Description (EN)', type: 'textarea' },
+        { key: 'active', label: 'Visible sur les tablettes', type: 'bool' },
+      ]}
+      defaults={() => ({ category: 'cut' as const, name_fr: '', name_en: '', description_fr: '', description_en: '', duration_min: 30, price: 25, student_price: null, shampoo_included: null, sort: 50, active: true })}
+      normalize={(r) => ({
+        ...r,
+        price: Number(r.price),
+        student_price: r.student_price === null || r.student_price === '' ? null : Number(r.student_price),
+        duration_min: r.duration_min === null || r.duration_min === '' ? null : Number(r.duration_min),
+        shampoo_included: r.shampoo_included === true || r.shampoo_included === 'true' ? true : r.shampoo_included === false || r.shampoo_included === 'false' ? false : null,
+      })}
+      columns={[
+        { label: 'Catégorie', render: (v) => SERVICE_CATS.find((c) => c.value === v.category)?.label },
+        { label: 'Prestation', render: (v) => <strong>{v.name_fr}</strong> },
+        { label: 'Durée', render: (v) => (v.duration_min ? `${v.duration_min} min` : '') },
+        { label: 'Prix', render: (v) => euros(v.price) },
+        { label: 'Étudiant', render: (v) => euros(v.student_price) },
+        { label: 'Statut', render: (v) => <StatusPill on={v.active} onLabel="Visible" offLabel="Masquée" /> },
+      ]}
+    />
+  );
+}
+
 export function DrinksSection() {
   return (
     <div className="space-y-6">

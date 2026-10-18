@@ -11,7 +11,7 @@ export default function Booking() {
   const url = content?.settings.salonkee_url ?? '';
   return (
     <Page>
-      <PageHeader title={t('booking.title')} eyebrow="Salonkee" />
+      <PageHeader title={t('booking.title')} eyebrow="Salonkee" back="/nos-services" />
       <div className="card grid items-center gap-10 p-8 md:grid-cols-[auto_1fr] md:p-12 animate-fade-up">
         <QrCode value={url} size={340} className="mx-auto" />
         <div>

@@ -13,12 +13,42 @@ test.describe('Fonctionnement des tablettes', () => {
     expect(errors).toEqual([]);
   });
 
+  test('nos services : catégories, tarifs étudiants et réservation', async ({ page }) => {
+    const errors = watchConsole(page);
+    await openTablet(page);
+    await page.getByTestId('cat-services').click();
+    await page.getByTestId('tile-services').click();
+    await expect(page.getByTestId('service-card')).toHaveCount(7);
+    const taper = page.getByTestId('service-card').filter({ hasText: 'Coupe taper' });
+    await expect(taper).toContainText(/25,00\s?€/);
+    await expect(taper.getByTestId('student-price')).toContainText(/22,00\s?€/);
+    await expect(taper).toContainText('Shampoing non inclus');
+    await page.getByTestId('services-cut_beard').click();
+    await expect(page.getByTestId('service-card')).toHaveCount(7);
+    await expect(page.getByTestId('service-card').filter({ hasText: 'Coupe mulet + barbe' })).toContainText(/42,50\s?€/);
+    await page.getByTestId('services-care').click();
+    await expect(page.getByTestId('service-card').filter({ has: page.getByRole('heading', { name: 'Épilation', exact: true }) })).toContainText(/15,00\s?€/);
+    await page.getByTestId('services-kids').click();
+    await expect(page.getByTestId('service-card')).toHaveCount(2);
+    await page.getByTestId('service-book').first().click();
+    await expect(page.getByTestId('service-book-sheet')).toContainText('Coupe enfant');
+    await expectNoDashes(page);
+    await page.keyboard.press('Escape');
+    await expect(page.getByTestId('service-book-sheet')).toHaveCount(0);
+    await page.getByTestId('lang-en').click();
+    await expect(page.getByTestId('service-card').first()).toContainText('Kids cut');
+    await expectNoDashes(page);
+    expect(errors).toEqual([]);
+  });
+
   test('accueil : tuiles, langue, grand texte et retour accueil', async ({ page }) => {
     const errors = watchConsole(page);
     await openTablet(page);
-    // Accueil : 4 catégories et 2 accès directs.
-    await expect(page.getByTestId('tiles').locator('a')).toHaveCount(6);
-    for (const c of ['games', 'shop', 'cutshop', 'social']) await expect(page.getByTestId(`cat-${c}`)).toBeVisible();
+    // Accueil : 4 grands menus, puis les réseaux sociaux à part.
+    await expect(page.getByTestId('tiles').locator('a')).toHaveCount(4);
+    for (const c of ['cutshop', 'shop', 'services', 'games']) await expect(page.getByTestId(`cat-${c}`)).toBeVisible();
+    for (const n of ['instagram', 'facebook', 'tiktok']) await expect(page.getByTestId(`home-social-${n}`)).toBeVisible();
+    await expect(page.getByTestId('cat-games')).toContainText('remporter un cadeau');
     await page.getByTestId('cat-games').click();
     await expect(page.getByTestId('tile-battle')).toBeVisible();
     // La roue est masquée tant que l'équipe ne l'a pas activée.
@@ -28,11 +58,14 @@ test.describe('Fonctionnement des tablettes', () => {
     await expect(page.getByTestId('next-event-banner')).toBeVisible();
     await expectNoDashes(page);
 
+    await page.getByTestId('cat-services').click();
+    await expect(page.getByTestId('category-tiles').locator('a')).toHaveCount(3);
     await page.getByTestId('lang-en').click();
     await expect(page.getByTestId('tile-booking')).toContainText('Book an appointment');
     await expectNoDashes(page);
     await page.getByTestId('lang-fr').click();
     await expect(page.getByTestId('tile-booking')).toContainText('Prendre rendez vous');
+    await page.getByTestId('back-button').click();
 
     const before = await page.evaluate(() => getComputedStyle(document.documentElement).fontSize);
     await page.getByTestId('large-text').click();

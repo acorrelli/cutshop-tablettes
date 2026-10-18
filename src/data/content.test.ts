@@ -7,6 +7,7 @@ import {
   EVENT_PROGRAM,
   EVENT_TYPES,
   SEED_DRINKS,
+  SEED_SERVICES,
   SEED_PAIRINGS,
   SEED_PRIZES,
   SEED_PRODUCTS,
@@ -40,6 +41,7 @@ describe('règle des tirets', () => {
       settings: DEFAULT_SETTINGS,
       events: EVENT_TYPES,
       program: EVENT_PROGRAM,
+      services: SEED_SERVICES,
       drinks: SEED_DRINKS,
       pairings: SEED_PAIRINGS,
       products: SEED_PRODUCTS,
@@ -56,6 +58,22 @@ describe('règle des tirets', () => {
 });
 
 describe('données d’exemple', () => {
+  it('prestations : identifiants uniques, prix cohérents, tarif étudiant toujours plus bas', () => {
+    expect(new Set(SEED_SERVICES.map((s) => s.id)).size).toBe(SEED_SERVICES.length);
+    for (const s of SEED_SERVICES) {
+      expect(s.name_fr && s.name_en && s.description_fr && s.description_en).toBeTruthy();
+      expect(s.price).toBeGreaterThan(0);
+      if (s.student_price !== null) expect(s.student_price).toBeLessThan(s.price);
+    }
+    const byName = (n: string) => SEED_SERVICES.find((s) => s.name_fr === n)!;
+    expect(byName('Coupe dégradé zéro')).toMatchObject({ price: 25, student_price: 22, duration_min: 30 });
+    expect(byName('Coupe transformation (+5 cm)')).toMatchObject({ price: 35, student_price: 33, duration_min: 40 });
+    expect(byName('Coupe simple + barbe')).toMatchObject({ price: 42.5, student_price: 38, duration_min: 40 });
+    expect(byName('Coupe + barbe + soin visage')).toMatchObject({ price: 75, duration_min: 70 });
+    expect(byName('Épilation')).toMatchObject({ price: 15, duration_min: 15 });
+    expect(SEED_SERVICES.filter((s) => s.category === 'kids').every((s) => s.price === 19)).toBe(true);
+  });
+
   it('contient au moins 80 questions complètes en FR et EN', () => {
     expect(SEED_QUESTIONS.length).toBeGreaterThanOrEqual(80);
     const ids = new Set(SEED_QUESTIONS.map((q) => q.id));

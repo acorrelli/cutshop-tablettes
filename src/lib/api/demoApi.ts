@@ -5,6 +5,7 @@
 import {
   DEFAULT_SETTINGS,
   SEED_DRINKS,
+  SEED_SERVICES,
   SEED_PAIRINGS,
   SEED_PRIZES,
   SEED_PRODUCTS,
@@ -29,13 +30,14 @@ import { generateCode, pickWeighted } from '../wheel';
 import { mergeSettings } from './supabaseApi';
 import type { AdminTable, AdminTableRow, Api, RegisterResult } from './types';
 
-const LS_KEY = 'cutshop.demo.v3';
+const LS_KEY = 'cutshop.demo.v4';
 export const DEMO_PASSWORD = 'demo';
 
 interface SharedState {
   settings: AppSettings;
   pin: string;
   events: CutEvent[];
+  services: AdminTableRow['services'][];
   drinks: AdminTableRow['drinks'][];
   drink_pairings: AdminTableRow['drink_pairings'][];
   products: AdminTableRow['products'][];
@@ -60,6 +62,7 @@ function freshShared(): SharedState {
     settings: structuredClone(DEFAULT_SETTINGS),
     pin: '2468',
     events: buildSeedEvents(),
+    services: structuredClone(SEED_SERVICES),
     drinks: structuredClone(SEED_DRINKS),
     drink_pairings: structuredClone(SEED_PAIRINGS),
     products: structuredClone(SEED_PRODUCTS),
@@ -146,6 +149,10 @@ export function createDemoApi(): Api {
         .filter((e) => e.published && new Date(e.ends_at ?? new Date(e.starts_at).getTime() + 7200000).getTime() > now)
         .sort((a, b) => a.starts_at.localeCompare(b.starts_at))
         .map((e) => ({ ...e, seats_left: Math.max(0, e.capacity - seatsTaken(e.id)) }));
+    },
+    async getServices() {
+      refresh();
+      return shared.services.filter((s) => s.active).sort((a, b) => a.sort - b.sort);
     },
     async getDrinks() {
       refresh();

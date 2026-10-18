@@ -5,6 +5,7 @@ export type Lang = 'fr' | 'en';
 export type ModuleKey =
   | 'concept'
   | 'booking'
+  | 'services'
   | 'events'
   | 'battle'
   | 'stop10'
@@ -19,6 +20,7 @@ export type ModuleKey =
 export const MODULE_KEYS: ModuleKey[] = [
   'concept',
   'booking',
+  'services',
   'events',
   'battle',
   'stop10',
@@ -117,6 +119,25 @@ export interface NewsletterSubscriber {
   last_name: string;
   source: string;
   created_at: string;
+}
+
+export type ServiceCategory = 'cut' | 'cut_beard' | 'care' | 'kids';
+
+/** Prestation du salon, avec son tarif classique et, le cas échéant, son tarif étudiant. */
+export interface Service {
+  id: string;
+  category: ServiceCategory;
+  name_fr: string;
+  name_en: string;
+  description_fr: string;
+  description_en: string;
+  duration_min: number | null;
+  price: number;
+  student_price: number | null;
+  /** true : shampoing inclus, false : non inclus, null : non précisé. */
+  shampoo_included: boolean | null;
+  sort: number;
+  active: boolean;
 }
 
 export type DrinkCategory = 'beer' | 'soft' | 'other';
@@ -291,6 +312,7 @@ export interface GamePlay {
 export interface PublicContent {
   settings: AppSettings;
   events: CutEventWithSeats[];
+  services: Service[];
   drinks: Drink[];
   pairings: Pairing[];
   products: Product[];

@@ -61,16 +61,17 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const loadAll = useCallback(async () => {
     try {
-      const [settings, events, drinks, pairings, products, questions, segments] = await Promise.all([
+      const [settings, events, services, drinks, pairings, products, questions, segments] = await Promise.all([
         api.getSettings(),
         api.getEvents(),
+        api.getServices(),
         api.getDrinks(),
         api.getPairings(),
         api.getProducts(),
         api.getQuestions(),
         api.getWheelSegments(),
       ]);
-      setContent({ settings, events, drinks, pairings, products, questions, segments });
+      setContent({ settings, events, services, drinks, pairings, products, questions, segments });
       setContentError(false);
     } catch {
       // Hors ligne : on garde les contenus déjà chargés (le service worker sert aussi le cache).

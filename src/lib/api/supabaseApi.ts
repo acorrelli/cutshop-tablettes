@@ -60,6 +60,17 @@ export function createSupabaseApi(sb: SupabaseClient): Api {
         return (data ?? []) as CutEventWithSeats[];
       }),
 
+    getServices: () =>
+      wrap(async () => {
+        const { data, error } = await sb.from('services').select('*').eq('active', true).order('sort');
+        check(error);
+        return (data ?? []).map((s) => ({
+          ...s,
+          price: Number(s.price),
+          student_price: s.student_price === null ? null : Number(s.student_price),
+        }));
+      }),
+
     getDrinks: () =>
       wrap(async () => {
         const { data, error } = await sb.from('drinks').select('*').eq('active', true).order('sort');

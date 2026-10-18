@@ -37,6 +37,17 @@ do $$ begin
   assert (select count(*) from public.get_public_events()) >= 15, 'anon voit les événements publics';
   assert (select count(*) from public.quiz_questions) >= 80, 'anon lit les questions';
   assert (select count(*) from public.get_wheel_segments()) = 5, 'anon lit les segments';
+  assert (select count(*) from public.services) = 21, 'anon lit les prestations';
+  assert (select student_price from public.services where name_fr = 'Coupe taper') = 22, 'tarif étudiant de la coupe taper';
+end $$;
+
+-- anon ne peut pas modifier les prestations.
+do $$ begin
+  begin
+    update public.services set price = 0;
+    raise exception 'anon a pu modifier les prestations';
+  exception when insufficient_privilege then null;
+  end;
 end $$;
 
 -- anon ne peut pas lire les données personnelles.

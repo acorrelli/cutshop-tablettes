@@ -12,6 +12,7 @@ export function Tile({
   index = 0,
   className = '',
   testId,
+  inline = false,
   children,
 }: {
   to: string;
@@ -22,6 +23,8 @@ export function Tile({
   index?: number;
   className?: string;
   testId?: string;
+  /** Icône à côté du titre plutôt qu'en haut : pour les tuiles basses aux textes longs. */
+  inline?: boolean;
   children?: ReactNode;
 }) {
   return (
@@ -32,10 +35,21 @@ export function Tile({
       style={{ animation: `fade-up 0.45s ease-out ${index * 0.04}s both` }}
     >
       <Icon size={190} strokeWidth={1} className="pointer-events-none absolute -right-8 -top-8 opacity-[0.15] transition group-active:rotate-6" />
-      <span className="mb-auto grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-black/20 ring-1 ring-white/15">
-        <Icon size={30} strokeWidth={2} />
-      </span>
-      <span className="mt-3 block text-[1.45rem] font-black uppercase leading-[1.1] tracking-wide">{title}</span>
+      {inline ? (
+        <span className="mt-auto flex items-center gap-3">
+          <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-black/20 ring-1 ring-white/15">
+            <Icon size={26} strokeWidth={2} />
+          </span>
+          <span className="block text-[1.45rem] font-black uppercase leading-[1.1] tracking-wide">{title}</span>
+        </span>
+      ) : (
+        <>
+          <span className="mb-auto grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-black/20 ring-1 ring-white/15">
+            <Icon size={30} strokeWidth={2} />
+          </span>
+          <span className="mt-3 block text-[1.45rem] font-black uppercase leading-[1.1] tracking-wide">{title}</span>
+        </>
+      )}
       <span className="mt-1 block text-base font-bold opacity-80">{sub}</span>
       {children}
     </Link>

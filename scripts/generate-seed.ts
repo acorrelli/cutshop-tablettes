@@ -8,6 +8,7 @@ import {
   DEFAULT_SETTINGS,
   buildSeedEvents,
   SEED_DRINKS,
+  SEED_SERVICES,
   SEED_PAIRINGS,
   SEED_PRIZES,
   SEED_PRODUCTS,
@@ -34,6 +35,14 @@ out.push('-- Programme des événements (dates fixes, heure de Bruxelles).');
 for (const e of buildSeedEvents()) {
   out.push(
     `insert into public.events (kind, title_fr, title_en, description_fr, description_en, recurrence_fr, recurrence_en, image_url, starts_at, ends_at, capacity, published) values (${s(e.kind)}, ${s(e.title_fr)}, ${s(e.title_en)}, ${s(e.description_fr)}, ${s(e.description_en)}, ${s(e.recurrence_fr)}, ${s(e.recurrence_en)}, ${s(e.image_url)}, ${s(e.starts_at)}, ${s(e.ends_at)}, ${e.capacity}, true);`,
+  );
+}
+out.push('');
+
+out.push('-- Prestations');
+for (const v of SEED_SERVICES) {
+  out.push(
+    `insert into public.services (category, name_fr, name_en, description_fr, description_en, duration_min, price, student_price, shampoo_included, sort, active) values (${s(v.category)}, ${s(v.name_fr)}, ${s(v.name_en)}, ${s(v.description_fr)}, ${s(v.description_en)}, ${n(v.duration_min)}, ${v.price}, ${n(v.student_price)}, ${v.shampoo_included === null ? 'null' : b(v.shampoo_included)}, ${v.sort}, ${b(v.active)});`,
   );
 }
 out.push('');
@@ -77,4 +86,4 @@ out.push('commit;');
 out.push('');
 
 writeFileSync(join(root, 'supabase', 'seed.sql'), out.join('\n'));
-console.log(`seed.sql généré : ${SEED_QUESTIONS.length} questions, ${SEED_DRINKS.length} boissons, ${SEED_PRODUCTS.length} produits.`);
+console.log(`seed.sql généré : ${SEED_QUESTIONS.length} questions, ${SEED_SERVICES.length} prestations, ${SEED_DRINKS.length} boissons, ${SEED_PRODUCTS.length} produits.`);
