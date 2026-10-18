@@ -322,7 +322,7 @@ function Finished({ room, me }: { room: Room; me: RoomPlayer }) {
   const podium = [ranked[1], ranked[0], ranked[2]].filter(Boolean);
 
   return (
-    <Page className="relative z-[1] flex flex-col items-center pt-6 lg:landscape:h-[calc(100dvh-76px)]">
+    <Page className="relative z-[1] flex flex-col items-center pt-4 lg:landscape:h-[calc(100dvh-76px)]">
       <ArcadeBackdrop image={GAME_ART[room.game].bg} />
       <div className="card w-full max-w-4xl border-white/10 bg-black/65 p-7 animate-pop" data-testid="room-finished">
         <div className="text-center">
@@ -333,9 +333,9 @@ function Finished({ room, me }: { room: Room; me: RoomPlayer }) {
         </div>
 
         {/* Podium */}
-        <div className="mt-6 flex items-end justify-center gap-4" data-testid="podium">
+        <div className="mt-4 flex items-end justify-center gap-4" data-testid="podium">
           {podium.map((p) => {
-            const h = p.rank === 1 ? 'h-40' : p.rank === 2 ? 'h-28' : 'h-20';
+            const h = p.rank === 1 ? 'h-32' : p.rank === 2 ? 'h-24' : 'h-16';
             return (
               <div key={p.table} className="flex w-44 flex-col items-center">
                 {p.rank === 1 && <Crown size={36} className="mb-1 text-gold" />}

@@ -5,4 +5,7 @@ import type { GameProps } from './types';
 
 export const GAME_COMPONENTS: Partial<Record<GameKey, LazyExoticComponent<ComponentType<GameProps>>>> = {
   pour: lazy(() => import('./pour/PerfectPour')),
+  findit: lazy(() => import('./findit/FindIt')),
+  barber: lazy(() => import('./barber/BarberRush')),
+  beat: lazy(() => import('./beat/BeatDrop')),
 };

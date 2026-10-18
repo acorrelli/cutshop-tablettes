@@ -476,9 +476,10 @@
       "exitMulti": "You will be ranked as having quit and your opponents will carry on without you."
     },
     "audio": {
-      "ask": "Beat Drop is played with music. Turn the sound on to enjoy the rhythm.",
-      "on": "Sound on: set the volume as you like.",
-      "enable": "Turn sound on"
+      "ask": "Beat Drop is played with music: turn the sound on.",
+      "on": "Sound on, set the volume at the top right.",
+      "enable": "Turn sound on",
+      "calibrate": "Calibrate"
     },
     "rules": {
       "pour": [
@@ -496,8 +497,7 @@
       "beat": [
         "Notes fall down 4 lanes.",
         "Tap the lane when the note crosses the line. Hold for long notes.",
-        "PERFECT or GOOD: keep going to build your combo and a multiplier up to x4.",
-        "Choose your difficulty: EASY, MEDIUM or HARD."
+        "PERFECT or GOOD: keep going to build your combo and a multiplier up to x4."
       ],
       "findit": [
         "A Cutshop scene appears with a list of objects to find.",

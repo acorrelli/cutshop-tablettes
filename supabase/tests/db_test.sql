@@ -596,7 +596,7 @@ do $$ begin
   assert not public.arcade_is_plausible('barber', 'std', 1000, '{"served":2}'), 'barber : trop de points par client';
   assert public.arcade_is_plausible('findit', 'race', 1700, '{"found":10,"scenes":1}'), 'findit plausible';
   assert not public.arcade_is_plausible('findit', 'race', 1701, '{"found":10,"scenes":1}'), 'findit invraisemblable';
-  assert public.arcade_is_plausible('beat', 'hard', 158800, '{"perfect":400,"good":0,"judgements":400}'), 'beat hard au plafond';
+  assert public.arcade_is_plausible('beat', 'hard', 157200, '{"perfect":400,"good":0,"judgements":400}'), 'beat hard au plafond';
   assert not public.arcade_is_plausible('beat', 'easy', 48001, '{"perfect":400,"good":0,"judgements":400}'), 'beat easy au-delà du plafond';
   assert not public.arcade_is_plausible('beat', 'medium', 800, '{"perfect":2,"good":1,"judgements":2}'), 'beat : plus de touches que de notes';
   assert not public.arcade_is_plausible('pour', 'std', -1, '{"glasses":5}'), 'score négatif';

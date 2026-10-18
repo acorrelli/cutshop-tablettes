@@ -16,6 +16,7 @@ Application web installée sur les 4 tablettes Android de l'espace d'attente du 
 8. Développement local et tests
 9. Sécurité, RGPD et fonctionnement hors ligne
 10. Structure du dépôt
+11. Cutshop Arcade et Cutshop Challenge
 
 ## 1. Ce que fait l'application
 
@@ -27,6 +28,7 @@ L'accueil présente quatre grands menus (Le concept Cutshop, Boissons et produit
 | Nos prestations | Coupes, coupe et barbe, soins et services, enfants : durée, description, prix classique et prix étudiant côte à côte, bouton « Réserver » qui affiche le QR code Salonkee |
 | Prendre rendez vous | Grand QR code vers Salonkee, aucune donnée saisie sur la tablette |
 | Les événements | Cartes triées par date, places restantes, inscription avec consentement RGPD, newsletter facultative, blocage quand c'est complet |
+| Cutshop Arcade | 4 mini jeux exclusifs (Barber Rush, Perfect Pour, Beat Drop, Find It Cutshop) en solo, en duel ou en battle entre tables, avec la plateforme Cutshop Challenge : classements, revanches et challenge de la semaine (voir la partie 11) |
 | Le Quiz Cutshop | Quiz multijoueur en temps réel entre les 4 tablettes (2 à 4 joueurs), 10 questions de 15 secondes, classement animé, podium, solo contre le chrono si personne ne rejoint |
 | Stop à 10 secondes | Chrono au centième, caché après 3 secondes, classement du jour remis à zéro chaque nuit |
 | La roue de la fortune | Visible seulement si l'équipe l'active, tirage pondéré côté serveur, code gagnant unique de 6 caractères |
@@ -44,7 +46,7 @@ Fonctionnement commun : bouton FR / EN et bouton grand texte toujours visibles, 
 ## 2. Créer le projet Supabase
 
 1. Crée un compte sur [supabase.com](https://supabase.com) puis un nouveau projet. Choisis une région européenne (par exemple Frankfurt ou Paris) et note bien le mot de passe de la base.
-2. Ouvre **SQL Editor**, clique sur **New query**, colle tout le contenu de `supabase/migrations/20261015000001_init.sql` et clique sur **Run**. Fais de même, dans l'ordre, avec les migrations suivantes du dossier (par exemple `20261018000001_services.sql`, qui ajoute les prestations). Le schéma complet est créé : tables, index, politiques RLS, fonctions serveur (inscriptions, roue, validation des codes, purge RGPD) et le bucket de photos `media`.
+2. Ouvre **SQL Editor**, clique sur **New query**, colle tout le contenu de `supabase/migrations/20261015000001_init.sql` et clique sur **Run**. Fais de même, dans l'ordre, avec les migrations suivantes du dossier (par exemple `20261018000001_services.sql`, qui ajoute les prestations, puis `20261018000002_arcade.sql`, le serveur de Cutshop Arcade). Le schéma complet est créé : tables, index, politiques RLS, fonctions serveur (inscriptions, roue, validation des codes, purge RGPD) et le bucket de photos `media`.
 3. Nouvelle requête : colle le contenu de `supabase/seed.sql` et clique sur **Run**. Les données d'exemple sont chargées : réglages, événements récurrents (dates calculées à partir du jour d'exécution), boissons, accords « Ta coupe, ta bière », produits, gains de la roue et 90 questions de quiz en FR et EN. Ce fichier ne doit être exécuté qu'une seule fois.
 4. Dans **Authentication**, section des fournisseurs de connexion, garde le fournisseur **Email** actif mais **désactive l'inscription libre** (option « Allow new users to sign up »). Seule l'équipe aura un compte.
 5. Dans les réglages **Realtime**, laisse l'accès aux canaux publics autorisé (l'option « canaux privés uniquement » doit rester désactivée) : le Quiz Cutshop utilise un canal public de présence et de diffusion, sans aucune donnée personnelle.
@@ -140,6 +142,7 @@ Tout se fait dans l'admin (appui long de 5 secondes sur le logo) :
 | Prestations | Services du salon : catégorie, durée, prix, prix étudiant, shampoing inclus ou non, descriptions FR et EN |
 | Boissons | Carte du bar et accords « Ta coupe, ta bière » |
 | Produits | Catalogue et étiquettes de correspondance (types de cheveux, cuir chevelu, barbe, effets) |
+| Arcade | Jeux actifs, expiration et limite des invitations, délai de mise en veille, association des tablettes aux tables, challenge de la semaine, modération des scores et des pseudos, remise à zéro, parties récentes, statistiques anonymisées |
 | Modules | Afficher ou masquer chaque tuile, dont la roue de la fortune |
 | Réglages | Nom de la tablette, code PIN staff, lien Salonkee, adresse, horaires, contact, textes du concept, chèques cadeaux, factures pros, politique de confidentialité, photos, nettoyage RGPD |
 | Statistiques | Parties jouées, inscriptions par événement, tours de roue et demandes produits, par jour et par tablette |
@@ -206,3 +209,60 @@ supabase/seed.sql              Données d'exemple
 supabase/tests/                Tests SQL
 tests/e2e/                     Tests de bout en bout Playwright
 ```
+
+## 11. Cutshop Arcade et Cutshop Challenge
+
+### Les jeux
+
+| Jeu | Durée | Principe | Barème |
+| --- | --- | --- | --- |
+| Barber Rush | 90 s | Choisir le bon outil et réaliser le geste demandé sur chaque client | 100 par client, bonus de précision et de vitesse jusqu'à +50 chacun, x2 après 3 réussites, mauvais outil ou client parti : points en moins |
+| Perfect Pour | 60 s | Maintenir pour tirer la bière, relâcher juste au dessus de la zone parfaite (la mousse retombe) | Parfait 200, très bien 150, pas mal 75, bonus de série jusqu'à +100 |
+| Beat Drop | 72 s | 4 couloirs, notes simples et longues sur 3 musiques originales générées dans le code (EASY, MEDIUM, HARD) | PERFECT ±60 ms, GOOD ±120 ms, multiplicateur de combo jusqu'à x4 |
+| Find It Cutshop | 90 s | Retrouver 5 objets par scène dans 4 décors du Cutshop. Mode course au score ou chasse compétitive (objets partagés) | 100 par objet, bonus de vitesse jusqu'à +50, scène sans erreur +200, erreur −10 |
+
+Toutes les tablettes d'une même partie reçoivent la même graine : mêmes verres, mêmes clients, mêmes notes, mêmes objets.
+
+### Architecture
+
+* `src/arcade/registry.ts` décrit chaque jeu (durée, variantes, score maximal, score de référence). Ajouter un jeu revient à ajouter une entrée, un moteur et un composant dans `src/arcade/games/<jeu>/`.
+* Chaque jeu sépare un **moteur pur** (`engine.ts`, sans affichage, testé) et un **composant** qui reçoit le contrat commun `GameProps` (`src/arcade/games/types.ts`) : graine, variante, horloge du serveur, heure de départ, durée, son, langue, score en direct et fin de partie.
+* `src/arcade/server/logic.ts` contient les **règles officielles** sous forme de fonctions pures. Le serveur de démonstration les exécute dans le navigateur (plusieurs onglets, verrou Web Locks). Le serveur Supabase applique exactement les mêmes règles en SQL (`supabase/migrations/20261018000002_arcade.sql`, fonctions `arcade_*` en SECURITY DEFINER, tables fermées aux tablettes). Toute évolution des règles se fait des deux côtés.
+* `src/arcade/ArcadeContext.tsx` gère l'identité de la table, l'horloge synchronisée sur le serveur (décalage mesuré à chaque échange), l'état partagé (tables, invitations, partie), le pseudo et le son de la session.
+
+### Protocole (version 1, constante `ARCADE_PROTOCOL`)
+
+La tablette envoie toutes les 2 secondes un signe de vie (`arcade_snapshot`) et reçoit l'état complet : tables (disponible, invitée, en attente, prête, en partie, hors ligne), invitations reçues et partie en cours. Un signal Realtime (`cutshop-arcade`) déclenche une mise à jour immédiate quand une autre table agit. Les scores en direct des adversaires passent par un second canal (`cutshop-arcade-live`) et ne servent qu'à l'affichage.
+
+| Action | Fonction | Règles appliquées par le serveur |
+| --- | --- | --- |
+| Défier | `arcade_create_room` | 1 table : duel, 2 ou 3 tables : battle. Tables invitées en ligne et libres, une seule partie par tablette, limite d'invitations sur 2 minutes |
+| Répondre | `arcade_respond` | Invitation encore valable (expiration réglable), accepter refuse automatiquement les autres invitations |
+| Prêt | `arcade_set_ready` | Seulement dans un lobby |
+| Lancer | `arcade_start` | Hôte uniquement, au moins 2 joueurs prêts, départ commun fixé par le serveur 4 secondes plus tard |
+| Quitter | `arcade_leave` | Hôte qui quitte le lobby : partie annulée. Joueur qui quitte une partie : classé en abandon |
+| Résultat | `arcade_submit_result` | Un seul envoi, pas avant la fin officielle (2,5 s de tolérance), au plus 20 s après (reconnexion), contrôle de cohérence |
+| Objet trouvé (chasse) | `arcade_claim` | Le premier arrivé l'emporte, 300 ms minimum entre deux réclamations d'une table |
+| Revanche | `arcade_rematch` | Nouvelle salle, mêmes adversaires, qui acceptent à nouveau |
+| Solo | `arcade_start_solo`, `arcade_submit_solo` | Session ouverte par le serveur, durée minimale respectée, contrôle de cohérence |
+
+Une tablette déconnectée pendant le lobby le quitte au bout de 15 secondes. Pendant une partie, elle peut revenir et finir le temps restant : son résultat est renvoyé automatiquement tant que le délai de grâce n'est pas écoulé, sinon elle est classée en abandon. Hors ligne, le solo reste jouable mais le score n'est pas enregistré.
+
+**Limites anti triche** : le serveur ne rejoue pas les parties. Il vérifie l'horloge (départ, fin, délai), le plafond théorique de chaque jeu et la cohérence entre le score et les statistiques envoyées (verres, clients, objets, notes). En chasse compétitive, le score officiel est recalculé à partir des objets attribués par le serveur. Une tablette modifiée pourrait encore envoyer un score faux mais plausible : l'admin peut supprimer tout score suspect.
+
+### Classements
+
+* **Points Challenge** : chaque score solo est ramené sur 1 000 points pour une très bonne partie (1 500 au maximum). Le classement général additionne le meilleur résultat de chaque jeu : rejouer cent fois ne rapporte rien de plus.
+* **Par jeu** : meilleur score de chaque joueur sur la période (aujourd'hui, semaine, mois, depuis toujours, heure de Bruxelles).
+* **Duels** : 3 points par victoire. **Battles** : 5, 3 et 1 point pour les trois premiers.
+* **Égalités dans une partie** : score le plus élevé, puis résultat validé en premier, puis plus petit numéro de table. Dans les classements : valeur la plus haute, puis performance atteinte en premier, puis ordre alphabétique.
+* **Challenge de la semaine** : créé dans l'admin (jeu, dates, titre, description et récompense en FR et EN), classé sur les meilleurs scores solo de la période.
+
+### Tables et tablettes
+
+En production, chaque tablette crée un jeton secret aléatoire. Dans l'admin, rubrique Arcade, l'équipe associe la tablette à sa table (1 à 4) : l'interface client ne peut pas choisir ni changer de table. En démonstration, la table est le numéro du nom de la tablette (Tablette 1 à 4).
+
+### Tester 4 tables sur un ordinateur
+
+Lance `npm run dev`, puis ouvre 4 onglets du même navigateur avec `?tablet=Tablette%201` à `?tablet=Tablette%204`. Depuis l'onglet 1, ouvre Les jeux, Cutshop Arcade, Cutshop Challenge, choisis une ou plusieurs tables et envoie le défi : l'invitation apparaît dans les autres onglets.
+

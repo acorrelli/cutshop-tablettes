@@ -195,7 +195,7 @@ as $$
     when 'barber' then 9000
     when 'pour' then 8000
     when 'findit' then 7000
-    when 'beat' then case p_variant when 'medium' then 125600 when 'hard' then 158800 else 48000 end
+    when 'beat' then case p_variant when 'medium' then 124000 when 'hard' then 157200 else 47200 end
   end;
 $$;
 

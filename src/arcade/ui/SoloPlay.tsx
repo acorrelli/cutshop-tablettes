@@ -1,7 +1,7 @@
 // Partie solo : présentation et règles, (choix de difficulté, son pour Beat Drop), partie, puis résultats.
 // Hors ligne, la partie se joue quand même mais le score n'est pas enregistré.
-import { ArrowLeft, Headphones, Play, RotateCcw, Swords, Trophy, WifiOff } from 'lucide-react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { ArrowLeft, Gauge, Headphones, Play, RotateCcw, Swords, Trophy, WifiOff } from 'lucide-react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { Page } from '../../components/ui';
@@ -25,6 +25,7 @@ export const RESULT_STATS: Record<GameKey, string[]> = {
 };
 
 const COUNTDOWN_MS = 3500;
+const BeatCalibration = lazy(() => import('../games/beat/Calibration'));
 
 type Phase = { kind: 'intro' } | { kind: 'playing'; seed: number; startAt: number; session: SoloSession | null } | { kind: 'result'; result: GameResult; session: SoloSession | null };
 
@@ -47,6 +48,7 @@ function Solo({ game }: { game: GameKey }) {
   const [phase, setPhase] = useState<Phase>({ kind: 'intro' });
   const [error, setError] = useState<string | null>(null);
   const [starting, setStarting] = useState(false);
+  const [calibrating, setCalibrating] = useState(false);
 
   const start = async () => {
     unlockArcadeAudio();
@@ -113,12 +115,12 @@ function Solo({ game }: { game: GameKey }) {
           </div>
         </div>
 
-        <div className="card flex min-h-0 flex-col gap-5 overflow-y-auto border-white/10 bg-black/60 p-6 animate-fade-up" data-testid="solo-intro">
+        <div className="card flex min-h-0 flex-col gap-4 overflow-y-auto border-white/10 bg-black/60 p-6 animate-fade-up" data-testid="solo-intro">
           <div>
             <h2 className="h2 text-2xl text-[#9BE7B5]">{t('arcade.howTo')}</h2>
-            <ol className="mt-3 space-y-2.5">
+            <ol className="mt-3 space-y-2">
               {(t(`arcade.rules.${game}`, { returnObjects: true }) as string[]).map((line, i) => (
-                <li key={i} className="flex gap-3 text-lg leading-snug text-cream/90">
+                <li key={i} className="flex gap-3 text-[1.05rem] leading-snug text-cream/90">
                   <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[#7CE3A0]/20 text-base font-black text-[#9BE7B5]">{i + 1}</span>
                   {line}
                 </li>
@@ -135,12 +137,17 @@ function Solo({ game }: { game: GameKey }) {
                     {variantLabel(game, v, lang)}
                   </button>
                 ))}
+                {needsAudio && (
+                  <button type="button" className="chip ml-auto gap-2" onClick={() => setCalibrating(true)} data-testid="beat-calibrate">
+                    <Gauge size={20} /> {t('arcade.audio.calibrate')}
+                  </button>
+                )}
               </div>
             </div>
           )}
 
           {needsAudio && (
-            <div className="flex items-center gap-4 rounded-2xl bg-[#7CE3A0]/10 p-4 ring-1 ring-[#7CE3A0]/40" data-testid="audio-gate">
+            <div className="flex items-center gap-4 rounded-2xl bg-[#7CE3A0]/10 px-4 py-3 ring-1 ring-[#7CE3A0]/40" data-testid="audio-gate">
               <Headphones size={34} className="shrink-0 text-[#9BE7B5]" />
               <p className="flex-1 text-base font-bold text-cream/90">{sound.on ? t('arcade.audio.on') : t('arcade.audio.ask')}</p>
               {!sound.on && (
@@ -174,6 +181,13 @@ function Solo({ game }: { game: GameKey }) {
         </div>
       </div>
       {gate.dialog}
+      {calibrating && (
+        <div className="fixed inset-0 z-[60] bg-[#06040F]/95 backdrop-blur" role="dialog" aria-modal="true">
+          <Suspense fallback={null}>
+            <BeatCalibration lang={lang} sound={sound} onClose={() => setCalibrating(false)} />
+          </Suspense>
+        </div>
+      )}
     </Page>
   );
 }

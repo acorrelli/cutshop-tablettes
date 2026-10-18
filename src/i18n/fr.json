@@ -476,9 +476,10 @@
       "exitMulti": "Tu seras classé en abandon et tes adversaires continueront sans toi."
     },
     "audio": {
-      "ask": "Beat Drop se joue en musique. Active le son pour profiter du rythme.",
-      "on": "Son activé : règle le volume à ta convenance.",
-      "enable": "Activer le son"
+      "ask": "Beat Drop se joue en musique : active le son.",
+      "on": "Son activé, règle le volume en haut à droite.",
+      "enable": "Activer le son",
+      "calibrate": "Calibrer"
     },
     "rules": {
       "pour": [
@@ -496,8 +497,7 @@
       "beat": [
         "Les notes descendent sur 4 couloirs.",
         "Touche le couloir au moment où la note passe sur la ligne. Maintiens pour les notes longues.",
-        "PERFECT ou GOOD : enchaîne pour faire grimper le combo et le multiplicateur jusqu’à x4.",
-        "Choisis ta difficulté : EASY, MEDIUM ou HARD."
+        "PERFECT ou GOOD : enchaîne pour faire grimper le combo et le multiplicateur jusqu’à x4."
       ],
       "findit": [
         "Une scène du Cutshop s’affiche avec une liste d’objets à retrouver.",
