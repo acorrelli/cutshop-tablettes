@@ -17,7 +17,7 @@ function dayLabel(key: string): string {
 
 type Metric = 'battles' | 'solo' | 'stop10' | 'kids' | 'registrations' | 'spins' | 'productRequests';
 const METRICS: { key: Metric; label: string }[] = [
-  { key: 'battles', label: 'Cutshop Challenge' },
+  { key: 'battles', label: 'Quiz Cutshop' },
   { key: 'solo', label: 'Quiz solo' },
   { key: 'stop10', label: 'Stop à 10 s' },
   { key: 'kids', label: 'Jeux kids' },

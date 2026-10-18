@@ -13,6 +13,7 @@ export function Tile({
   className = '',
   testId,
   inline = false,
+  center = false,
   children,
 }: {
   to: string;
@@ -25,18 +26,27 @@ export function Tile({
   testId?: string;
   /** Icône à côté du titre plutôt qu'en haut : pour les tuiles basses aux textes longs. */
   inline?: boolean;
+  /** Contenu centré (grandes tuiles des pages de catégorie). */
+  center?: boolean;
   children?: ReactNode;
 }) {
   return (
     <Link
       to={to}
       data-testid={testId}
-      className={`group relative flex min-h-[150px] flex-col justify-end overflow-hidden rounded-3xl bg-gradient-to-br p-4 shadow-tile ring-1 ring-white/10 transition active:scale-[0.97] lg:px-6 lg:py-5 ${tone} ${tone.includes('text-') ? '' : 'text-cream'} ${className}`}
+      className={`group relative flex min-h-[150px] flex-col ${center ? 'items-center justify-center text-center' : inline ? 'justify-center' : 'justify-end'} overflow-hidden rounded-3xl bg-gradient-to-br p-4 shadow-tile ring-1 ring-white/10 transition active:scale-[0.97] lg:px-6 lg:py-5 ${tone} ${tone.includes('text-') ? '' : 'text-cream'} ${className}`}
       style={{ animation: `fade-up 0.45s ease-out ${index * 0.04}s both` }}
     >
       <Icon size={190} strokeWidth={1} className="pointer-events-none absolute -right-8 -top-8 opacity-[0.15] transition group-active:rotate-6" />
-      {inline ? (
-        <span className="mt-auto flex items-center gap-3">
+      {center ? (
+        <>
+          <span className="grid h-20 w-20 shrink-0 place-items-center rounded-3xl bg-black/20 ring-1 ring-white/15">
+            <Icon size={42} strokeWidth={1.75} />
+          </span>
+          <span className="mt-4 block text-[1.7rem] font-black uppercase leading-[1.1] tracking-wide">{title}</span>
+        </>
+      ) : inline ? (
+        <span className="flex items-center gap-3">
           <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-black/20 ring-1 ring-white/15">
             <Icon size={26} strokeWidth={2} />
           </span>

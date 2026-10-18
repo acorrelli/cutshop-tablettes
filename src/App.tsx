@@ -1,5 +1,11 @@
 import { lazy, Suspense, type ReactNode } from 'react';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { ArcadeProvider } from './arcade/ArcadeContext';
+import ArcadeHome from './arcade/ui/ArcadeHome';
+import ChallengeHub from './arcade/ui/ChallengeHub';
+import { InviteToast } from './arcade/ui/InviteToast';
+import RoomPage from './arcade/ui/RoomPage';
+import SoloPlay from './arcade/ui/SoloPlay';
 import { BattleInvite } from './components/BattleInvite';
 import { TopBar } from './components/TopBar';
 import { AppProvider, useApp } from './context/AppContext';
@@ -62,6 +68,10 @@ function Kiosk() {
             <Route path="/evenements" element={<Gate module="events"><Events /></Gate>} />
             <Route path="/evenements/:id" element={<Gate module="events"><EventRegister /></Gate>} />
             <Route path="/battle" element={<Gate module="battle"><BattlePage /></Gate>} />
+            <Route path="/arcade" element={<Gate module="arcade"><ArcadeHome /></Gate>} />
+            <Route path="/arcade/jouer/:game" element={<Gate module="arcade"><SoloPlay /></Gate>} />
+            <Route path="/arcade/challenge" element={<Gate module="arcade"><ChallengeHub /></Gate>} />
+            <Route path="/arcade/salle" element={<Gate module="arcade"><RoomPage /></Gate>} />
             <Route path="/stop10" element={<Gate module="stop10"><Stop10 /></Gate>} />
             <Route path="/roue" element={<Gate module="wheel"><Wheel /></Gate>} />
             <Route path="/kids" element={<Gate module="kids"><KidsHome /></Gate>} />
@@ -91,6 +101,7 @@ function Kiosk() {
         )}
       </div>
       <BattleInvite />
+      {!isAdmin && tablet && <InviteToast />}
       {asleep && !isAdmin && <Screensaver />}
     </>
   );
@@ -100,7 +111,9 @@ export default function App() {
   return (
     <AppProvider>
       <BattleProvider>
-        <Kiosk />
+        <ArcadeProvider>
+          <Kiosk />
+        </ArcadeProvider>
       </BattleProvider>
     </AppProvider>
   );

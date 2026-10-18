@@ -38,7 +38,7 @@ test.describe('Jeux', () => {
     const names = ['Bravo', 'Charlie', 'Delta'];
     for (const [i, p] of others.entries()) {
       await expect(p.getByTestId('battle-invite-banner')).toBeVisible({ timeout: 5000 });
-      await expect(p.getByTestId('battle-invite-banner')).toContainText('Alpha lance un Cutshop Challenge depuis Tablette 1');
+      await expect(p.getByTestId('battle-invite-banner')).toContainText('Alpha lance un Quiz Cutshop depuis Tablette 1');
       await p.getByTestId('invite-join').click();
       await p.getByTestId('battle-pseudo').fill(names[i]);
       await p.getByTestId('battle-join').click();
@@ -61,14 +61,14 @@ test.describe('Jeux', () => {
     const podiums = await Promise.all(pages.slice(0, 3).map((p) => p.getByTestId('battle-podium').innerText()));
     // Un seul gagnant, reconnu par toutes les tablettes : il voit « tu remportes », les autres voient son pseudo.
     const norm = titles.map((t) => t.toLowerCase().replace(/\u00a0/g, ' '));
-    const winnerIdx = norm.findIndex((t) => t.includes('tu remportes le cutshop challenge'));
+    const winnerIdx = norm.findIndex((t) => t.includes('tu remportes le quiz cutshop'));
     if (winnerIdx < 0) {
       // Cas rare : personne n'a marqué (tout le monde a répondu A et A était toujours faux).
       for (const t of norm) expect(t).toContain('aucun point');
     } else {
       const winnerPseudo = ['alpha', 'bravo', 'charlie'][winnerIdx];
       norm.forEach((t, i) => {
-        if (i !== winnerIdx) expect(t).toBe(`${winnerPseudo} remporte le cutshop challenge !`);
+        if (i !== winnerIdx) expect(t).toBe(`${winnerPseudo} remporte le quiz cutshop !`);
       });
     }
     // Le classement est identique sur les trois tablettes.

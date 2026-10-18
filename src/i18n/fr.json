@@ -34,8 +34,12 @@
       "title": "Les événements",
       "sub": "DJ, impro, stand up et plus"
     },
+    "arcade": {
+      "title": "Cutshop Arcade",
+      "sub": "4 jeux exclusifs, duels entre tables et classements"
+    },
     "battle": {
-      "title": "Le Cutshop Challenge",
+      "title": "Le Quiz Cutshop",
       "sub": "Quiz en direct entre tablettes"
     },
     "stop10": {
@@ -85,12 +89,12 @@
   "screensaver": {
     "hook": "Touche l’écran, ton moment commence ici",
     "next": "Prochain événement",
-    "battleInvite": "Défie les autres clients au Cutshop Challenge !",
-    "battleLive": "Un Cutshop Challenge commence, rejoins le !"
+    "battleInvite": "Défie les autres clients au Quiz Cutshop !",
+    "battleLive": "Un Quiz Cutshop commence, rejoins le !"
   },
   "setup": {
     "title": "Configuration de la tablette",
-    "text": "Choisis le nom de cette tablette. Il sert aux statistiques et au Cutshop Challenge. Tu pourras le modifier plus tard dans l’espace admin.",
+    "text": "Choisis le nom de cette tablette. Il sert aux statistiques et au Quiz Cutshop. Tu pourras le modifier plus tard dans l’espace admin.",
     "choose": "Tablette {{n}}"
   },
   "concept": {
@@ -147,12 +151,12 @@
     "programTitle": "Le programme"
   },
   "battle": {
-    "title": "Le Cutshop Challenge",
+    "title": "Le Quiz Cutshop",
     "intro": "Affronte les autres clients en direct sur les tablettes du salon. 10 questions, 15 secondes chacune : la justesse et la rapidité comptent !",
     "pseudo": "Ton pseudo",
     "pseudoPh": "Ex : Barbe Noire",
     "pseudoErr": "Choisis un pseudo pour jouer",
-    "launch": "Lancer un Cutshop Challenge",
+    "launch": "Lancer un Quiz Cutshop",
     "solo": "Jouer en solo",
     "theme": "Thème",
     "themes": {
@@ -166,8 +170,8 @@
     },
     "join": "Rejoindre",
     "later": "Pas maintenant",
-    "invite": "Un Cutshop Challenge commence, rejoins le !",
-    "inviteBy": "{{pseudo}} lance un Cutshop Challenge depuis {{tablet}}",
+    "invite": "Un Quiz Cutshop commence, rejoins le !",
+    "inviteBy": "{{pseudo}} lance un Quiz Cutshop depuis {{tablet}}",
     "lobby": "Salle d’attente",
     "waiting": "En attente d’adversaires sur les autres tablettes...",
     "startsIn": "Départ dans {{s}} s",
@@ -189,17 +193,17 @@
     "gone": "a quitté la partie",
     "you": "toi",
     "podium": "Le podium",
-    "winner": "{{pseudo}} remporte le Cutshop Challenge !",
-    "youWin": "Bravo, tu remportes le Cutshop Challenge !",
+    "winner": "{{pseudo}} remporte le Quiz Cutshop !",
+    "youWin": "Bravo, tu remportes le Quiz Cutshop !",
     "spinWon": "Tu as gagné un tour de roue !",
     "spinGo": "Je tourne la roue",
     "playAgain": "Rejouer",
     "soloTitle": "Partie solo",
     "soloScore": "Ton score : {{n}} points",
     "soloCorrect": "{{n}} bonnes réponses sur {{total}}",
-    "busy": "Un Cutshop Challenge est déjà en cours sur les tablettes. Rejoins la suivante !",
-    "full": "Ce Cutshop Challenge est complet (4 joueurs).",
-    "missed": "Ce Cutshop Challenge a déjà commencé. Lance la tienne !",
+    "busy": "Un Quiz Cutshop est déjà en cours sur les tablettes. Rejoins le suivant !",
+    "full": "Ce Quiz Cutshop est complet (4 joueurs).",
+    "missed": "Ce Quiz Cutshop a déjà commencé. Lance le tien !",
     "quit": "Quitter la partie",
     "liveNow": "En direct",
     "range": "2 à 4 joueurs",
@@ -230,7 +234,7 @@
   "wheel": {
     "title": "La roue de la fortune",
     "locked": "La roue s’active avec l’équipe",
-    "lockedText": "Demande à un membre du staff de saisir son code. Tu peux aussi gagner un tour en remportant un Cutshop Challenge ou en réussissant un 10,00 s pile.",
+    "lockedText": "Demande à un membre du staff de saisir son code. Tu peux aussi gagner un tour en remportant un Quiz Cutshop ou en réussissant un 10,00 s pile.",
     "staffPin": "Code staff",
     "unlock": "Activer la roue",
     "pinWrong": "Code incorrect",
@@ -247,7 +251,7 @@
     "rate": "La roue vient déjà de tourner sur cette tablette. Réessaie dans quelques minutes.",
     "empty": "Plus aucun gain disponible pour le moment.",
     "reason": {
-      "battle": "Tour offert pour ta victoire au Cutshop Challenge",
+      "battle": "Tour offert pour ta victoire au Quiz Cutshop",
       "stop10": "Tour offert pour ton 10,00 s pile",
       "staff": "Tour activé par l’équipe"
     },
@@ -365,7 +369,7 @@
     },
     "shop": {
       "title": "Boissons et produits",
-      "sub": "Découvre notre sélection de bières artisanales et toute notre gamme de produits Nishman. Lequel est fait pour toi ?"
+      "sub": "Découvre notre sélection de bières artisanales et toute notre gamme de produits Nishman."
     },
     "services": {
       "title": "Nos services",
@@ -402,5 +406,229 @@
     "invoice": "Indépendant ou société ? Demande nous une facture.",
     "invoiceCta": "Demander une facture",
     "none": "Aucune prestation à afficher pour le moment."
+  },
+  "arcade": {
+    "play": "Jouer",
+    "yourTurn": "À toi de jouer.",
+    "table": "Table {{n}}",
+    "unavailable": "Ce jeu arrive très bientôt.",
+    "getReady": "Prépare toi",
+    "timeUp": "Temps écoulé !",
+    "howTo": "Comment jouer",
+    "difficulty": "Difficulté",
+    "challengeTable": "Défier une table",
+    "notPairedSolo": "Cette tablette n’est pas encore associée à une table : la partie se joue librement, sans enregistrement du score.",
+    "challenge": {
+      "title": "Cutshop Challenge",
+      "sub": "Classements, duels, battles et défis hebdomadaires"
+    },
+    "status": {
+      "available": "Disponible",
+      "invited": "Invitée",
+      "waiting": "En attente",
+      "ready": "Prête",
+      "playing": "En partie",
+      "offline": "Hors ligne"
+    },
+    "errors": {
+      "not_paired": "Cette tablette n’est pas encore associée à une table. Demande à l’équipe.",
+      "busy": "Tu as déjà une partie en cours.",
+      "unavailable": "Cette table n’est plus disponible.",
+      "rate_limited": "Doucement ! Attends quelques secondes avant de réessayer.",
+      "not_found": "Cette partie n’existe plus.",
+      "not_allowed": "Action impossible pour le moment.",
+      "expired": "Cette invitation a expiré.",
+      "not_ready": "Tous les joueurs ne sont pas encore prêts.",
+      "too_early": "La partie n’est pas encore terminée.",
+      "too_late": "Le délai pour envoyer ton score est dépassé.",
+      "implausible": "Ce score a été refusé par le contrôle de cohérence.",
+      "duplicate": "Ton score a déjà été enregistré.",
+      "taken": "Déjà pris par une autre table.",
+      "invalid": "Choix invalide.",
+      "network": "Connexion au serveur impossible pour le moment."
+    },
+    "sound": {
+      "on": "Activer le son",
+      "off": "Couper le son",
+      "volume": "Volume"
+    },
+    "pseudo": {
+      "title": "Ton pseudo",
+      "text": "Il apparaîtra dans les classements. 15 caractères maximum.",
+      "placeholder": "Ex : Barbe Noire",
+      "ok": "C’est parti",
+      "anonymous": "Jouer en anonyme",
+      "empty": "Choisis un pseudo d’au moins 2 caractères.",
+      "offensive": "Ce pseudo n’est pas accepté. Choisis en un autre.",
+      "label": "Pseudo",
+      "none": "Choisir",
+      "hint": "Tu choisiras ton pseudo juste avant de jouer."
+    },
+    "hud": {
+      "score": "Score",
+      "you": "Toi",
+      "out": "Abandon",
+      "exit": "Quitter la partie",
+      "exitTitle": "Quitter la partie ?",
+      "exitOk": "Quitter",
+      "exitCancel": "Continuer",
+      "exitSolo": "Ta partie en cours sera perdue et ton score ne sera pas enregistré.",
+      "exitMulti": "Tu seras classé en abandon et tes adversaires continueront sans toi."
+    },
+    "audio": {
+      "ask": "Beat Drop se joue en musique. Active le son pour profiter du rythme.",
+      "on": "Son activé : règle le volume à ta convenance.",
+      "enable": "Activer le son"
+    },
+    "rules": {
+      "pour": [
+        "Maintiens le bouton ou le verre pour tirer la bière, relâche pour arrêter.",
+        "Vise la zone verte : la mousse retombe un peu après le service, relâche juste au dessus.",
+        "Chaque type de verre a son niveau idéal. Enchaîne les verres parfaits pour un bonus de série.",
+        "Attention : si ça déborde, le verre est perdu !"
+      ],
+      "barber": [
+        "Un client s’installe avec sa commande : regarde le ticket.",
+        "Choisis le bon outil puis réalise le geste sur le client.",
+        "Sois précis et rapide : bonus de précision, bonus de vitesse et multiplicateur x2 après 3 réussites.",
+        "Mauvais outil ou client qui s’impatiente : des points en moins."
+      ],
+      "beat": [
+        "Les notes descendent sur 4 couloirs.",
+        "Touche le couloir au moment où la note passe sur la ligne. Maintiens pour les notes longues.",
+        "PERFECT ou GOOD : enchaîne pour faire grimper le combo et le multiplicateur jusqu’à x4.",
+        "Choisis ta difficulté : EASY, MEDIUM ou HARD."
+      ],
+      "findit": [
+        "Une scène du Cutshop s’affiche avec une liste d’objets à retrouver.",
+        "Touche chaque objet de la liste dès que tu le repères. Utilise le zoom si besoin.",
+        "Plus tu es rapide, plus tu gagnes de points. Une scène sans erreur rapporte un bonus.",
+        "Évite de toucher au hasard : chaque erreur coûte 10 points."
+      ]
+    },
+    "result": {
+      "score": "Ton score",
+      "points": "{{n}} points Challenge",
+      "saving": "Enregistrement du score...",
+      "saved": "Score enregistré !",
+      "rankToday": "Tu es {{n}}e du jour avec {{best}} points.",
+      "offline": "Partie libre : score non enregistré.",
+      "replay": "Rejouer",
+      "home": "Accueil Arcade"
+    },
+    "stats": {
+      "glasses": "Verres servis",
+      "perfect": "Parfaits",
+      "great": "Très bien",
+      "ok": "Pas mal",
+      "miss": "Ratés",
+      "overflow": "Débordements",
+      "served": "Clients servis",
+      "left": "Clients partis",
+      "wrongTool": "Mauvais outils",
+      "good": "Good",
+      "maxCombo": "Meilleur combo",
+      "judgements": "Notes",
+      "found": "Objets trouvés",
+      "scenes": "Scènes terminées",
+      "wrong": "Erreurs"
+    },
+    "board": {
+      "title": "Classements",
+      "empty": "Aucun score pour l’instant. À toi d’ouvrir le bal !",
+      "games": "{{n}} jeu(x) joué(s)",
+      "wins": "{{wins}} victoire(s) sur {{played}} partie(s)",
+      "pts": "pts",
+      "general": "Général",
+      "duels": "Duels",
+      "battles": "Battles",
+      "howTitle": "Comment sont calculés les classements ?",
+      "generalHow": "Pour chaque jeu, ton meilleur score solo est converti en points Challenge (1 000 points pour un très bon score, 1 500 au maximum). Le classement général additionne tes 4 jeux.",
+      "gameHow": "Ton meilleur score sur la période. Une seule ligne par joueur.",
+      "duelHow": "Duel gagné : 3 points.",
+      "battleHow": "Battle : 5 points pour le premier, 3 pour le deuxième, 1 pour le troisième.",
+      "ties": "En cas d’égalité :",
+      "multiRules": [
+        "Le plus de points",
+        "Puis le plus de victoires",
+        "Puis le moins de parties jouées",
+        "Puis la performance atteinte en premier"
+      ]
+    },
+    "period": {
+      "today": "Aujourd’hui",
+      "week": "Semaine",
+      "month": "Mois",
+      "all": "Depuis toujours"
+    },
+    "week": {
+      "title": "Challenge de la semaine",
+      "reward": "À gagner :",
+      "none": "Pas de challenge cette semaine. Reviens bientôt !",
+      "left": "Encore {{d}} j {{h}} h {{m}} min",
+      "ranking": "Classement du challenge"
+    },
+    "notPaired": {
+      "title": "Tablette non associée",
+      "text": "Pour défier les autres tables, cette tablette doit être associée à une table par l’équipe. Tu peux déjà jouer en solo !"
+    },
+    "defy": {
+      "title": "Défier une table",
+      "you": "Tu joues à la",
+      "inRoom": "Tu as déjà une partie en préparation ou en cours.",
+      "backToRoom": "Retour à ta partie",
+      "tables": "Choisis une ou plusieurs tables",
+      "modeHint": "1 table : duel. 2 ou 3 tables : battle.",
+      "game": "Choisis le jeu",
+      "raceHint": "Course au score : chacun joue la même scène, le meilleur score gagne.",
+      "huntHint": "Chasse compétitive : les objets sont partagés, le premier qui touche l’objet le remporte.",
+      "sendDuel": "Envoyer le défi",
+      "sendBattle": "Lancer la battle à {{n}}"
+    },
+    "room": {
+      "none": "Aucune partie en cours.",
+      "newChallenge": "Nouveau défi",
+      "invited": "Invitée, réponse attendue ({{s}} s)",
+      "host": "Organise la partie",
+      "joined": "A accepté, se prépare",
+      "state": {
+        "ready": "Prête !",
+        "declined": "A refusé",
+        "expired": "Pas de réponse",
+        "left": "A quitté",
+        "invited": "Invitée",
+        "joined": "A accepté"
+      },
+      "duel": "Duel",
+      "battle": "Battle à {{n}}",
+      "hostReady": "Tout le monde est prêt. Lance la partie !",
+      "hostWaiting": "En attente des réponses et des joueurs prêts...",
+      "hostAlone": "Personne n’a encore rejoint la partie.",
+      "waitHost": "Tu es prêt. L’organisateur va lancer la partie.",
+      "pressReady": "Appuie sur « Je suis prêt » quand tu veux commencer.",
+      "start": "Lancer la partie",
+      "ready": "Je suis prêt",
+      "isReady": "Prêt !",
+      "cancel": "Annuler la partie",
+      "leave": "Quitter",
+      "abandoned": "Tu as quitté cette partie.",
+      "waitingOthers": "En attente des autres joueurs...",
+      "done": "Terminé",
+      "stillPlaying": "Joue encore",
+      "declinedAll": "Ton défi n’a pas été accepté cette fois.",
+      "cancelled": "Cette partie a été annulée.",
+      "youWin": "Victoire !",
+      "winner": "{{pseudo}} remporte la partie !",
+      "rematch": "Revanche"
+    },
+    "invite": {
+      "duel": "Défi en duel",
+      "battle": "Invitation à une battle",
+      "from": "{{pseudo}} te défie",
+      "accept": "Accepter",
+      "decline": "Refuser",
+      "backPlaying": "Retour à ta partie",
+      "backLobby": "Partie en attente"
+    }
   }
 }

@@ -9,10 +9,10 @@ export PATH="${PGBIN:+$PGBIN:}$PATH"
 
 TMP="$(mktemp -d)"
 PORT=55432
-cleanup() { pg_ctl -D "$TMP/data" -m immediate stop >/dev/null 2>&1 || true; rm -rf "$TMP"; }
+cleanup() { ${RUN_AS:-} pg_ctl -D "$TMP/data" -m immediate stop >/dev/null 2>&1 || true; rm -rf "$TMP"; }
+RUN_AS=""
 trap cleanup EXIT
 
-RUN_AS=""
 if [ "$(id -u)" = "0" ]; then
   id -u postgres >/dev/null 2>&1 || useradd -m postgres
   chown -R postgres "$TMP"
@@ -25,7 +25,8 @@ $RUN_AS pg_ctl -D "$TMP/data" -o "-p $PORT -k $TMP -c timezone=UTC" -l "$TMP/log
 sleep 1
 
 PSQL="psql -h $TMP -p $PORT -U postgres -v ON_ERROR_STOP=1 -q"
-$PSQL -c "create database cutshop" postgres
+# Base en UTF8 comme sur Supabase (normalisation Unicode des pseudos), quel que soit le locale du système.
+$PSQL -c "create database cutshop encoding 'UTF8' locale 'C' template template0" postgres
 $PSQL -f supabase/tests/supabase_stub.sql cutshop
 for f in supabase/migrations/*.sql; do $PSQL -f "$f" cutshop; done
 $PSQL -f supabase/seed.sql cutshop

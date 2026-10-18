@@ -1,4 +1,5 @@
 // Types partagés entre l'interface, la couche de données et les données d'exemple.
+import type { ArcadeConfig } from '../arcade/types';
 
 export type Lang = 'fr' | 'en';
 
@@ -7,6 +8,7 @@ export type ModuleKey =
   | 'booking'
   | 'services'
   | 'events'
+  | 'arcade'
   | 'battle'
   | 'stop10'
   | 'wheel'
@@ -22,6 +24,7 @@ export const MODULE_KEYS: ModuleKey[] = [
   'booking',
   'services',
   'events',
+  'arcade',
   'battle',
   'stop10',
   'wheel',
@@ -77,6 +80,10 @@ export interface AppSettings {
   privacy_fr: string;
   privacy_en: string;
   modules: Record<ModuleKey, boolean>;
+  /** Délai avant la mise en veille et l'effacement de la session client, en secondes. */
+  idle_seconds: number;
+  /** Réglages de Cutshop Arcade. */
+  arcade: ArcadeConfig;
 }
 
 export type EventKind = 'dj' | 'talk' | 'read' | 'mic' | 'run' | 'other';

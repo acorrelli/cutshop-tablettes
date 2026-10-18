@@ -21,7 +21,8 @@ function check(error: PostgrestError | { message: string } | null): void {
 /** Fusionne les réglages enregistrés avec les valeurs par défaut (nouveaux champs ajoutés plus tard). */
 export function mergeSettings(data: Partial<AppSettings> | null | undefined): AppSettings {
   const d = data ?? {};
-  return { ...DEFAULT_SETTINGS, ...d, modules: { ...DEFAULT_SETTINGS.modules, ...(d.modules ?? {}) } };
+  const arcade = { ...DEFAULT_SETTINGS.arcade, ...(d.arcade ?? {}), games: { ...DEFAULT_SETTINGS.arcade.games, ...(d.arcade?.games ?? {}) } };
+  return { ...DEFAULT_SETTINGS, ...d, modules: { ...DEFAULT_SETTINGS.modules, ...(d.modules ?? {}) }, arcade };
 }
 
 async function wrap<T>(fn: () => Promise<T>): Promise<T> {

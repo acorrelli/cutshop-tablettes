@@ -4,7 +4,7 @@ import { api, type RedeemResult } from '../../lib/api';
 import type { WheelSpin } from '../../lib/types';
 import { AdminCard, CrudSection, fmtDateTime, StatusPill } from '../Crud';
 
-const REASONS: Record<string, string> = { staff: 'Code staff', battle: 'Victoire Cutshop Challenge', stop10: '10,00 s pile' };
+const REASONS: Record<string, string> = { staff: 'Code staff', battle: 'Victoire Quiz Cutshop', stop10: '10,00 s pile' };
 
 export function WheelSection() {
   const [code, setCode] = useState('');

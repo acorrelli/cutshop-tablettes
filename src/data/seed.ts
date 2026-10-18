@@ -14,6 +14,7 @@ import type {
   Service,
   WheelPrize,
 } from '../lib/types';
+import { DEFAULT_ARCADE_CONFIG } from '../arcade/types';
 
 export const DEFAULT_SETTINGS: AppSettings = {
   salonkee_url: 'https://salonkee.be/salon/cutshop-mons',
@@ -92,6 +93,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
     booking: true,
     services: true,
     events: true,
+    arcade: true,
     battle: true,
     stop10: true,
     wheel: false,
@@ -102,6 +104,8 @@ export const DEFAULT_SETTINGS: AppSettings = {
     invoice: true,
     instagram: true,
   },
+  idle_seconds: 60,
+  arcade: structuredClone(DEFAULT_ARCADE_CONFIG),
 };
 
 // ---------------------------------------------------------------------------

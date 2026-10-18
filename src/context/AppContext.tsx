@@ -58,6 +58,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [pending, setPending] = useState(0);
   const resetCbs = useRef(new Set<() => void>());
   const idle = useRef<IdleTimer | null>(null);
+  const idleMs = useRef(IDLE_MS);
 
   const loadAll = useCallback(async () => {
     try {
@@ -71,6 +72,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         api.getQuestions(),
         api.getWheelSegments(),
       ]);
+      idleMs.current = Math.min(600, Math.max(30, settings.idle_seconds || 60)) * 1000;
       setContent({ settings, events, services, drinks, pairings, products, questions, segments });
       setContentError(false);
     } catch {
@@ -136,7 +138,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [resetSession]);
 
   useEffect(() => {
-    const timer = createIdleTimer(() => sleepNow(), IDLE_MS);
+    const timer = createIdleTimer(() => sleepNow(), () => idleMs.current);
     idle.current = timer;
     const poke = () => timer.poke();
     const events = ['pointerdown', 'keydown', 'touchstart', 'wheel'] as const;

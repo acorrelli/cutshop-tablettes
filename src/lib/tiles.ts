@@ -5,6 +5,7 @@ import {
   FerrisWheel,
   Gamepad2,
   Gift,
+  Joystick,
   History,
   Puzzle,
   Receipt,
@@ -29,6 +30,7 @@ export interface TileDef {
 }
 
 export const MODULE_TILES: Record<string, TileDef> = {
+  arcade: { key: 'arcade', to: '/arcade', icon: Joystick, tone: 'from-[#0E1714] via-[#13241D] to-[#0A0F0D]' },
   battle: { key: 'battle', to: '/battle', icon: Swords, tone: 'from-gold-500 to-gold-700 text-bottle-950' },
   stop10: { key: 'stop10', to: '/stop10', icon: Timer, tone: 'from-bottle-600 to-bottle-900' },
   wheel: { key: 'wheel', to: '/roue', icon: FerrisWheel, tone: 'from-gold-600 to-bottle-800' },
@@ -58,7 +60,7 @@ export const CATEGORIES: CategoryDef[] = [
   { key: 'cutshop', to: '/cutshop', icon: Sparkles, tone: 'from-bottle-500 to-bottle-800', items: ['concept', 'events'] },
   { key: 'shop', to: '/boissons-produits', icon: Beer, tone: 'from-gold-700 to-bottle-900', items: ['drinks', 'products', 'gift'] },
   { key: 'services', to: '/nos-services', icon: Scissors, tone: 'from-cream-200 to-gold-500 text-bottle-950', items: ['services', 'booking', 'invoice'] },
-  { key: 'games', to: '/jeux', icon: Gamepad2, tone: 'from-gold-500 to-gold-700 text-bottle-950', items: ['battle', 'stop10', 'wheel', 'kids'] },
+  { key: 'games', to: '/jeux', icon: Gamepad2, tone: 'from-gold-500 to-gold-700 text-bottle-950', items: ['arcade', 'battle', 'stop10', 'wheel', 'kids'] },
 ];
 
 /** Catégorie d'un module, pour le bouton retour des pages. */

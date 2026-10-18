@@ -12,7 +12,8 @@ export interface IdleTimer {
   readonly paused: boolean;
 }
 
-export function createIdleTimer(onIdle: () => void, timeoutMs = IDLE_MS): IdleTimer {
+/** timeoutMs peut être une fonction : le délai est relu à chaque interaction (réglage de l'admin). */
+export function createIdleTimer(onIdle: () => void, timeoutMs: number | (() => number) = IDLE_MS): IdleTimer {
   let handle: ReturnType<typeof setTimeout> | null = null;
   let pauses = 0;
   let stopped = false;
@@ -27,7 +28,7 @@ export function createIdleTimer(onIdle: () => void, timeoutMs = IDLE_MS): IdleTi
     handle = setTimeout(() => {
       handle = null;
       onIdle();
-    }, timeoutMs);
+    }, typeof timeoutMs === 'function' ? timeoutMs() : timeoutMs);
   };
 
   arm();

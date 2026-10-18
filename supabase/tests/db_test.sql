@@ -261,4 +261,383 @@ do $$ begin
 end $$;
 
 reset role;
+
+-- ---------------------------------------------------------------------------
+-- 4. Cutshop Arcade : serveur autoritaire des mini jeux (supabase/migrations/20261018000002_arcade.sql)
+
+-- Vérifie qu'un appel échoue avec l'erreur métier attendue ('arcade:<code>').
+create or replace function public.test_arcade_expect(p_sql text, p_code text)
+returns void language plpgsql as $$
+begin
+  execute p_sql;
+  raise exception 'attendu arcade:% pour %', p_code, p_sql;
+exception when others then
+  if sqlerrm <> 'arcade:' || p_code then
+    raise exception 'attendu arcade:% pour %, obtenu : %', p_code, p_sql, sqlerrm;
+  end if;
+end;
+$$;
+
+-- Les tablettes n'ont aucun accès direct aux tables ni aux fonctions d'administration.
+set role anon;
+select set_config('request.jwt.claim.sub', '', false);
+do $$ begin
+  begin
+    perform * from public.arcade_scores;
+    raise exception 'anon a pu lire arcade_scores';
+  exception when insufficient_privilege then null;
+  end;
+  begin
+    insert into public.arcade_devices (token, table_no) values ('tok-pirate-0001', 1);
+    raise exception 'anon a pu s''associer à une table';
+  exception when insufficient_privilege then null;
+  end;
+  begin
+    perform public.arcade_admin_pair_device('tok-pirate-0001', 1);
+    raise exception 'anon a pu appeler arcade_admin_pair_device';
+  exception when insufficient_privilege then null;
+  end;
+  begin
+    perform public.arcade_admin_scores(10);
+    raise exception 'anon a pu appeler arcade_admin_scores';
+  exception when insufficient_privilege then null;
+  end;
+  begin
+    perform public.arcade_admin_reset(null);
+    raise exception 'anon a pu appeler arcade_admin_reset';
+  exception when insufficient_privilege then null;
+  end;
+  begin
+    perform public.arcade_housekeeping(0);
+    raise exception 'anon a pu appeler une fonction interne';
+  exception when insufficient_privilege then null;
+  end;
+end $$;
+
+-- Tablette inconnue : enregistrée sans table, aucune action de jeu possible.
+do $$ declare v jsonb; begin
+  v := public.arcade_snapshot('tok-table-1-aaaa');
+  assert v -> 'table' = 'null'::jsonb, 'tablette non associée : ' || v::text;
+  assert jsonb_array_length(v -> 'tables') = 4, 'quatre tables listées';
+  assert v -> 'tables' -> 0 ->> 'status' = 'offline', 'table 1 hors ligne';
+  assert v -> 'invites' = '[]'::jsonb and v -> 'room' = 'null'::jsonb, 'ni invitation ni partie';
+  perform public.test_arcade_expect($q$ select public.arcade_create_room('tok-table-1-aaaa', 'Alpha', 'pour', 'std', '[2]') $q$, 'not_paired');
+  perform public.test_arcade_expect($q$ select public.arcade_start_solo('tok-table-1-aaaa', 'pour', 'std') $q$, 'not_paired');
+end $$;
+
+-- Un compte connecté non admin est refusé.
+set role authenticated;
+select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-00000000b002', false);
+do $$ begin
+  perform public.test_arcade_expect($q$ select public.arcade_admin_pair_device('tok-table-1-aaaa', 1) $q$, 'not_allowed');
+  perform public.test_arcade_expect($q$ select public.arcade_admin_scores(10) $q$, 'not_allowed');
+  perform public.test_arcade_expect($q$ select public.arcade_admin_rename('a', 'b') $q$, 'not_allowed');
+end $$;
+
+-- Association des tablettes par l'admin ; une nouvelle tablette sur une table en dissocie l'ancienne.
+select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-00000000a001', false);
+do $$ begin
+  perform public.arcade_admin_pair_device('tok-table-1-aaaa', 1);
+  perform public.arcade_admin_pair_device('tok-table-2-aaaa', 2);
+  perform public.arcade_admin_pair_device('tok-table-3-aaaa', 3);
+  perform public.arcade_admin_pair_device('tok-old-table-4', 4);
+  perform public.arcade_admin_pair_device('tok-table-4-aaaa', 4);
+  perform public.test_arcade_expect($q$ select public.arcade_admin_pair_device('tok-table-4-aaaa', 5) $q$, 'invalid');
+end $$;
+reset role;
+do $$ begin
+  assert (select table_no from public.arcade_devices where token = 'tok-old-table-4') is null, 'ancienne tablette de la table 4 dissociée';
+  assert (select count(*) from public.arcade_devices where table_no is not null) = 4, 'quatre tablettes associées';
+end $$;
+
+-- Duel complet : invitation, prêt, départ synchronisé, résultats, classement et scores.
+set role anon;
+select set_config('request.jwt.claim.sub', '', false);
+do $$ declare v jsonb; v_room text; begin
+  perform public.arcade_snapshot('tok-table-' || t || '-aaaa') from generate_series(1, 4) t;
+  v := public.arcade_snapshot('tok-table-1-aaaa');
+  assert (v ->> 'table')::int = 1, 'table 1 associée';
+  assert (select bool_and(x ->> 'status' = 'available') from jsonb_array_elements(v -> 'tables') x), 'tables disponibles : ' || (v -> 'tables')::text;
+
+  perform public.test_arcade_expect($q$ select public.arcade_create_room('tok-table-1-aaaa', 'connard', 'pour', 'std', '[2]') $q$, 'invalid');
+  perform public.test_arcade_expect($q$ select public.arcade_create_room('tok-table-1-aaaa', 'Alpha', 'pour', 'hard', '[2]') $q$, 'invalid');
+  perform public.test_arcade_expect($q$ select public.arcade_create_room('tok-table-1-aaaa', 'Alpha', 'pour', 'std', '[1]') $q$, 'invalid');
+  perform public.test_arcade_expect($q$ select public.arcade_create_room('tok-table-1-aaaa', 'Alpha', 'pour', 'std', '[5]') $q$, 'invalid');
+
+  v := public.arcade_create_room('tok-table-1-aaaa', '  Alpha  ', 'pour', 'std', '[2, 2, 1]');
+  v_room := v ->> 'id';
+  perform set_config('arcade.test_duel', v_room, false);
+  assert v ->> 'mode' = 'duel' and v ->> 'status' = 'lobby' and (v ->> 'host')::int = 1, 'duel créé : ' || v::text;
+  assert (v ->> 'duration_ms')::int = 60000 and v -> 'claims' = '{}'::jsonb, 'durée Perfect Pour';
+  assert jsonb_array_length(v -> 'players') = 2, 'deux joueurs';
+  assert v -> 'players' -> 0 ->> 'pseudo' = 'Alpha' and v -> 'players' -> 0 ->> 'state' = 'joined', 'organisateur en premier';
+  assert v -> 'players' -> 1 ->> 'state' = 'invited'
+    and (v -> 'players' -> 1 ->> 'expires_at')::bigint = (v ->> 'created_at')::bigint + 45000, 'invitation de 45 s';
+
+  v := public.arcade_snapshot('tok-table-2-aaaa');
+  assert v -> 'tables' -> 1 ->> 'status' = 'invited', 'table 2 invitée';
+  assert jsonb_array_length(v -> 'invites') = 1 and v -> 'invites' -> 0 ->> 'room_id' = v_room
+    and v -> 'invites' -> 0 ->> 'host_pseudo' = 'Alpha' and v -> 'invites' -> 0 ->> 'game' = 'pour', 'invitation reçue : ' || (v -> 'invites')::text;
+
+  -- L'organisateur est déjà dans une partie.
+  perform public.test_arcade_expect($q$ select public.arcade_create_room('tok-table-1-aaaa', 'Alpha', 'pour', 'std', '[3]') $q$, 'busy');
+
+  v := public.arcade_respond('tok-table-2-aaaa', v_room, true, 'Bravo');
+  assert v -> 'players' -> 1 ->> 'state' = 'joined' and v -> 'players' -> 1 ->> 'pseudo' = 'Bravo', 'invitation acceptée';
+  assert public.arcade_snapshot('tok-table-2-aaaa') -> 'tables' -> 1 ->> 'status' = 'waiting', 'table 2 en attente';
+  -- Une table déjà dans une partie ne peut pas être invitée.
+  perform public.test_arcade_expect(format($q$ select public.arcade_create_room('tok-table-3-aaaa', 'Charlie', 'pour', 'std', '[2]') $q$), 'unavailable');
+  perform public.test_arcade_expect(format('select public.arcade_respond(%L, %L, true, %L)', 'tok-table-2-aaaa', v_room, 'Bravo'), 'expired');
+  perform public.test_arcade_expect(format('select public.arcade_start(%L, %L)', 'tok-table-1-aaaa', v_room), 'not_ready');
+  perform public.arcade_set_ready('tok-table-2-aaaa', v_room, true);
+  perform public.test_arcade_expect(format('select public.arcade_start(%L, %L)', 'tok-table-2-aaaa', v_room), 'not_allowed');
+  perform public.test_arcade_expect(format('select public.arcade_start(%L, %L)', 'tok-table-3-aaaa', 'r-inconnue'), 'not_found');
+  v := public.arcade_start('tok-table-1-aaaa', v_room);
+  assert v ->> 'status' = 'playing' and v ->> 'mode' = 'duel', 'partie lancée';
+  assert (v ->> 'starts_at')::bigint between public.now_ms() + 3000 and public.now_ms() + 4000, 'compte à rebours de 4 s';
+  assert (v ->> 'ends_at')::bigint = (v ->> 'starts_at')::bigint + 60000, 'fin = départ + durée';
+  assert public.arcade_snapshot('tok-table-1-aaaa') -> 'tables' -> 0 ->> 'status' = 'playing', 'table 1 en jeu';
+  assert public.arcade_snapshot('tok-table-1-aaaa') -> 'room' ->> 'seed' = public.arcade_snapshot('tok-table-2-aaaa') -> 'room' ->> 'seed', 'même graine';
+  -- Résultat envoyé avant la fin officielle.
+  perform public.test_arcade_expect(format($q$ select public.arcade_submit_result(%L, %L, 500, '{"glasses":20}') $q$, 'tok-table-1-aaaa', v_room), 'too_early');
+end $$;
+
+-- Simule la fin du temps de jeu.
+reset role;
+update public.arcade_rooms set starts_at = public.now_ms() - 64000, ends_at = public.now_ms() - 100 where id = current_setting('arcade.test_duel');
+set role anon;
+
+do $$ declare v jsonb; v_room text := current_setting('arcade.test_duel'); begin
+  perform public.test_arcade_expect(format($q$ select public.arcade_submit_result(%L, %L, 99999, '{"glasses":20}') $q$, 'tok-table-1-aaaa', v_room), 'implausible');
+  perform public.test_arcade_expect(format($q$ select public.arcade_submit_result(%L, %L, 3000, '{"glasses":5}') $q$, 'tok-table-1-aaaa', v_room), 'implausible');
+  perform public.test_arcade_expect(format($q$ select public.arcade_submit_result(%L, %L, 12.5, '{"glasses":20}') $q$, 'tok-table-1-aaaa', v_room), 'implausible');
+  perform public.test_arcade_expect(format($q$ select public.arcade_submit_result(%L, %L, 500, '{}') $q$, 'tok-table-3-aaaa', v_room), 'not_allowed');
+  v := public.arcade_submit_result('tok-table-1-aaaa', v_room, 1200, '{"glasses":20}');
+  assert v ->> 'status' = 'playing' and (v -> 'players' -> 0 ->> 'score')::int = 1200, 'premier résultat enregistré';
+  perform public.test_arcade_expect(format($q$ select public.arcade_submit_result(%L, %L, 900, '{"glasses":20}') $q$, 'tok-table-1-aaaa', v_room), 'duplicate');
+  v := public.arcade_submit_result('tok-table-2-aaaa', v_room, 1500, '{"glasses":20}');
+  assert v ->> 'status' = 'finished', 'partie terminée : ' || v::text;
+  assert (v -> 'players' -> 1 ->> 'rank')::int = 1 and (v -> 'players' -> 0 ->> 'rank')::int = 2, 'classement : ' || (v -> 'players')::text;
+  -- Les deux tables voient le même résultat.
+  assert public.arcade_snapshot('tok-table-1-aaaa') -> 'room' -> 'players' = public.arcade_snapshot('tok-table-2-aaaa') -> 'room' -> 'players', 'résultat identique';
+  v := public.arcade_scores(0);
+  assert jsonb_array_length(v) = 2, 'deux scores : ' || v::text;
+  assert exists (select 1 from jsonb_array_elements(v) s where s ->> 'id' = v_room || ':2' and (s ->> 'table')::int = 2
+    and s ->> 'mode' = 'duel' and (s ->> 'rank')::int = 1 and (s ->> 'players')::int = 2 and (s ->> 'score')::int = 1500
+    and s ->> 'pseudo' = 'Bravo' and s ->> 'room_id' = v_room), 'ligne de score du vainqueur';
+  assert jsonb_array_length(public.arcade_scores(public.now_ms() + 1000)) = 0, 'filtre p_since';
+  perform public.test_arcade_expect(format($q$ select public.arcade_submit_result(%L, %L, 900, '{"glasses":20}') $q$, 'tok-table-2-aaaa', v_room), 'duplicate');
+
+  -- Revanche : nouvelle salle qui attend la confirmation de l'adversaire.
+  v := public.arcade_rematch('tok-table-2-aaaa', v_room, 'Bravo');
+  assert v ->> 'status' = 'lobby' and (v ->> 'host')::int = 2 and v ->> 'rematch_of' = v_room and v ->> 'game' = 'pour', 'revanche : ' || v::text;
+  assert v -> 'players' -> 1 ->> 'state' = 'invited' and (v -> 'players' -> 1 ->> 'table')::int = 1, 'adversaire réinvité';
+  perform public.test_arcade_expect(format('select public.arcade_start(%L, %L)', 'tok-table-2-aaaa', v ->> 'id'), 'not_ready');
+  v := public.arcade_leave('tok-table-2-aaaa', v ->> 'id');
+  assert v ->> 'status' = 'cancelled', 'l''organisateur annule la revanche';
+end $$;
+
+-- Refus, invitation expirée, déconnexion dans le lobby.
+do $$ declare v jsonb; v_room text; begin
+  v := public.arcade_create_room('tok-table-3-aaaa', 'Charlie', 'barber', 'std', '[4]');
+  v_room := v ->> 'id';
+  v := public.arcade_respond('tok-table-4-aaaa', v_room, false, '');
+  assert v -> 'players' -> 1 ->> 'state' = 'declined', 'invitation refusée';
+  assert public.arcade_snapshot('tok-table-4-aaaa') -> 'tables' -> 3 ->> 'status' = 'available', 'table 4 disponible après refus';
+  perform public.test_arcade_expect(format('select public.arcade_start(%L, %L)', 'tok-table-3-aaaa', v_room), 'not_ready');
+  perform public.arcade_leave('tok-table-3-aaaa', v_room);
+
+  v := public.arcade_create_room('tok-table-3-aaaa', 'Charlie', 'beat', 'hard', '[4]');
+  perform set_config('arcade.test_expire', v ->> 'id', false);
+  assert (v ->> 'duration_ms')::int = 72000, 'durée Beat Drop';
+  v := public.arcade_create_room('tok-table-1-aaaa', 'Alpha', 'findit', 'race', '[2, 4]');
+  perform set_config('arcade.test_offline', v ->> 'id', false);
+  assert v ->> 'mode' = 'battle', 'deux invités : battle';
+  perform public.arcade_respond('tok-table-2-aaaa', v ->> 'id', true, 'Bravo');
+end $$;
+reset role;
+update public.arcade_room_players set expires_at = public.now_ms() - 1 where room_id = current_setting('arcade.test_expire') and table_no = 4;
+-- La table 2 ne donne plus signe de vie.
+update public.arcade_devices set last_seen = public.now_ms() - 16000 where table_no = 2;
+set role anon;
+do $$ declare v jsonb; v_room text; begin
+  v := public.arcade_snapshot('tok-table-4-aaaa');
+  assert jsonb_array_length(v -> 'invites') = 1 and v -> 'invites' -> 0 ->> 'room_id' = current_setting('arcade.test_offline'), 'invitation expirée masquée : ' || (v -> 'invites')::text;
+  perform public.test_arcade_expect(format('select public.arcade_respond(%L, %L, true, %L)', 'tok-table-4-aaaa', current_setting('arcade.test_expire'), 'Delta'), 'expired');
+  assert v -> 'tables' -> 1 ->> 'status' = 'offline', 'table 2 hors ligne';
+  v := public.arcade_snapshot('tok-table-1-aaaa');
+  assert v -> 'room' -> 'players' -> 1 ->> 'state' = 'left', 'table déconnectée sortie du lobby : ' || (v -> 'room')::text;
+  assert v -> 'tables' -> 3 ->> 'status' = 'invited', 'table 4 invitée';
+  perform public.arcade_snapshot('tok-table-2-aaaa');
+  -- Accepter une invitation refuse les autres invitations en attente.
+  v_room := public.arcade_create_room('tok-table-2-aaaa', 'Bravo', 'pour', 'std', '[4]') ->> 'id';
+  perform public.arcade_respond('tok-table-4-aaaa', v_room, true, 'Delta');
+  v := public.arcade_snapshot('tok-table-1-aaaa');
+  assert v -> 'room' -> 'players' -> 2 ->> 'state' = 'declined', 'autre invitation refusée implicitement';
+  perform public.arcade_leave('tok-table-1-aaaa', v -> 'room' ->> 'id');
+  perform public.arcade_leave('tok-table-2-aaaa', v_room);
+  perform public.arcade_leave('tok-table-3-aaaa', current_setting('arcade.test_expire'));
+end $$;
+
+-- Limite d'invitations : 6 sur 2 minutes par défaut.
+reset role;
+insert into public.arcade_invite_log (from_table, at) select 3, public.now_ms() from generate_series(1, 5);
+set role anon;
+do $$ begin
+  perform public.test_arcade_expect($q$ select public.arcade_create_room('tok-table-3-aaaa', 'Charlie', 'pour', 'std', '[1]') $q$, 'rate_limited');
+end $$;
+reset role;
+delete from public.arcade_invite_log;
+set role anon;
+
+-- Délai de grâce dépassé : la table muette est classée en abandon, l'autre gagne.
+do $$ declare v jsonb; v_room text; begin
+  v := public.arcade_create_room('tok-table-1-aaaa', 'Alpha', 'pour', 'std', '[2]');
+  v_room := v ->> 'id';
+  perform set_config('arcade.test_grace', v_room, false);
+  perform public.arcade_respond('tok-table-2-aaaa', v_room, true, 'Bravo');
+  perform public.arcade_set_ready('tok-table-2-aaaa', v_room, true);
+  perform public.arcade_start('tok-table-1-aaaa', v_room);
+end $$;
+reset role;
+update public.arcade_rooms set starts_at = public.now_ms() - 64000, ends_at = public.now_ms() - 100 where id = current_setting('arcade.test_grace');
+set role anon;
+do $$ declare v_room text := current_setting('arcade.test_grace'); begin
+  perform public.arcade_submit_result('tok-table-1-aaaa', v_room, 400, '{"glasses":10}');
+end $$;
+reset role;
+update public.arcade_rooms set ends_at = public.now_ms() - 20001 where id = current_setting('arcade.test_grace');
+set role anon;
+do $$ declare v jsonb; v_room text := current_setting('arcade.test_grace'); begin
+  perform public.test_arcade_expect(format($q$ select public.arcade_submit_result(%L, %L, 500, '{"glasses":20}') $q$, 'tok-table-2-aaaa', v_room), 'too_late');
+  v := public.arcade_snapshot('tok-table-2-aaaa') -> 'room';
+  assert v ->> 'id' = v_room and v ->> 'status' = 'finished', 'partie terminée à l''échéance : ' || coalesce(v::text, 'null');
+  assert (v -> 'players' -> 1 ->> 'abandoned')::boolean and (v -> 'players' -> 1 ->> 'rank')::int = 2, 'abandon classé dernier';
+  assert (v -> 'players' -> 0 ->> 'rank')::int = 1, 'l''autre joueur gagne';
+  assert (select count(*) from jsonb_array_elements(public.arcade_scores(0)) s where s ->> 'room_id' = v_room) = 1, 'un seul score enregistré';
+end $$;
+
+-- Find It, chasse compétitive : chaque objet n'est attribué qu'une fois, au premier.
+do $$ declare v jsonb; v_room text; begin
+  v := public.arcade_create_room('tok-table-1-aaaa', 'Alpha', 'findit', 'hunt', '[2]');
+  v_room := v ->> 'id';
+  perform set_config('arcade.test_hunt', v_room, false);
+  perform public.arcade_respond('tok-table-2-aaaa', v_room, true, 'Bravo');
+  perform public.arcade_set_ready('tok-table-2-aaaa', v_room, true);
+  perform public.arcade_start('tok-table-1-aaaa', v_room);
+  -- Pas de réclamation pendant le compte à rebours.
+  perform public.test_arcade_expect(format('select public.arcade_claim(%L, %L, %L)', 'tok-table-2-aaaa', v_room, '0:comb'), 'not_allowed');
+end $$;
+reset role;
+update public.arcade_rooms set starts_at = public.now_ms() - 1000, ends_at = public.now_ms() + 89000 where id = current_setting('arcade.test_hunt');
+set role anon;
+do $$ declare v jsonb; v_room text := current_setting('arcade.test_hunt'); begin
+  v := public.arcade_claim('tok-table-2-aaaa', v_room, '0:comb');
+  assert v = '{"won": true, "owner": 2}'::jsonb, 'premier arrivé : ' || v::text;
+  v := public.arcade_claim('tok-table-1-aaaa', v_room, '0:comb');
+  assert v = '{"won": false, "owner": 2}'::jsonb, 'déjà trouvé : ' || v::text;
+  perform public.test_arcade_expect(format('select public.arcade_claim(%L, %L, %L)', 'tok-table-2-aaaa', v_room, '0:vinyl'), 'rate_limited');
+  perform public.test_arcade_expect(format('select public.arcade_claim(%L, %L, %L)', 'tok-table-1-aaaa', v_room, 'BAD'), 'invalid');
+end $$;
+reset role;
+update public.arcade_claim_log set at = at - 400;
+set role anon;
+do $$ declare v_room text := current_setting('arcade.test_hunt'); begin
+  perform public.arcade_claim('tok-table-2-aaaa', v_room, '0:vinyl');
+  perform public.arcade_claim('tok-table-1-aaaa', v_room, '0:mic');
+end $$;
+reset role;
+update public.arcade_rooms set ends_at = public.now_ms() - 10 where id = current_setting('arcade.test_hunt');
+set role anon;
+do $$ declare v jsonb; v_room text := current_setting('arcade.test_hunt'); begin
+  -- Le score officiel vient des objets attribués, pas de ce que la tablette annonce.
+  perform public.arcade_submit_result('tok-table-2-aaaa', v_room, 99999, '{"wrong":1}');
+  v := public.arcade_submit_result('tok-table-1-aaaa', v_room, 5000, '{"wrong":0}');
+  assert v ->> 'status' = 'finished', 'chasse terminée';
+  assert (v -> 'players' -> 1 ->> 'score')::int = 190 and (v -> 'players' -> 1 ->> 'rank')::int = 1, 'table 2 : ' || (v -> 'players')::text;
+  assert (v -> 'players' -> 0 ->> 'score')::int = 100 and (v -> 'players' -> 0 ->> 'rank')::int = 2, 'table 1 : ' || (v -> 'players')::text;
+  assert v -> 'claims' = '{"0:comb": 2, "0:vinyl": 2, "0:mic": 1}'::jsonb, 'objets attribués : ' || (v -> 'claims')::text;
+end $$;
+
+-- Solo : durée minimale, un seul enregistrement, pseudo filtré, jeu désactivé.
+do $$ declare v jsonb; begin
+  v := public.arcade_start_solo('tok-table-1-aaaa', 'pour', 'std');
+  perform set_config('arcade.test_solo', v ->> 'id', false);
+  assert (v ->> 'started_at')::bigint = (v ->> 'now')::bigint and (v ->> 'seed')::bigint between 0 and 4294967295, 'session solo : ' || v::text;
+  perform public.test_arcade_expect($q$ select public.arcade_start_solo('tok-table-1-aaaa', 'pour', 'std') $q$, 'rate_limited');
+  perform public.test_arcade_expect($q$ select public.arcade_start_solo('tok-table-2-aaaa', 'findit', 'hunt') $q$, 'invalid');
+  perform public.test_arcade_expect(format($q$ select public.arcade_submit_solo(%L, %L, 'Léa', 800, '{"glasses":20}') $q$, 'tok-table-1-aaaa', v ->> 'id'), 'too_early');
+end $$;
+reset role;
+update public.arcade_solo set started_at = started_at - 59000 where id = current_setting('arcade.test_solo');
+update public.settings set data = jsonb_set(data, '{arcade}', '{"games":{"beat":false}}'::jsonb);
+set role anon;
+do $$ declare v jsonb; v_id text := current_setting('arcade.test_solo'); begin
+  perform public.test_arcade_expect(format($q$ select public.arcade_submit_solo(%L, %L, 'Léa', 800, '{"glasses":20}') $q$, 'tok-table-2-aaaa', v_id), 'not_found');
+  perform public.test_arcade_expect(format($q$ select public.arcade_submit_solo(%L, %L, 'Léa', 8001, '{"glasses":30}') $q$, 'tok-table-1-aaaa', v_id), 'implausible');
+  perform public.test_arcade_expect(format($q$ select public.arcade_submit_solo(%L, %L, 'connard', 800, '{"glasses":20}') $q$, 'tok-table-1-aaaa', v_id), 'invalid');
+  perform public.test_arcade_expect(format($q$ select public.arcade_submit_solo(%L, %L, 'Sale PD', 800, '{"glasses":20}') $q$, 'tok-table-1-aaaa', v_id), 'invalid');
+  perform public.test_arcade_expect(format($q$ select public.arcade_submit_solo(%L, %L, ' x ', 800, '{"glasses":20}') $q$, 'tok-table-1-aaaa', v_id), 'invalid');
+  v := public.arcade_submit_solo('tok-table-1-aaaa', v_id, 'Léa', 800, '{"glasses":20}');
+  assert v ->> 'mode' = 'solo' and v ->> 'pseudo' = 'Léa' and (v ->> 'table')::int = 1 and (v ->> 'score')::int = 800
+    and v -> 'room_id' = 'null'::jsonb and v -> 'rank' = 'null'::jsonb and v ->> 'id' = v_id, 'score solo : ' || v::text;
+  perform public.test_arcade_expect(format($q$ select public.arcade_submit_solo(%L, %L, 'Léa', 800, '{"glasses":20}') $q$, 'tok-table-1-aaaa', v_id), 'duplicate');
+  -- Jeu désactivé dans les réglages.
+  perform public.test_arcade_expect($q$ select public.arcade_start_solo('tok-table-3-aaaa', 'beat', 'easy') $q$, 'invalid');
+  perform public.test_arcade_expect($q$ select public.arcade_create_room('tok-table-3-aaaa', 'Charlie', 'beat', 'easy', '[4]') $q$, 'invalid');
+  perform public.arcade_start_solo('tok-table-3-aaaa', 'barber', 'std');
+end $$;
+
+-- Contrôles de cohérence (mêmes règles que validation.ts).
+reset role;
+do $$ begin
+  assert public.arcade_is_plausible('barber', 'std', 9000, '{"served":23}'), 'barber au plafond';
+  assert not public.arcade_is_plausible('barber', 'std', 9001, '{"served":23}'), 'barber au-delà du plafond';
+  assert not public.arcade_is_plausible('barber', 'std', 1000, '{"served":2}'), 'barber : trop de points par client';
+  assert public.arcade_is_plausible('findit', 'race', 1700, '{"found":10,"scenes":1}'), 'findit plausible';
+  assert not public.arcade_is_plausible('findit', 'race', 1701, '{"found":10,"scenes":1}'), 'findit invraisemblable';
+  assert public.arcade_is_plausible('beat', 'hard', 158800, '{"perfect":400,"good":0,"judgements":400}'), 'beat hard au plafond';
+  assert not public.arcade_is_plausible('beat', 'easy', 48001, '{"perfect":400,"good":0,"judgements":400}'), 'beat easy au-delà du plafond';
+  assert not public.arcade_is_plausible('beat', 'medium', 800, '{"perfect":2,"good":1,"judgements":2}'), 'beat : plus de touches que de notes';
+  assert not public.arcade_is_plausible('pour', 'std', -1, '{"glasses":5}'), 'score négatif';
+  assert public.arcade_is_plausible('pour', 'std', 0, '{"glasses":"x"}'), 'statistique non numérique comptée 0';
+  assert public.arcade_pseudo_key('  Léa   MARTIN ') = 'lea martin', 'clé de pseudo';
+  assert not public.arcade_is_offensive('Monique'), 'Monique autorisé';
+  assert public.arcade_is_offensive('FuckYou'), 'fragment bloqué';
+  assert public.arcade_is_offensive('c0n'), 'chiffres leet convertis';
+end $$;
+
+-- Administration : scores, renommage, parties, challenges, remise à zéro.
+set role authenticated;
+select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-00000000a001', false);
+do $$ declare v jsonb; v_n int; begin
+  v := public.arcade_admin_scores(2);
+  assert jsonb_array_length(v) = 2, 'admin : derniers scores';
+  assert v -> 0 ->> 'mode' = 'solo', 'admin : plus récent en premier';
+  v_n := public.arcade_admin_rename('LEA', 'Léa M');
+  assert v_n = 1, 'renommage sans casse ni accents : ' || v_n;
+  assert exists (select 1 from jsonb_array_elements(public.arcade_scores(0)) s where s ->> 'pseudo' = 'Léa M'), 'pseudo renommé';
+  v := public.arcade_admin_rooms(50);
+  assert jsonb_array_length(v) >= 8, 'admin : parties listées';
+  assert v -> 0 ? 'players' and v -> 0 -> 'players' -> 0 ? 'abandoned', 'format AdminRoomRow';
+  perform public.arcade_admin_save_challenge('{"id":"week-42","game":"pour","title_fr":"Perfect Pour Challenge","title_en":"Perfect Pour Challenge","description_fr":"","description_en":"","reward_fr":"Une bière","reward_en":"A beer","starts_at":"2026-10-12T00:00:00.000Z","ends_at":"2026-10-18T23:59:00.000Z","active":true}');
+  perform public.arcade_admin_save_challenge('{"id":"week-42","game":"pour","title_fr":"Perfect Pour","title_en":"Perfect Pour","description_fr":"","description_en":"","reward_fr":"","reward_en":"","starts_at":"2026-10-12T00:00:00.000Z","ends_at":"2026-10-18T23:59:00.000Z","active":false}');
+  perform public.test_arcade_expect($q$ select public.arcade_admin_save_challenge('{"id":"x","game":"pour","starts_at":"pas une date","ends_at":"2026-10-18T23:59:00.000Z"}') $q$, 'invalid');
+  v := public.arcade_challenges();
+  assert jsonb_array_length(v) = 1 and v -> 0 ->> 'title_fr' = 'Perfect Pour' and not (v -> 0 ->> 'active')::boolean, 'challenge modifié : ' || v::text;
+  assert v -> 0 ->> 'starts_at' = '2026-10-12T00:00:00.000Z', 'date ISO : ' || (v -> 0 ->> 'starts_at');
+  perform public.arcade_admin_delete_challenge('week-42');
+  assert public.arcade_challenges() = '[]'::jsonb, 'challenge supprimé';
+  perform public.arcade_admin_delete_score(current_setting('arcade.test_duel') || ':1');
+  assert jsonb_array_length(public.arcade_scores(0)) = 5, 'score supprimé';
+  v_n := public.arcade_admin_reset('findit');
+  assert v_n = 2, 'remise à zéro de Find It : ' || v_n;
+  v_n := public.arcade_admin_reset(null);
+  assert v_n = 3, 'remise à zéro complète : ' || v_n;
+end $$;
+
+reset role;
+update public.settings set data = data - 'arcade';
+drop function public.test_arcade_expect(text, text);
+
 select 'TOUS LES TESTS BASE DE DONNÉES SONT PASSÉS' as resultat;

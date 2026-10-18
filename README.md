@@ -27,7 +27,7 @@ L'accueil présente quatre grands menus (Le concept Cutshop, Boissons et produit
 | Nos prestations | Coupes, coupe et barbe, soins et services, enfants : durée, description, prix classique et prix étudiant côte à côte, bouton « Réserver » qui affiche le QR code Salonkee |
 | Prendre rendez vous | Grand QR code vers Salonkee, aucune donnée saisie sur la tablette |
 | Les événements | Cartes triées par date, places restantes, inscription avec consentement RGPD, newsletter facultative, blocage quand c'est complet |
-| Le Cutshop Challenge | Quiz multijoueur en temps réel entre les 4 tablettes (2 à 4 joueurs), 10 questions de 15 secondes, classement animé, podium, solo contre le chrono si personne ne rejoint |
+| Le Quiz Cutshop | Quiz multijoueur en temps réel entre les 4 tablettes (2 à 4 joueurs), 10 questions de 15 secondes, classement animé, podium, solo contre le chrono si personne ne rejoint |
 | Stop à 10 secondes | Chrono au centième, caché après 3 secondes, classement du jour remis à zéro chaque nuit |
 | La roue de la fortune | Visible seulement si l'équipe l'active, tirage pondéré côté serveur, code gagnant unique de 6 caractères |
 | Le coin des kids | Le Petit Barbier (tondeuse, ciseaux, peigne, couleurs, repousse) et Memory sur 3 niveaux |
@@ -37,9 +37,9 @@ L'accueil présente quatre grands menus (Le concept Cutshop, Boissons et produit
 | Factures pros | Formulaire avec validation du numéro de TVA (belge avec clé de contrôle, et formats européens) |
 | Nos réseaux | QR codes Instagram, Facebook et TikTok |
 
-Fonctionnement commun : bouton FR / EN et bouton grand texte toujours visibles, retour accueil en un geste, écran de veille animé après 60 secondes d'inactivité avec effacement de toutes les saisies, invitation à le Cutshop Challenge affichée sur toutes les tablettes, appui long de 5 secondes sur le logo pour ouvrir l'admin.
+Fonctionnement commun : bouton FR / EN et bouton grand texte toujours visibles, retour accueil en un geste, écran de veille animé après 60 secondes d'inactivité avec effacement de toutes les saisies, invitation à le Quiz Cutshop affichée sur toutes les tablettes, appui long de 5 secondes sur le logo pour ouvrir l'admin.
 
-**Mode démonstration** : sans clés Supabase, l'application démarre avec les données d'exemple stockées dans le navigateur (mot de passe admin « demo »). Le Cutshop Challenge fonctionne alors entre plusieurs onglets d'un même navigateur. C'est pratique pour découvrir l'application avant de brancher Supabase.
+**Mode démonstration** : sans clés Supabase, l'application démarre avec les données d'exemple stockées dans le navigateur (mot de passe admin « demo »). Le Quiz Cutshop fonctionne alors entre plusieurs onglets d'un même navigateur. C'est pratique pour découvrir l'application avant de brancher Supabase.
 
 ## 2. Créer le projet Supabase
 
@@ -47,7 +47,7 @@ Fonctionnement commun : bouton FR / EN et bouton grand texte toujours visibles, 
 2. Ouvre **SQL Editor**, clique sur **New query**, colle tout le contenu de `supabase/migrations/20261015000001_init.sql` et clique sur **Run**. Fais de même, dans l'ordre, avec les migrations suivantes du dossier (par exemple `20261018000001_services.sql`, qui ajoute les prestations). Le schéma complet est créé : tables, index, politiques RLS, fonctions serveur (inscriptions, roue, validation des codes, purge RGPD) et le bucket de photos `media`.
 3. Nouvelle requête : colle le contenu de `supabase/seed.sql` et clique sur **Run**. Les données d'exemple sont chargées : réglages, événements récurrents (dates calculées à partir du jour d'exécution), boissons, accords « Ta coupe, ta bière », produits, gains de la roue et 90 questions de quiz en FR et EN. Ce fichier ne doit être exécuté qu'une seule fois.
 4. Dans **Authentication**, section des fournisseurs de connexion, garde le fournisseur **Email** actif mais **désactive l'inscription libre** (option « Allow new users to sign up »). Seule l'équipe aura un compte.
-5. Dans les réglages **Realtime**, laisse l'accès aux canaux publics autorisé (l'option « canaux privés uniquement » doit rester désactivée) : le Cutshop Challenge utilise un canal public de présence et de diffusion, sans aucune donnée personnelle.
+5. Dans les réglages **Realtime**, laisse l'accès aux canaux publics autorisé (l'option « canaux privés uniquement » doit rester désactivée) : le Quiz Cutshop utilise un canal public de présence et de diffusion, sans aucune donnée personnelle.
 6. Dans **Project Settings**, rubrique **API** (ou **Data API**), copie :
    * l'URL du projet (`https://xxxx.supabase.co`) ;
    * la clé publique **anon** (ou la clé « publishable » sur les projets récents).
@@ -122,7 +122,7 @@ L'application a sa propre mise en veille (60 secondes) : laisse le « Screensave
 ### Vérifications après installation
 
 1. L'écran d'accueil s'affiche avec 11 tuiles (12 si la roue est activée).
-2. Lance un Cutshop Challenge sur la Tablette 1 : l'invitation doit apparaître sur les trois autres tablettes en moins d'une seconde.
+2. Lance un Quiz Cutshop sur la Tablette 1 : l'invitation doit apparaître sur les trois autres tablettes en moins d'une seconde.
 3. Inscris toi à un événement de test puis vérifie l'inscription dans l'admin, rubrique Événements, bouton Inscrits.
 
 ## 7. Modifier les contenus
@@ -166,16 +166,16 @@ Astuce : pour simuler plusieurs tablettes, ouvre plusieurs onglets avec `?tablet
 
 | Commande | Rôle |
 | --- | --- |
-| `npm test` | Tests unitaires : tirage pondéré de la roue, score de le Cutshop Challenge, chrono Stop à 10 secondes, remise à zéro après inactivité, moteur multijoueur simulé à 4 joueurs avec déconnexion, TVA, sélection produits, absence de tirets dans tous les textes |
+| `npm test` | Tests unitaires : tirage pondéré de la roue, score de le Quiz Cutshop, chrono Stop à 10 secondes, remise à zéro après inactivité, moteur multijoueur simulé à 4 joueurs avec déconnexion, TVA, sélection produits, absence de tirets dans tous les textes |
 | `npm run test:db` | Lance un Postgres temporaire, applique la migration et les données d'exemple, puis vérifie les politiques RLS, les inscriptions avec capacité, le PIN, le tirage de la roue sur 3000 tours, les stocks, la validation des codes et la purge RGPD |
-| `npm run test:e2e` | Tests de bout en bout dans Chromium sur le build : chaque module en FR et EN, formulaires, veille, admin, roue, kids et Cutshop Challenge à 4 onglets (lancer `npm run build` avant) |
+| `npm run test:e2e` | Tests de bout en bout dans Chromium sur le build : chaque module en FR et EN, formulaires, veille, admin, roue, kids et Quiz Cutshop à 4 onglets (lancer `npm run build` avant) |
 | `npm run seed` | Régénère `supabase/seed.sql` depuis `src/data/seed.ts` |
 
 ## 9. Sécurité, RGPD et fonctionnement hors ligne
 
 * **Clé anon uniquement sur les tablettes** : elles lisent les contenus publics et insèrent inscriptions et demandes. Les politiques RLS empêchent toute lecture des données personnelles. Seuls les comptes listés dans la table `admins` les lisent.
 * **Inscriptions** : fonction serveur `register_event` qui contrôle le consentement, le format du mail et la capacité (verrou sur l'événement : deux tablettes ne peuvent pas prendre la dernière place en même temps).
-* **Roue** : tirage pondéré et génération du code dans la fonction Postgres `spin_wheel`. Le PIN staff n'est jamais lisible par les tablettes, 8 essais ratés en 10 minutes bloquent la roue, les tours offerts (Cutshop Challenge, 10,00 s pile) sont limités à un toutes les 2 minutes par tablette. Un code validé au comptoir devient inutilisable.
+* **Roue** : tirage pondéré et génération du code dans la fonction Postgres `spin_wheel`. Le PIN staff n'est jamais lisible par les tablettes, 8 essais ratés en 10 minutes bloquent la roue, les tours offerts (Quiz Cutshop, 10,00 s pile) sont limités à un toutes les 2 minutes par tablette. Un code validé au comptoir devient inutilisable.
 * **Aucune donnée personnelle sur les tablettes** : rien n'est écrit dans le stockage local (seul le nom de la tablette l'est), les formulaires sont vidés après envoi et à chaque mise en veille, la session admin reste en mémoire.
 * **Consentements** clairs en FR et EN, lien vers la politique de confidentialité intégrée (modifiable dans Réglages).
 * **Durées de conservation** : le bouton « Nettoyer les anciennes données » (Réglages) supprime les inscriptions 3 mois après l'événement, les demandes de facture traitées depuis 3 mois et les demandes produits de plus de 30 jours. Pour l'automatiser chaque nuit, active l'extension `pg_cron` dans Supabase (Database, Extensions) puis exécute :
@@ -194,12 +194,12 @@ public/                        Logo (emplacement provisoire), icônes PWA
 scripts/                       Génération du seed SQL, des icônes, tests base de données
 src/admin/                     Espace admin (CRUD, inscrits, roue, demandes, statistiques)
 src/components/                Barre du haut, logo, QR code, roue SVG, éléments d'interface
-src/context/                   État de l'application (veille, langue, contenus) et Cutshop Challenge
+src/context/                   État de l'application (veille, langue, contenus) et Quiz Cutshop
 src/data/seed.ts               Données d'exemple (source unique, 90 questions FR et EN)
 src/i18n/                      Traductions fr.json et en.json
-src/lib/                       Logique métier testée (roue, Cutshop Challenge, chrono, veille, TVA, produits)
+src/lib/                       Logique métier testée (roue, Quiz Cutshop, chrono, veille, TVA, produits)
 src/lib/api/                   Accès aux données : Supabase ou mode démonstration
-src/lib/realtime/              Canal temps réel et moteur multijoueur de le Cutshop Challenge
+src/lib/realtime/              Canal temps réel et moteur multijoueur de le Quiz Cutshop
 src/pages/                     Écrans clients
 supabase/migrations/           Schéma complet, RLS et fonctions serveur
 supabase/seed.sql              Données d'exemple
