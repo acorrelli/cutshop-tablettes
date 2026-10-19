@@ -15,6 +15,13 @@ import type {
   WheelPrize,
 } from '../lib/types';
 import { DEFAULT_ARCADE_CONFIG } from '../arcade/types';
+import type { QA, QuizPair } from './quiz/qa';
+import { MONS_QUESTIONS } from './quiz/mons';
+import { BEER_QUESTIONS } from './quiz/beer';
+import { BARBER_QUESTIONS } from './quiz/barber';
+import { MUSIC_QUESTIONS } from './quiz/music';
+import { GENERAL_QUESTIONS } from './quiz/general';
+import { KIDS_QUESTIONS } from './quiz/kids';
 
 export const DEFAULT_SETTINGS: AppSettings = {
   salonkee_url: 'https://salonkee.be/salon/cutshop-mons',
@@ -611,10 +618,9 @@ export const SEED_PRIZES: WheelPrize[] = [
 ];
 
 // ---------------------------------------------------------------------------
-// Quiz : 90 questions. La première proposition est toujours la bonne réponse
-// (correct_index 0) ; l'ordre est mélangé au moment de jouer.
-
-type QA = [string, [string, string, string, string]];
+// Quiz : 15 questions de base par thème, plus 100 questions par thème dans src/data/quiz.
+// La première proposition est toujours la bonne réponse (correct_index 0) ;
+// l'ordre est mélangé au moment de jouer.
 
 function q(theme: QuizTheme, n: number, fr: QA, en: QA): QuizQuestion {
   return {
@@ -912,3 +918,19 @@ export const SEED_QUESTIONS: QuizQuestion[] = [
     ['Que fabriquent les abeilles ?', ['Du miel', 'Du lait', 'Du chocolat', 'De la confiture']],
     ['What do bees make?', ['Honey', 'Milk', 'Chocolate', 'Jam']]),
 ];
+
+/** Questions ajoutées en octobre 2026 : numérotées à partir de 16 dans chaque thème. */
+const EXTRA_QUESTIONS: Record<QuizTheme, QuizPair[]> = {
+  mons: MONS_QUESTIONS,
+  beer: BEER_QUESTIONS,
+  barber: BARBER_QUESTIONS,
+  music: MUSIC_QUESTIONS,
+  general: GENERAL_QUESTIONS,
+  kids: KIDS_QUESTIONS,
+};
+
+export const EXTRA_QUESTION_START = 16;
+
+for (const [theme, pairs] of Object.entries(EXTRA_QUESTIONS) as [QuizTheme, QuizPair[]][]) {
+  pairs.forEach(([fr, en], i) => SEED_QUESTIONS.push(q(theme, EXTRA_QUESTION_START + i, fr, en)));
+}

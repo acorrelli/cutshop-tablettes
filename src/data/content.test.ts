@@ -81,8 +81,10 @@ describe('données d’exemple', () => {
     expect(SEED_SERVICES.filter((s) => s.category === 'kids').every((s) => s.price === 19)).toBe(true);
   });
 
-  it('contient au moins 80 questions complètes en FR et EN', () => {
-    expect(SEED_QUESTIONS.length).toBeGreaterThanOrEqual(80);
+  it('contient 115 questions complètes en FR et EN dans chaque thème', () => {
+    expect(SEED_QUESTIONS.length).toBe(690);
+    expect(new Set(SEED_QUESTIONS.map((q) => q.question_fr.toLowerCase())).size).toBe(SEED_QUESTIONS.length);
+    expect(new Set(SEED_QUESTIONS.map((q) => q.question_en.toLowerCase())).size).toBe(SEED_QUESTIONS.length);
     const ids = new Set(SEED_QUESTIONS.map((q) => q.id));
     expect(ids.size).toBe(SEED_QUESTIONS.length);
     for (const q of SEED_QUESTIONS) {
@@ -93,7 +95,7 @@ describe('données d’exemple', () => {
       expect(q.question_en.length).toBeGreaterThan(5);
     }
     for (const theme of ['mons', 'beer', 'barber', 'music', 'general', 'kids']) {
-      expect(SEED_QUESTIONS.filter((q) => q.theme === theme).length).toBeGreaterThanOrEqual(10);
+      expect(SEED_QUESTIONS.filter((q) => q.theme === theme).length).toBe(115);
     }
   });
 

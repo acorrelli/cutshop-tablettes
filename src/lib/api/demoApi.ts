@@ -30,7 +30,7 @@ import { generateCode, pickWeighted } from '../wheel';
 import { mergeSettings } from './supabaseApi';
 import type { AdminTable, AdminTableRow, Api, RegisterResult } from './types';
 
-const LS_KEY = 'cutshop.demo.v5';
+const LS_KEY = 'cutshop.demo.v6';
 export const DEMO_PASSWORD = 'demo';
 
 interface SharedState {

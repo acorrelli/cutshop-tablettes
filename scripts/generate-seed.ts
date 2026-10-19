@@ -13,6 +13,7 @@ import {
   SEED_PRIZES,
   SEED_PRODUCTS,
   SEED_QUESTIONS,
+  EXTRA_QUESTION_START,
 } from '../src/data/seed';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -87,3 +88,21 @@ out.push('');
 
 writeFileSync(join(root, 'supabase', 'seed.sql'), out.join('\n'));
 console.log(`seed.sql généré : ${SEED_QUESTIONS.length} questions, ${SEED_SERVICES.length} prestations, ${SEED_DRINKS.length} boissons, ${SEED_PRODUCTS.length} produits.`);
+
+// Mise à jour d'une base déjà en service : ajoute uniquement les questions absentes.
+const extra = SEED_QUESTIONS.filter((q) => Number(q.id.split('-').pop()) >= EXTRA_QUESTION_START);
+const up: string[] = [];
+up.push('-- Ajout des nouvelles questions de quiz dans une base Cutshop déjà installée.');
+up.push('-- Fichier généré par scripts/generate-seed.ts : ne pas modifier à la main.');
+up.push('-- À coller dans le SQL Editor de Supabase. Sans risque si on le lance deux fois : une question déjà présente est ignorée.');
+up.push('begin;');
+for (const q of extra) {
+  up.push(
+    `insert into public.quiz_questions (theme, question_fr, question_en, answers_fr, answers_en, correct_index, active) select ${s(q.theme)}, ${s(q.question_fr)}, ${s(q.question_en)}, ${arr(q.answers_fr)}, ${arr(q.answers_en)}, ${q.correct_index}, ${b(q.active)} where not exists (select 1 from public.quiz_questions where question_fr = ${s(q.question_fr)});`,
+  );
+}
+up.push('commit;');
+up.push(`select theme, count(*) as questions from public.quiz_questions group by theme order by theme;`);
+up.push('');
+writeFileSync(join(root, 'supabase', 'ajout_questions_quiz.sql'), up.join('\n'));
+console.log(`ajout_questions_quiz.sql généré : ${extra.length} nouvelles questions.`);

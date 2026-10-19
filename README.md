@@ -47,7 +47,7 @@ Fonctionnement commun : bouton FR / EN et bouton grand texte toujours visibles, 
 ## 2. Créer le projet Supabase
 
 1. Crée un compte sur [supabase.com](https://supabase.com) puis un nouveau projet. Choisis une région européenne (par exemple Frankfurt ou Paris) et note bien le mot de passe de la base.
-2. Ouvre **SQL Editor**, clique sur **New query**, colle **tout** le contenu du fichier `supabase/installation_complete.sql` et clique sur **Run**. Ce fichier unique contient, dans l'ordre, toutes les migrations (schéma, politiques RLS, fonctions serveur, bucket de photos `media`, prestations, serveur de Cutshop Arcade) puis les données d'exemple (réglages, événements, boissons, prestations, 32 produits, gains de la roue et 90 questions de quiz en FR et EN). Il ne doit être exécuté qu'**une seule fois**, sur un projet neuf. Il se régénère avec `npm run sql:setup`.
+2. Ouvre **SQL Editor**, clique sur **New query**, colle **tout** le contenu du fichier `supabase/installation_complete.sql` et clique sur **Run**. Ce fichier unique contient, dans l'ordre, toutes les migrations (schéma, politiques RLS, fonctions serveur, bucket de photos `media`, prestations, serveur de Cutshop Arcade) puis les données d'exemple (réglages, événements, boissons, prestations, 32 produits, gains de la roue et 690 questions de quiz en FR et EN, 115 par thème). Il ne doit être exécuté qu'**une seule fois**, sur un projet neuf. Il se régénère avec `npm run sql:setup`.
 3. Vérifie dans **Table Editor** que les tables `settings`, `events`, `drinks`, `products` et `arcade_rooms` existent.
 4. Dans **Authentication**, section des fournisseurs de connexion, garde le fournisseur **Email** actif mais **désactive l'inscription libre** (option « Allow new users to sign up »). Seule l'équipe aura un compte.
 5. Dans les réglages **Realtime**, laisse l'accès aux canaux publics autorisé (l'option « canaux privés uniquement » doit rester désactivée) : le Quiz Cutshop utilise un canal public de présence et de diffusion, sans aucune donnée personnelle.
@@ -58,6 +58,8 @@ Fonctionnement commun : bouton FR / EN et bouton grand texte toujours visibles, 
    Ne copie jamais la clé `service_role` dans l'application.
 
 Avec la ligne de commande Supabase, les étapes 2 et 3 se font aussi par `supabase link` puis `supabase db push` et l'exécution de `supabase/seed.sql`.
+
+**Base déjà installée et nouvelles questions de quiz** : colle le contenu de `supabase/ajout_questions_quiz.sql` dans **SQL Editor** et clique sur **Run**. Seules les questions absentes sont ajoutées, tes modifications faites dans l'admin sont conservées, et le fichier peut être relancé sans risque. Le tableau affiché à la fin donne le nombre de questions par thème.
 
 ## 3. Relier l'application au projet Supabase et activer GitHub Pages
 
@@ -213,7 +215,7 @@ scripts/                       Génération du seed SQL, des icônes, tests base
 src/admin/                     Espace admin (CRUD, inscrits, roue, demandes, statistiques)
 src/components/                Barre du haut, logo, QR code, roue SVG, éléments d'interface
 src/context/                   État de l'application (veille, langue, contenus) et Quiz Cutshop
-src/data/seed.ts               Données d'exemple (source unique, 90 questions FR et EN)
+src/data/seed.ts               Données d'exemple (source unique, quiz dans src/data/quiz)
 src/i18n/                      Traductions fr.json et en.json
 src/lib/                       Logique métier testée (roue, Quiz Cutshop, chrono, veille, TVA, produits)
 src/lib/api/                   Accès aux données : Supabase ou mode démonstration
