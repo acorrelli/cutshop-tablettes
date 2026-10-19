@@ -8,7 +8,7 @@ Application web installée sur les 4 tablettes Android de l'espace d'attente du 
 
 1. Ce que fait l'application
 2. Créer le projet Supabase
-3. Ajouter les secrets GitHub et activer GitHub Pages
+3. Relier l'application au projet Supabase et activer GitHub Pages
 4. Premier déploiement
 5. Créer le compte admin
 6. Configurer les 4 tablettes (Fully Kiosk Browser)
@@ -59,19 +59,17 @@ Fonctionnement commun : bouton FR / EN et bouton grand texte toujours visibles, 
 
 Avec la ligne de commande Supabase, les étapes 2 et 3 se font aussi par `supabase link` puis `supabase db push` et l'exécution de `supabase/seed.sql`.
 
-## 3. Ajouter les secrets GitHub et activer GitHub Pages
+## 3. Relier l'application au projet Supabase et activer GitHub Pages
 
-1. Pousse ce dépôt sur GitHub (branche `main`).
-2. Dans le dépôt : **Settings**, puis **Secrets and variables**, puis **Actions**, bouton **New repository secret**. Crée deux secrets :
-   * `VITE_SUPABASE_URL` : l'URL du projet Supabase ;
-   * `VITE_SUPABASE_ANON_KEY` : la clé publique anon.
+1. L'URL du projet et sa clé publique sont dans le fichier `.env.supabase` (projet `qttnbbkagzmmafrifmgp`). Ces deux valeurs sont publiques par nature : aucun secret GitHub n'est nécessaire. Si le projet change, il suffit de modifier ce fichier.
+2. Pousse ce dépôt sur GitHub (branche `main`). Le dépôt doit être **public** pour bénéficier de GitHub Pages gratuitement ; aucune donnée sensible n'y figure.
 3. Dans **Settings**, puis **Pages**, choisis **Source : GitHub Actions**.
 4. Facultatif : si tu publies sur un domaine personnalisé ou sur `ton-compte.github.io` directement, crée une variable de dépôt (onglet **Variables**) nommée `BASE_PATH` avec la valeur `/`. Sinon, l'application est publiée sous `/nom-du-depot/` automatiquement.
 
 ## 4. Premier déploiement
 
 1. Fais un push sur `main` (ou lance le workflow « Deploiement GitHub Pages » à la main dans l'onglet **Actions**).
-2. Le workflow installe les dépendances, lance les tests unitaires, construit l'application avec les secrets et la publie. Si les secrets sont absents, il le signale par un avertissement et publie la version de démonstration.
+2. Le workflow installe les dépendances, lance les tests unitaires, construit l'application reliée à Supabase (`npm run build:prod`) et la publie.
 3. L'adresse s'affiche à la fin du job `deploy`, par exemple `https://ton-compte.github.io/cutshop-tablettes/`.
 
 ## 5. Créer le compte admin
@@ -188,6 +186,8 @@ Astuce : pour simuler plusieurs tablettes, ouvre plusieurs onglets avec `?tablet
 | `npm run test:db` | Lance un Postgres temporaire, applique la migration et les données d'exemple, puis vérifie les politiques RLS, les inscriptions avec capacité, le PIN, le tirage de la roue sur 3000 tours, les stocks, la validation des codes et la purge RGPD |
 | `npm run test:e2e` | Tests de bout en bout dans Chromium sur le build : chaque module en FR et EN, formulaires, veille, admin, roue, kids et Quiz Cutshop à 4 onglets (lancer `npm run build` avant) |
 | `npm run seed` | Régénère `supabase/seed.sql` depuis `src/data/seed.ts` |
+| `npm run sql:setup` | Régénère `supabase/installation_complete.sql` (migrations et données d'exemple en un seul fichier) |
+| `npm run build:prod` | Construit la version reliée au projet Supabase (`.env.supabase`) ; `npm run build` reste en mode démonstration pour les tests |
 
 ## 9. Sécurité, RGPD et fonctionnement hors ligne
 

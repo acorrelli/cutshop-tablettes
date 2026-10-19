@@ -1,5 +1,5 @@
 # Build et publication sur GitHub Pages à chaque push sur main.
-# Secrets à créer dans le dépôt : VITE_SUPABASE_URL et VITE_SUPABASE_ANON_KEY.
+# La connexion Supabase vient du fichier .env.supabase (URL et clé publique du projet) : aucun secret à créer.
 name: Deploiement GitHub Pages
 
 on:
@@ -19,8 +19,6 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      HAS_SUPABASE: ${{ secrets.VITE_SUPABASE_URL != '' && secrets.VITE_SUPABASE_ANON_KEY != '' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -35,17 +33,11 @@ jobs:
       - name: Tests unitaires
         run: npm test
 
-      - name: Build
-        run: npm run build
+      - name: Build (connecté à Supabase)
+        run: npm run build:prod
         env:
-          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
           # Chemin du site : /nom-du-depot/ par défaut, ou la variable de dépôt BASE_PATH (ex : / pour un domaine personnalisé).
           BASE_PATH: ${{ vars.BASE_PATH || format('/{0}/', github.event.repository.name) }}
-
-      - name: Alerte si Supabase n'est pas configuré
-        if: ${{ env.HAS_SUPABASE != 'true' }}
-        run: echo "::warning::Secrets Supabase absents, le site est publié en mode démonstration."
 
       - uses: actions/configure-pages@v5
 

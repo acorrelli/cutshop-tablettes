@@ -10,6 +10,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:prod": "tsc -b && vite build --mode supabase",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
