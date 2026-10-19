@@ -28,6 +28,7 @@ PSQL="psql -h $TMP -p $PORT -U postgres -v ON_ERROR_STOP=1 -q"
 # Base en UTF8 comme sur Supabase (normalisation Unicode des pseudos), quel que soit le locale du système.
 $PSQL -c "create database cutshop encoding 'UTF8' locale 'C' template template0" postgres
 $PSQL -f supabase/tests/supabase_stub.sql cutshop
-for f in supabase/migrations/*.sql; do $PSQL -f "$f" cutshop; done
-$PSQL -f supabase/seed.sql cutshop
+# Le fichier d'installation complète (migrations + données d'exemple) est celui collé dans Supabase.
+node scripts/build-setup-sql.mjs >/dev/null
+$PSQL -f supabase/installation_complete.sql cutshop
 $PSQL -f supabase/tests/db_test.sql cutshop

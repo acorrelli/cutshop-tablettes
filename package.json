@@ -16,7 +16,8 @@
     "test:db": "bash scripts/test-db.sh",
     "test:e2e": "playwright test",
     "seed": "tsx scripts/generate-seed.ts",
-    "typecheck": "tsc -b"
+    "typecheck": "tsc -b",
+    "sql:setup": "node scripts/build-setup-sql.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.117.3",

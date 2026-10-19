@@ -12,6 +12,7 @@ Application web installée sur les 4 tablettes Android de l'espace d'attente du 
 4. Premier déploiement
 5. Créer le compte admin
 6. Configurer les 4 tablettes (Fully Kiosk Browser)
+6 bis. Le Chromebook de l'équipe (admin)
 7. Modifier les contenus
 8. Développement local et tests
 9. Sécurité, RGPD et fonctionnement hors ligne
@@ -46,8 +47,8 @@ Fonctionnement commun : bouton FR / EN et bouton grand texte toujours visibles, 
 ## 2. Créer le projet Supabase
 
 1. Crée un compte sur [supabase.com](https://supabase.com) puis un nouveau projet. Choisis une région européenne (par exemple Frankfurt ou Paris) et note bien le mot de passe de la base.
-2. Ouvre **SQL Editor**, clique sur **New query**, colle tout le contenu de `supabase/migrations/20261015000001_init.sql` et clique sur **Run**. Fais de même, dans l'ordre, avec les migrations suivantes du dossier (par exemple `20261018000001_services.sql`, qui ajoute les prestations, puis `20261018000002_arcade.sql`, le serveur de Cutshop Arcade). Le schéma complet est créé : tables, index, politiques RLS, fonctions serveur (inscriptions, roue, validation des codes, purge RGPD) et le bucket de photos `media`.
-3. Nouvelle requête : colle le contenu de `supabase/seed.sql` et clique sur **Run**. Les données d'exemple sont chargées : réglages, événements récurrents (dates calculées à partir du jour d'exécution), boissons, accords « Ta coupe, ta bière », produits, gains de la roue et 90 questions de quiz en FR et EN. Ce fichier ne doit être exécuté qu'une seule fois.
+2. Ouvre **SQL Editor**, clique sur **New query**, colle **tout** le contenu du fichier `supabase/installation_complete.sql` et clique sur **Run**. Ce fichier unique contient, dans l'ordre, toutes les migrations (schéma, politiques RLS, fonctions serveur, bucket de photos `media`, prestations, serveur de Cutshop Arcade) puis les données d'exemple (réglages, événements, boissons, prestations, 32 produits, gains de la roue et 90 questions de quiz en FR et EN). Il ne doit être exécuté qu'**une seule fois**, sur un projet neuf. Il se régénère avec `npm run sql:setup`.
+3. Vérifie dans **Table Editor** que les tables `settings`, `events`, `drinks`, `products` et `arcade_rooms` existent.
 4. Dans **Authentication**, section des fournisseurs de connexion, garde le fournisseur **Email** actif mais **désactive l'inscription libre** (option « Allow new users to sign up »). Seule l'équipe aura un compte.
 5. Dans les réglages **Realtime**, laisse l'accès aux canaux publics autorisé (l'option « canaux privés uniquement » doit rester désactivée) : le Quiz Cutshop utilise un canal public de présence et de diffusion, sans aucune donnée personnelle.
 6. Dans **Project Settings**, rubrique **API** (ou **Data API**), copie :
@@ -83,7 +84,7 @@ Avec la ligne de commande Supabase, les étapes 2 et 3 se font aussi par `supaba
    select id from auth.users where email = 'ton.adresse@exemple.be';
    ```
 
-3. Sur une tablette ou un ordinateur, ouvre l'application, fais un **appui long de 5 secondes sur le logo** (ou ajoute `#/admin` à l'adresse) et connecte toi.
+3. Ouvre l'application sur le Chromebook de l'équipe (voir la partie 6 bis) ou sur une tablette (**appui long de 5 secondes sur le logo**, ou `#/admin` à la fin de l'adresse) et connecte toi.
 4. **Première chose à faire** : dans **Réglages**, change le code PIN staff de la roue (par défaut `2468`).
 
 Tu peux répéter les étapes 1 et 2 pour chaque membre de l'équipe. L'admin se déconnecte tout seul après 3 minutes d'inactivité.
@@ -123,9 +124,23 @@ L'application a sa propre mise en veille (60 secondes) : laisse le « Screensave
 
 ### Vérifications après installation
 
-1. L'écran d'accueil s'affiche avec 11 tuiles (12 si la roue est activée).
+1. L'écran d'accueil affiche les 4 menus (Le concept Cutshop, Boissons et produits, Nos services, Les jeux) et le bandeau des réseaux sociaux.
 2. Lance un Quiz Cutshop sur la Tablette 1 : l'invitation doit apparaître sur les trois autres tablettes en moins d'une seconde.
 3. Inscris toi à un événement de test puis vérifie l'inscription dans l'admin, rubrique Événements, bouton Inscrits.
+4. Depuis la Tablette 1, ouvre Les jeux, Cutshop Arcade, Cutshop Challenge et défie la table 2 : l'invitation doit apparaître sur la Tablette 2 en quelques secondes.
+
+### Associer chaque tablette à sa table (Cutshop Arcade)
+
+Pour les défis entre tables, chaque tablette doit être associée une fois à sa table. Sur la tablette elle même : appui long de 5 secondes sur le logo, connexion admin, rubrique **Arcade**, carte **Tables**, bouton **Associer à la table 1** (2, 3 ou 4 selon la tablette), puis **Déconnexion**. L'association est enregistrée côté serveur avec un jeton propre à l'appareil : un client ne peut pas changer de table.
+
+## 6 bis. Le Chromebook de l'équipe (admin)
+
+L'admin ne s'installe pas sur les tablettes clientes : il s'utilise depuis le Chromebook du comptoir.
+
+1. Ouvre Chrome et va sur l'adresse de l'application suivie de `#/admin`, par exemple `https://ton-compte.github.io/cutshop-tablettes/#/admin`.
+2. Menu de Chrome (trois points), **Caster, enregistrer et partager**, **Créer un raccourci**, coche **Ouvrir dans une fenêtre**, nomme le « Admin Cutshop ». Le raccourci apparaît dans le lanceur et peut être épinglé à l'étagère.
+3. Connecte toi avec le compte créé à l'étape 5. Pour la sécurité, l'admin se déconnecte après 3 minutes sans activité : il suffit de se reconnecter.
+4. Ne donne jamais de nom de tablette au Chromebook : il ne fait pas partie des 4 tablettes clientes.
 
 ## 7. Modifier les contenus
 
