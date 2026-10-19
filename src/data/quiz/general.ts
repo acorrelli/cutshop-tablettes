@@ -114,8 +114,8 @@ export const GENERAL_QUESTIONS: QuizPair[] = [
    ['In which year did Pluto lose its planet status?', ['2006', '1996', '2012', '2001']]],
 
   // Nature
-  [['Quel est le plus grand animal vivant sur Terre ?', ['La baleine bleue', 'L’éléphant d’Afrique', 'Le cachalot', 'Le requin baleine']],
-   ['What is the largest animal living on Earth?', ['The blue whale', 'The African elephant', 'The sperm whale', 'The whale shark']]],
+  [['Quel est le plus grand animal qui vit dans les océans ?', ['La baleine bleue', 'L’éléphant d’Afrique', 'Le cachalot', 'Le requin baleine']],
+   ['What is the largest animal living in the oceans?', ['The blue whale', 'The African elephant', 'The sperm whale', 'The whale shark']]],
   [['Quel est le plus grand primate du monde ?', ['Le gorille', 'Le chimpanzé', 'L’orang-outan', 'Le babouin']],
    ['What is the largest primate in the world?', ['The gorilla', 'The chimpanzee', 'The orangutan', 'The baboon']]],
   [['De quoi se nourrit principalement le koala ?', ['De feuilles d’eucalyptus', 'De bambou', 'De bananes', 'D’insectes']],
