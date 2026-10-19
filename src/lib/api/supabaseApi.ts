@@ -194,7 +194,9 @@ export function createSupabaseApi(sb: SupabaseClient): Api {
     },
 
     signIn: async (email, password) => {
-      const { error } = await sb.auth.signInWithPassword({ email, password });
+      // Les claviers tactiles ajoutent souvent une majuscule ou une espace en fin d'adresse.
+      const { error } = await sb.auth.signInWithPassword({ email: email.trim().toLowerCase(), password });
+      if (error && /invalid login credentials/i.test(error.message)) throw new Error('Adresse mail ou mot de passe incorrect.');
       check(error);
       const s = await sessionInfo();
       if (!s) throw new Error('Session introuvable');
