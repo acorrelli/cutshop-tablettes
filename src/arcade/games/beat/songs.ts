@@ -20,11 +20,18 @@ interface Section {
   drop?: boolean;
 }
 
-export interface Song {
+/** Ce que l'écran affiche d'un morceau (synthèse ou musique importée). */
+export interface SongInfo {
   id: string;
   title: string;
   artist: string;
   bpm: number;
+  hue: number;
+  /** Instant du premier temps (ms) : 0 pour les morceaux de synthèse. */
+  beatPhaseMs?: number;
+}
+
+export interface Song extends SongInfo {
   /** Motifs sur 16 pas (1 = frappe). */
   kick: number[];
   snare: number[];
@@ -36,8 +43,6 @@ export interface Song {
   /** Accords de nappe, un par mesure de la boucle. */
   chords: number[][];
   sections: Section[];
-  /** Couleur d'ambiance de l'écran. */
-  hue: number;
 }
 
 const X = 1;
@@ -158,7 +163,7 @@ export function songForSeed(seed: number): Song {
   return SONGS[(seed >>> 0) % SONGS.length];
 }
 
-export function stepMs(song: Song): number {
+export function stepMs(song: { bpm: number }): number {
   return 60000 / song.bpm / 4;
 }
 
@@ -191,7 +196,7 @@ export interface BeatNote {
 
 /** Écart minimal entre deux notes d'une même piste, et marge avant la fin du morceau. */
 export const MIN_LANE_GAP_MS = 150;
-const END_MARGIN_MS = 1500;
+export const END_MARGIN_MS = 1500;
 /** Mesures d'introduction sans note : le joueur entend le tempo avant la première note (pas de note sur le GO). */
 export const LEAD_IN_BARS = 1;
 
@@ -234,11 +239,11 @@ export function buildBeatmap(song: Song, difficulty: BeatDifficulty): BeatNote[]
     if (!drop && section.bass && bassNote && s === 0) add(step, 1, 4);
   }
 
-  return sanitize(notes);
+  return sanitizeBeatmap(notes);
 }
 
 /** Retire les doublons, les notes trop rapprochées sur une piste, et celles trop proches de la fin. */
-function sanitize(notes: BeatNote[]): BeatNote[] {
+export function sanitizeBeatmap(notes: BeatNote[]): BeatNote[] {
   const sorted = notes.filter((n) => n.t + n.len <= BEAT_MS - END_MARGIN_MS).sort((a, b) => a.t - b.t || a.lane - b.lane);
   const lastEnd = new Array<number>(LANES).fill(-Infinity);
   const out: BeatNote[] = [];

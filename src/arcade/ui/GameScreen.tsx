@@ -33,6 +33,7 @@ export function GameScreen({
   roomId,
   claim,
   claims,
+  track,
 }: {
   game: GameKey;
   variant: string;
@@ -46,6 +47,7 @@ export function GameScreen({
   roomId?: string;
   claim?: GameProps['claim'];
   claims?: GameProps['claims'];
+  track?: string | null;
 }) {
   const { t } = useTranslation();
   const { lang } = useApp();
@@ -201,6 +203,7 @@ export function GameScreen({
         {Game ? (
           <Suspense fallback={<div className="grid h-full place-items-center text-xl">...</div>}>
             <Game
+              track={track ?? null}
               seed={seed}
               variant={variant}
               clock={now}

@@ -59,6 +59,8 @@ Fonctionnement commun : bouton FR / EN et bouton grand texte toujours visibles, 
 
 Avec la ligne de commande Supabase, les étapes 2 et 3 se font aussi par `supabase link` puis `supabase db push` et l'exécution de `supabase/seed.sql`.
 
+**Base déjà installée et musiques Beat Drop** : colle le contenu de `supabase/ajout_musiques_beat_drop.sql` dans **SQL Editor** et clique sur **Run** (une seule fois suffit, relançable sans risque). Tant que ce fichier n'est pas lancé, Beat Drop joue ses morceaux d'origine.
+
 **Base déjà installée et nouvelles questions de quiz** : colle le contenu de `supabase/ajout_questions_quiz.sql` dans **SQL Editor** et clique sur **Run**. Seules les questions absentes sont ajoutées, tes modifications faites dans l'admin sont conservées, et le fichier peut être relancé sans risque. Le tableau affiché à la fin donne le nombre de questions par thème.
 
 ## 3. Relier l'application au projet Supabase et activer GitHub Pages
@@ -157,6 +159,7 @@ Tout se fait dans l'admin (appui long de 5 secondes sur le logo) :
 | Prestations | Services du salon : catégorie, durée, prix, prix étudiant, shampoing inclus ou non, descriptions FR et EN |
 | Boissons | Carte du bar et accords « Ta coupe, ta bière » |
 | Produits | Catalogue et étiquettes de correspondance (types de cheveux, cuir chevelu, barbe, effets) |
+| Musiques Beat Drop | Importer un MP3, choisir le passage de 72 secondes, analyse automatique (tempo et notes des trois niveaux), écoute de contrôle avec un bip sur chaque note, réglage fin des notes, pochette, ordre, activation |
 | Arcade | Jeux actifs, expiration et limite des invitations, délai de mise en veille, association des tablettes aux tables, challenge de la semaine, modération des scores et des pseudos, remise à zéro, parties récentes, statistiques anonymisées |
 | Modules | Afficher ou masquer chaque tuile, dont la roue de la fortune |
 | Réglages | Nom de la tablette, code PIN staff, lien Salonkee, adresse, horaires, contact, textes du concept, chèques cadeaux, factures pros, politique de confidentialité, photos, nettoyage RGPD |
@@ -235,10 +238,18 @@ tests/e2e/                     Tests de bout en bout Playwright
 | --- | --- | --- | --- |
 | Barber Rush | 90 s | Choisir le bon outil et réaliser le geste demandé sur chaque client | 100 par client, bonus de précision et de vitesse jusqu'à +50 chacun, x2 après 3 réussites, mauvais outil ou client parti : points en moins |
 | Perfect Pour | 60 s | Maintenir pour tirer la bière, relâcher juste au dessus de la zone parfaite (la mousse retombe) | Parfait 200, très bien 150, pas mal 75, bonus de série jusqu'à +100 |
-| Beat Drop | 72 s | 4 couloirs, notes simples et longues sur 3 musiques originales générées dans le code (EASY, MEDIUM, HARD) | PERFECT ±60 ms, GOOD ±120 ms, multiplicateur de combo jusqu'à x4 |
+| Beat Drop | 72 s | 4 couloirs, notes simples et longues (EASY, MEDIUM, HARD), sur les musiques importées dans l'admin ou, à défaut, sur 3 musiques originales générées dans le code | PERFECT ±60 ms, GOOD ±120 ms, multiplicateur de combo jusqu'à x4 |
 | Find It Cutshop | 90 s | Retrouver 5 objets par scène dans 4 décors du Cutshop. Mode course au score ou chasse compétitive (objets partagés) | 100 par objet, bonus de vitesse jusqu'à +50, scène sans erreur +200, erreur −10 |
 
 Toutes les tablettes d'une même partie reçoivent la même graine : mêmes verres, mêmes clients, mêmes notes, mêmes objets.
+
+### Musiques importées dans Beat Drop
+
+* **Import** (admin, rubrique Musiques Beat Drop) : le navigateur découpe un extrait de 72 secondes (fondu de sortie compris), le compresse en MP3 128 kbit/s (+/ 1,2 Mo) et l'envoie dans le bucket `media` (dossier `beat/`). Le morceau complet n'est jamais envoyé.
+* **Analyse** (`src/arcade/games/beat/analysis.ts`) : attaques par bande de fréquences (basses, médiums, aigus), tempo par autocorrélation puis peigne de temps, grille de doubles croches. Les notes sont choisies sur les cases les plus fortes, avec la densité des morceaux d'origine et sous le plafond de score de chaque niveau : les classements et le Cutshop Challenge restent comparables. Basses à gauche, voix et instruments au centre, caisse claire à droite ; notes longues sur les sons tenus.
+* **Jeu** : en solo, le joueur choisit sa musique (ou « Au hasard ») ; en multijoueur, la graine désigne la musique, identique sur toutes les tablettes, et elle se télécharge dès le salon d'attente. Sans réseau, la partie continue sur la pulsation visuelle.
+* **Réglage** : l'écoute de contrôle fait entendre un bip sur chaque note. Si les bips sont en retard ou en avance, les boutons « Avancer de 20 ms » et « Retarder de 20 ms » décalent toutes les notes.
+* **Classements** : par niveau, toutes musiques confondues, comme avant.
 
 ### Architecture
 

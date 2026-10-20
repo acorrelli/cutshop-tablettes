@@ -1,3 +1,4 @@
+import type { BeatTrackRow } from '../arcade/games/beat/tracks';
 // Types partagés entre l'interface, la couche de données et les données d'exemple.
 import type { ArcadeConfig } from '../arcade/types';
 
@@ -325,4 +326,6 @@ export interface PublicContent {
   products: Product[];
   questions: QuizQuestion[];
   segments: WheelSegment[];
+  /** Beat Drop : musiques importées actives. */
+  beatTracks: BeatTrackRow[];
 }

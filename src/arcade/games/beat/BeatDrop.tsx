@@ -1,12 +1,20 @@
 // Beat Drop : autoroute néon à 4 pistes en perspective, dessinée sur canvas. Multi touch (un doigt = une piste),
-// clavier D F J K pour les tests. Le morceau est joué par le synthétiseur, calé sur l'horloge de la partie.
+// clavier D F J K pour les tests. Le morceau (synthèse ou musique importée) est calé sur l'horloge de la partie.
 import { useEffect, useRef } from 'react';
 import { audioContext, sfx } from '../../audio';
 import type { GameProps } from '../types';
 import { BeatEngine, type Judgement } from './engine';
 import { loadBeatOffset } from './offset';
-import { LANES, stepMs } from './songs';
+import { LANES, songForSeed, stepMs } from './songs';
 import { BeatSynth } from './synth';
+import { loadTrackBuffer, TrackPlayer } from './trackAudio';
+
+/** Ce que l'écran pilote du son : synthétiseur ou lecteur de musique importée. */
+interface Player {
+  tick?: () => void;
+  setVolume: (v: number) => void;
+  stop: () => void;
+}
 
 const TXT = {
   fr: {
@@ -249,7 +257,7 @@ export default function BeatDrop(props: GameProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const propsRef = useRef(props);
   propsRef.current = props;
-  const synthRef = useRef<BeatSynth | null>(null);
+  const synthRef = useRef<Player | null>(null);
   /** Démarre le synthétiseur (au montage, ou quand le son est réactivé en cours de partie). */
   const ensureSynthRef = useRef<() => void>(() => undefined);
 
@@ -273,10 +281,15 @@ export default function BeatDrop(props: GameProps) {
     const lang = p.lang === 'en' ? 'en' : 'fr';
     const T = TXT[lang];
 
-    const engine = new BeatEngine(p.seed, p.variant, loadBeatOffset(), p.durationMs);
+    const engine = new BeatEngine(p.seed, p.variant, loadBeatOffset(), p.durationMs, p.track ?? null);
     engine.start(startAt);
     const song = engine.song;
     const beatMs = stepMs(song) * 4;
+    root.dataset.song = song.title;
+    /** Décalage du premier temps : la pulsation visuelle tombe sur les temps de la musique importée. */
+    const beatPhase = (((song.beatPhaseMs ?? 0) % beatMs) + beatMs) % beatMs;
+    let disposed = false;
+    let loading = false;
     const travel = TRAVEL_MS[engine.difficulty];
 
     ensureSynthRef.current = () => {
@@ -285,14 +298,36 @@ export default function BeatDrop(props: GameProps) {
       if (now() > startAt + p.durationMs) return;
       const actx = audioContext();
       if (!actx) return;
+      const track = engine.track;
+      if (track) {
+        // Musique importée : décodage asynchrone (déjà téléchargée pendant le choix du morceau, en général).
+        if (loading) return;
+        loading = true;
+        loadTrackBuffer(actx, track.audioUrl)
+          .then((buffer) => {
+            loading = false;
+            const cur = propsRef.current.sound;
+            if (disposed || synthRef.current || !cur.on || cur.volume <= 0 || now() > startAt + p.durationMs - 1000) return;
+            const player = new TrackPlayer({ ctx: actx, buffer, volume: cur.volume, startPerf: startAt - clockOffset });
+            player.start();
+            synthRef.current = player;
+          })
+          .catch(() => {
+            // Pas de son (réseau) : la partie continue, les notes suivent la pulsation.
+            loading = false;
+            audioFailed = true;
+          });
+        return;
+      }
       try {
-        const s = new BeatSynth({ ctx: actx, song, volume: snd.volume, startPerf: startAt - clockOffset });
+        const s = new BeatSynth({ ctx: actx, song: songForSeed(engine.seed), volume: snd.volume, startPerf: startAt - clockOffset });
         s.start();
         synthRef.current = s;
       } catch {
         synthRef.current = null;
       }
     };
+    let audioFailed = false;
     ensureSynthRef.current();
 
     // Mise en page et calques pré dessinés.
@@ -412,7 +447,7 @@ export default function BeatDrop(props: GameProps) {
       lastPerf = perf;
       const tNow = now();
       const props = propsRef.current;
-      synthRef.current?.tick();
+      synthRef.current?.tick?.();
 
       if (!ended) {
         engine.update(tNow);
@@ -451,16 +486,17 @@ export default function BeatDrop(props: GameProps) {
       c.clearRect(0, 0, W, H);
       if (staticLayer) c.drawImage(staticLayer, 0, 0, W, H);
 
-      const phase = vt >= 0 ? (vt % beatMs) / beatMs : 1;
+      const vg = vt - beatPhase;
+      const phase = vg >= 0 ? (vg % beatMs) / beatMs : 1;
       const pulse = vt >= 0 ? Math.exp(-phase * 5) : 0;
-      const soundOff = !propsRef.current.sound.on || propsRef.current.sound.volume <= 0;
+      const soundOff = !propsRef.current.sound.on || propsRef.current.sound.volume <= 0 || audioFailed;
 
       // Lignes de temps qui défilent (pulsation visuelle, même sans le son).
       c.save();
-      const k0 = Math.max(0, Math.floor((vt + L.dBottom * travel) / beatMs));
-      const k1 = Math.floor((vt + travel) / beatMs);
+      const k0 = Math.max(0, Math.floor((vg + L.dBottom * travel) / beatMs));
+      const k1 = Math.floor((vg + travel) / beatMs);
       for (let k = k0; k <= k1; k++) {
-        const d = (k * beatMs - vt) / travel;
+        const d = (k * beatMs - vg) / travel;
         if (d < L.dBottom || d > 1) continue;
         const s = scaleAt(L, d);
         const y = yAt(L, s);
@@ -848,6 +884,7 @@ export default function BeatDrop(props: GameProps) {
       root.removeEventListener('contextmenu', noMenu);
       window.removeEventListener('keydown', onKeyDown);
       window.removeEventListener('keyup', onKeyUp);
+      disposed = true;
       synthRef.current?.stop();
       synthRef.current = null;
       ensureSynthRef.current = () => undefined;
@@ -855,7 +892,7 @@ export default function BeatDrop(props: GameProps) {
     };
     // Une partie = une graine, une variante, un départ : le reste est lu via propsRef.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.seed, props.variant, props.startAt, props.durationMs]);
+  }, [props.seed, props.variant, props.startAt, props.durationMs, props.track]);
 
   // Son activé, coupé ou volume changé en cours de partie.
   useEffect(() => {
@@ -865,7 +902,7 @@ export default function BeatDrop(props: GameProps) {
   }, [props.sound.on, props.sound.volume]);
 
   return (
-    <div ref={rootRef} className="relative h-full w-full overflow-hidden select-none touch-none">
+    <div ref={rootRef} className="relative h-full w-full overflow-hidden select-none touch-none" data-testid="beat-root">
       <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
     </div>
   );

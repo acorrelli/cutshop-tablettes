@@ -21,6 +21,7 @@
     "sql:setup": "node scripts/build-setup-sql.mjs"
   },
   "dependencies": {
+    "@breezystack/lamejs": "^1.2.7",
     "@supabase/supabase-js": "^2.117.3",
     "i18next": "^26.4.5",
     "lucide-react": "^1.57.0",

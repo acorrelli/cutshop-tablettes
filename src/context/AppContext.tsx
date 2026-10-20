@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import { useNavigate } from 'react-router-dom';
 import i18n from '../i18n';
 import { api } from '../lib/api';
+import { setBeatTracks } from '../arcade/games/beat/tracks';
 import { createIdleTimer, IDLE_MS, type IdleTimer } from '../lib/idle';
 import { onQueueChange, startQueueWorker } from '../lib/queue';
 import { getTabletName, setTabletName, isStaffDevice } from '../lib/tablet';
@@ -62,7 +63,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const loadAll = useCallback(async () => {
     try {
-      const [settings, events, services, drinks, pairings, products, questions, segments] = await Promise.all([
+      const [settings, events, services, drinks, pairings, products, questions, segments, beatTracks] = await Promise.all([
         api.getSettings(),
         api.getEvents(),
         api.getServices(),
@@ -71,9 +72,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
         api.getProducts(),
         api.getQuestions(),
         api.getWheelSegments(),
+        // Jamais bloquant : sans musiques importées, Beat Drop joue ses morceaux de synthèse.
+        api.getBeatTracks().catch(() => []),
       ]);
+      setBeatTracks(beatTracks);
       idleMs.current = Math.min(600, Math.max(30, settings.idle_seconds || 60)) * 1000;
-      setContent({ settings, events, services, drinks, pairings, products, questions, segments });
+      setContent({ settings, events, services, drinks, pairings, products, questions, segments, beatTracks });
       setContentError(false);
     } catch {
       // Hors ligne : on garde les contenus déjà chargés (le service worker sert aussi le cache).

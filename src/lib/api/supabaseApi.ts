@@ -1,3 +1,4 @@
+import type { BeatTrackRow } from '../../arcade/games/beat/tracks';
 // Implémentation Supabase de la couche de données.
 
 import type { PostgrestError, SupabaseClient } from '@supabase/supabase-js';
@@ -106,6 +107,17 @@ export function createSupabaseApi(sb: SupabaseClient): Api {
         check(error);
         return (data ?? []) as WheelSegment[];
       }),
+
+    getBeatTracks: async () => {
+      // Table absente (SQL pas encore lancé) ou réseau coupé : Beat Drop garde ses morceaux de synthèse.
+      try {
+        const { data, error } = await sb.from('beat_tracks').select('*').eq('active', true).order('sort');
+        if (error) return [];
+        return (data ?? []).map((r) => ({ ...r, bpm: Number(r.bpm) })) as BeatTrackRow[];
+      } catch {
+        return [];
+      }
+    },
 
     getStop10Today: () =>
       wrap(async () => {
@@ -318,6 +330,21 @@ export function createSupabaseApi(sb: SupabaseClient): Api {
       const { error } = await sb.storage.from('media').upload(path, file, { cacheControl: '31536000', upsert: false });
       check(error);
       return sb.storage.from('media').getPublicUrl(path).data.publicUrl;
+    },
+
+    uploadAudio: async (file) => {
+      const path = `beat/${Date.now()}_${crypto.randomUUID().slice(0, 8)}.mp3`;
+      const { error } = await sb.storage.from('media').upload(path, file, { cacheControl: '31536000', upsert: false, contentType: 'audio/mpeg' });
+      check(error);
+      return sb.storage.from('media').getPublicUrl(path).data.publicUrl;
+    },
+
+    removeMedia: async (url) => {
+      const marker = '/storage/v1/object/public/media/';
+      const i = url.indexOf(marker);
+      if (i < 0) return;
+      const { error } = await sb.storage.from('media').remove([decodeURIComponent(url.slice(i + marker.length))]);
+      check(error);
     },
 
     purgePersonalData: async () => {

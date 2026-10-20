@@ -32,6 +32,8 @@ import type { AdminTable, AdminTableRow, Api, RegisterResult } from './types';
 
 const LS_KEY = 'cutshop.demo.v6';
 export const DEMO_PASSWORD = 'demo';
+/** Extraits audio envoyés pendant la visite (adresses blob, perdues au rechargement). */
+const liveAudio = new Set<string>();
 
 interface SharedState {
   settings: AppSettings;
@@ -43,6 +45,7 @@ interface SharedState {
   products: AdminTableRow['products'][];
   quiz_questions: AdminTableRow['quiz_questions'][];
   wheel_prizes: AdminTableRow['wheel_prizes'][];
+  beat_tracks: AdminTableRow['beat_tracks'][];
   spins: WheelSpin[];
   stop10: Stop10Score[];
   plays: GamePlay[];
@@ -68,6 +71,7 @@ function freshShared(): SharedState {
     products: structuredClone(SEED_PRODUCTS),
     quiz_questions: structuredClone(SEED_QUESTIONS),
     wheel_prizes: structuredClone(SEED_PRIZES),
+    beat_tracks: [],
     spins: [],
     stop10: [],
     plays: [],
@@ -81,6 +85,7 @@ function load(): SharedState {
     if (raw) {
       const parsed = JSON.parse(raw) as SharedState;
       parsed.settings = mergeSettings(parsed.settings);
+      parsed.beat_tracks ??= [];
       // Régénère les événements de démonstration passés pour garder un agenda vivant.
       const future = parsed.events.filter((e) => new Date(e.ends_at ?? e.starts_at).getTime() > Date.now());
       if (future.length === 0) parsed.events = buildSeedEvents();
@@ -169,6 +174,11 @@ export function createDemoApi(): Api {
     async getQuestions() {
       refresh();
       return shared.quiz_questions.filter((q) => q.active);
+    },
+    async getBeatTracks() {
+      refresh();
+      // En démo, la musique reste en mémoire le temps de la visite : un morceau dont le fichier a disparu est ignoré.
+      return structuredClone((shared.beat_tracks ?? []).filter((t) => t.active && liveAudio.has(t.audio_url)));
     },
     async getWheelSegments() {
       refresh();
@@ -424,6 +434,16 @@ export function createDemoApi(): Api {
         reader.onerror = () => reject(reader.error);
         reader.readAsDataURL(file);
       });
+    },
+    async uploadAudio(file) {
+      requireAdmin();
+      const url = URL.createObjectURL(file);
+      liveAudio.add(url);
+      return url;
+    },
+    async removeMedia(url) {
+      requireAdmin();
+      if (liveAudio.delete(url)) URL.revokeObjectURL(url);
     },
     async purgePersonalData() {
       requireAdmin();

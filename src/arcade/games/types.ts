@@ -28,4 +28,6 @@ export interface GameProps {
   /** Find It, chasse compétitive : objets déjà attribués (objet -> table). */
   claims?: Record<string, TableNo>;
   myTable?: TableNo | null;
+  /** Beat Drop en solo : musique importée choisie par le joueur (sinon tirée de la graine). */
+  track?: string | null;
 }

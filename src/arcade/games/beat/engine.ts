@@ -13,8 +13,9 @@ import {
   songForSeed,
   type BeatDifficulty,
   type BeatNote,
-  type Song,
+  type SongInfo,
 } from './songs';
+import { beatTrackById, beatTrackForSeed, type BeatTrack } from './tracks';
 
 export type Judgement = 'perfect' | 'good' | 'miss';
 export const JUDGEMENT_POINTS: Record<Judgement, number> = { perfect: 100, good: 50, miss: 0 };
@@ -60,7 +61,9 @@ export interface BeatEvent {
 export class BeatEngine implements ArcadeGameEngine {
   readonly seed: number;
   readonly difficulty: BeatDifficulty;
-  readonly song: Song;
+  readonly song: SongInfo;
+  /** Musique importée jouée (null : morceau de synthèse). */
+  readonly track: BeatTrack | null;
   readonly notes: NoteState[];
   readonly durationMs: number;
   readonly judgements: number;
@@ -78,11 +81,24 @@ export class BeatEngine implements ArcadeGameEngine {
   private held: boolean[] = new Array<boolean>(LANES).fill(false);
   private over = false;
 
-  constructor(seed: number, variant: string, offsetMs = 0, durationMs = BEAT_MS) {
+  /**
+   * trackId : musique choisie en solo. Sans choix, la graine désigne une musique importée s'il y en a,
+   * sinon un morceau de synthèse : toutes les tablettes d'une partie jouent donc le même morceau.
+   */
+  constructor(seed: number, variant: string, offsetMs = 0, durationMs = BEAT_MS, trackId: string | null = null) {
     this.seed = seed;
     this.difficulty = asDifficulty(variant);
-    this.song = songForSeed(seed);
-    const map = buildBeatmap(this.song, this.difficulty);
+    this.track = beatTrackById(trackId) ?? beatTrackForSeed(seed);
+    let map: BeatNote[];
+    if (this.track) {
+      const tr = this.track;
+      this.song = { id: tr.id, title: tr.title, artist: tr.artist, bpm: tr.bpm, hue: tr.hue, beatPhaseMs: tr.beatPhaseMs };
+      map = tr.charts[this.difficulty];
+    } else {
+      const song = songForSeed(seed);
+      this.song = song;
+      map = buildBeatmap(song, this.difficulty);
+    }
     this.notes = map.map((n, index) => ({ ...n, index, head: null, tail: null, holding: false }));
     this.judgements = judgementCount(map);
     this.durationMs = durationMs;

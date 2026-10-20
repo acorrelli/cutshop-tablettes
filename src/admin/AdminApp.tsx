@@ -8,6 +8,7 @@ import {
   LayoutGrid,
   LogOut,
   Mail,
+  Music,
   MessageCircleHeart,
   Receipt,
   Scissors,
@@ -24,6 +25,7 @@ import { DEMO_PASSWORD } from '../lib/api/demoApi';
 import { IS_DEMO } from '../lib/env';
 import { isStaffDevice } from '../lib/tablet';
 import { ArcadeSection } from './sections/Arcade';
+import { BeatTracksSection } from './sections/BeatTracks';
 import { DrinksSection, EventsSection, NewsletterSection, ProductsSection, QuizSection, ServicesSection } from './sections/Content';
 import { InvoiceRequestsSection, ProductRequestsSection } from './sections/Requests';
 import { ModulesSection, SettingsSection } from './sections/Settings';
@@ -39,6 +41,7 @@ const NAV = [
   { to: 'demandes-factures', label: 'Demandes de factures', icon: Receipt, el: <InvoiceRequestsSection /> },
   { to: 'evenements', label: 'Événements', icon: CalendarDays, el: <EventsSection /> },
   { to: 'arcade', label: 'Arcade', icon: Gamepad2, el: <ArcadeSection /> },
+  { to: 'musiques', label: 'Musiques Beat Drop', icon: Music, el: <BeatTracksSection /> },
   { to: 'roue', label: 'Roue', icon: FerrisWheel, el: <WheelSection /> },
   { to: 'newsletter', label: 'Newsletter', icon: Mail, el: <NewsletterSection /> },
   { to: 'quiz', label: 'Quiz', icon: CircleHelp, el: <QuizSection /> },

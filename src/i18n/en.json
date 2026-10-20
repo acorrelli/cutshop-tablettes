@@ -416,6 +416,9 @@
     "timeUp": "Time’s up!",
     "howTo": "How to play",
     "difficulty": "Difficulty",
+    "music": "Music",
+    "musicRandom": "Random",
+    "musicRandomSub": "Surprise!",
     "challengeTable": "Challenge a table",
     "notPairedSolo": "This tablet is not linked to a table yet: you can play freely, but the score will not be saved.",
     "challenge": {

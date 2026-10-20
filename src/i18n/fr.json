@@ -416,6 +416,9 @@
     "timeUp": "Temps écoulé !",
     "howTo": "Comment jouer",
     "difficulty": "Difficulté",
+    "music": "Musique",
+    "musicRandom": "Au hasard",
+    "musicRandomSub": "Surprise !",
     "challengeTable": "Défier une table",
     "notPairedSolo": "Cette tablette n’est pas encore associée à une table : la partie se joue librement, sans enregistrement du score.",
     "challenge": {

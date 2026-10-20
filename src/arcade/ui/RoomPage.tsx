@@ -13,6 +13,8 @@ import { GAMES } from '../registry';
 import type { GameResult, Room, RoomPlayer } from '../types';
 import { ArcadeBackdrop, formatScore, TABLE_COLORS, TableBadge, useErrorText, useTicker, variantLabel } from './common';
 import { GameScreen } from './GameScreen';
+import { beatTrackForSeed } from '../games/beat/tracks';
+import { preloadTrackAudio } from '../games/beat/trackAudio';
 
 const PENDING_KEY = 'cutshop.arcade.pending';
 
@@ -44,6 +46,13 @@ export default function RoomPage() {
   const { t } = useTranslation();
   const { snapshot, table } = useArcade();
   const room = snapshot?.room ?? null;
+  // Beat Drop : la musique de la partie (tirée de la graine) se télécharge dès le salon d'attente.
+  const beatSeed = room?.game === 'beat' ? room.seed : null;
+  useEffect(() => {
+    if (beatSeed === null || beatSeed === undefined) return;
+    const tr = beatTrackForSeed(beatSeed);
+    if (tr) void preloadTrackAudio(tr.audioUrl).catch(() => undefined);
+  }, [beatSeed]);
 
   if (!snapshot) return <Page className="relative z-[1] grid min-h-[60vh] place-items-center text-xl">...</Page>;
   if (!room || !table) {

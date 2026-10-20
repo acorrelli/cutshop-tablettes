@@ -640,4 +640,40 @@ reset role;
 update public.settings set data = data - 'arcade';
 drop function public.test_arcade_expect(text, text);
 
+
+-- ---------------------------------------------------------------------------
+-- Beat Drop : musiques importées (lecture publique des morceaux actifs, écriture réservée à l'admin).
+reset role;
+set role authenticated;
+select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-00000000a001', false);
+insert into public.beat_tracks (title, artist, audio_url, bpm, charts) values
+  ('Morceau actif', 'Artiste', 'https://x.test/a.mp3', 120, '{"easy": [[2000, 0, 0]]}'),
+  ('Morceau caché', 'Artiste', 'https://x.test/b.mp3', 98.5, '{"easy": [[2000, 1, 0]]}');
+update public.beat_tracks set active = false where title = 'Morceau caché';
+reset role;
+set role anon;
+select set_config('request.jwt.claim.sub', '', false);
+do $$ begin
+  assert (select count(*) from public.beat_tracks) = 1, 'anon lit seulement les morceaux actifs';
+  begin
+    insert into public.beat_tracks (title, audio_url, bpm, charts) values ('Pirate', 'https://x.test/p.mp3', 120, '{}');
+    raise exception 'anon a pu ajouter un morceau';
+  exception when insufficient_privilege then null;
+  end;
+  begin
+    delete from public.beat_tracks;
+    if (select count(*) from public.beat_tracks) <> 1 then raise exception 'anon a pu supprimer un morceau'; end if;
+  exception when insufficient_privilege then null;
+  end;
+end $$;
+reset role;
+do $$ begin
+  begin
+    insert into public.beat_tracks (title, audio_url, bpm, charts) values ('Tempo absurde', 'https://x.test/t.mp3', 400, '{}');
+    raise exception 'tempo hors limites accepté';
+  exception when check_violation then null;
+  end;
+end $$;
+delete from public.beat_tracks;
+
 select 'TOUS LES TESTS BASE DE DONNÉES SONT PASSÉS' as resultat;

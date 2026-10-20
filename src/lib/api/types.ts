@@ -1,3 +1,4 @@
+import type { BeatTrackRow } from '../../arcade/games/beat/tracks';
 import type {
   AppSettings,
   CutEvent,
@@ -72,7 +73,8 @@ export type AdminTable =
   | 'drink_pairings'
   | 'products'
   | 'quiz_questions'
-  | 'wheel_prizes';
+  | 'wheel_prizes'
+  | 'beat_tracks';
 
 export interface AdminTableRow {
   events: CutEvent;
@@ -82,6 +84,7 @@ export interface AdminTableRow {
   products: Product;
   quiz_questions: QuizQuestion;
   wheel_prizes: WheelPrize;
+  beat_tracks: BeatTrackRow;
 }
 
 export type RequestTable = 'product_requests' | 'invoice_requests' | 'desk_requests';
@@ -111,6 +114,8 @@ export interface Api {
   getQuestions(): Promise<QuizQuestion[]>;
   getWheelSegments(): Promise<WheelSegment[]>;
   getStop10Today(): Promise<Stop10Score[]>;
+  /** Musiques importées de Beat Drop (actives). Liste vide si la table n'existe pas encore. */
+  getBeatTracks(): Promise<BeatTrackRow[]>;
 
   // Envois depuis la tablette
   registerEvent(input: RegisterInput): Promise<RegisterResult>;
@@ -146,5 +151,9 @@ export interface Api {
   deleteRequest(table: RequestTable, id: string): Promise<void>;
   statsSince(sinceIso: string): Promise<StatsRows>;
   uploadImage(file: File): Promise<string>;
+  /** Extrait MP3 de Beat Drop : renvoie son adresse publique. */
+  uploadAudio(file: Blob): Promise<string>;
+  /** Supprime un fichier envoyé (photo ou musique) à partir de son adresse. Sans effet si l'adresse est externe. */
+  removeMedia(url: string): Promise<void>;
   purgePersonalData(): Promise<Record<string, number>>;
 }

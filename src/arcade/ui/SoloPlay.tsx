@@ -1,6 +1,6 @@
 // Partie solo : présentation et règles, (choix de difficulté, son pour Beat Drop), partie, puis résultats.
 // Hors ligne, la partie se joue quand même mais le score n'est pas enregistré.
-import { ArrowLeft, Gauge, Headphones, Play, RotateCcw, Swords, Trophy, WifiOff } from 'lucide-react';
+import { ArrowLeft, Gauge, Headphones, Play, RotateCcw, Shuffle, Swords, Trophy, WifiOff } from 'lucide-react';
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
@@ -15,6 +15,8 @@ import { newSeed } from '../rng';
 import { GAME_KEYS, type ArcadeErrorCode, type GameKey, type GameResult, type ScoreRow, type SoloSession } from '../types';
 import { ArcadeBackdrop, formatScore, gameTagline, PseudoChip, SoundControl, useErrorText, useGameEnabled, usePseudoGate, variantLabel } from './common';
 import { GameScreen } from './GameScreen';
+import { beatTrackById, beatTracks } from '../games/beat/tracks';
+import { preloadTrackAudio } from '../games/beat/trackAudio';
 
 /** Statistiques affichées en fin de partie, par jeu. */
 export const RESULT_STATS: Record<GameKey, string[]> = {
@@ -49,6 +51,8 @@ function Solo({ game }: { game: GameKey }) {
   const [error, setError] = useState<string | null>(null);
   const [starting, setStarting] = useState(false);
   const [calibrating, setCalibrating] = useState(false);
+  /** Beat Drop : musique choisie (null : au hasard). */
+  const [track, setTrack] = useState<string | null>(null);
 
   const start = async () => {
     unlockArcadeAudio();
@@ -77,6 +81,7 @@ function Solo({ game }: { game: GameKey }) {
         startAt={phase.startAt}
         durationMs={def.durationMs(variant)}
         exitText={t('arcade.hud.exitSolo')}
+        track={game === 'beat' ? track : null}
         onExit={() => setPhase({ kind: 'intro' })}
         onEnd={(result) => {
           // Laisse le temps d'afficher « Temps écoulé ».
@@ -145,6 +150,8 @@ function Solo({ game }: { game: GameKey }) {
               </div>
             </div>
           )}
+
+          {game === 'beat' && <TrackPicker value={track} onChange={setTrack} />}
 
           {needsAudio && (
             <div className="flex items-center gap-4 rounded-2xl bg-[#7CE3A0]/10 px-4 py-3 ring-1 ring-[#7CE3A0]/40" data-testid="audio-gate">
@@ -292,5 +299,61 @@ function SoloResult({
       </div>
       {gateDialog}
     </Page>
+  );
+}
+
+/** Beat Drop : choix de la musique parmi les morceaux importés dans l'admin (rien ne s'affiche s'il n'y en a pas). */
+function TrackPicker({ value, onChange }: { value: string | null; onChange: (id: string | null) => void }) {
+  const { t } = useTranslation();
+  const { content } = useApp();
+  const rows = content?.beatTracks;
+  const tracks = useMemo(() => {
+    void rows;
+    return beatTracks();
+  }, [rows]);
+  // Morceau retiré entre temps : retour au hasard.
+  useEffect(() => {
+    if (value && !tracks.some((tr) => tr.id === value)) onChange(null);
+  }, [tracks, value, onChange]);
+  if (tracks.length === 0) return null;
+  const pick = (id: string | null) => {
+    onChange(id);
+    const tr = beatTrackById(id);
+    if (tr) void preloadTrackAudio(tr.audioUrl).catch(() => undefined);
+  };
+  const card = 'relative flex h-[92px] w-[150px] shrink-0 flex-col justify-end overflow-hidden rounded-2xl p-3 text-left ring-2 transition';
+  return (
+    <div data-testid="beat-tracks">
+      <p className="label">{t('arcade.music')}</p>
+      <div className="-mx-1 flex gap-3 overflow-x-auto px-1 pb-2">
+        <button
+          type="button"
+          onClick={() => pick(null)}
+          className={`${card} bg-gradient-to-br from-[#2A1B5E] to-[#0B0720] ${value === null ? 'ring-[#7CE3A0]' : 'ring-white/10'}`}
+          aria-pressed={value === null}
+          data-testid="beat-track-random"
+        >
+          <Shuffle size={24} className="absolute left-3 top-3 text-[#9BE7B5]" />
+          <span className="text-lg font-black leading-tight text-cream">{t('arcade.musicRandom')}</span>
+          <span className="text-sm text-cream/60">{t('arcade.musicRandomSub')}</span>
+        </button>
+        {tracks.map((tr) => (
+          <button
+            key={tr.id}
+            type="button"
+            onClick={() => pick(tr.id)}
+            className={`${card} ${value === tr.id ? 'ring-[#7CE3A0]' : 'ring-white/10'}`}
+            style={{ background: `linear-gradient(135deg, hsl(${tr.hue} 70% 32%), hsl(${(tr.hue + 60) % 360} 70% 12%))` }}
+            aria-pressed={value === tr.id}
+            data-testid={`beat-track-${tr.id}`}
+          >
+            {tr.coverUrl && <img src={tr.coverUrl} alt="" className="absolute inset-0 h-full w-full object-cover opacity-60" draggable={false} />}
+            <span className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
+            <span className="relative line-clamp-2 text-base font-black leading-tight text-cream">{tr.title}</span>
+            {tr.artist && <span className="relative truncate text-sm text-cream/70">{tr.artist}</span>}
+          </button>
+        ))}
+      </div>
+    </div>
   );
 }
