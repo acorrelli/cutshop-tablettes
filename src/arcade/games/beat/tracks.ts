@@ -17,6 +17,8 @@ export interface BeatTrackRow {
   /** Instant du premier temps dans l'extrait (ms), pour caler la pulsation visuelle. */
   beat_phase_ms: number;
   charts: Partial<Record<BeatDifficulty, CompactNote[]>>;
+  /** Niveau de la musique : elle n'apparaît que dans ce niveau sur les tablettes. */
+  level: BeatDifficulty;
   active: boolean;
   sort: number;
   created_at?: string;
@@ -32,6 +34,7 @@ export interface BeatTrack {
   bpm: number;
   beatPhaseMs: number;
   hue: number;
+  level: BeatDifficulty;
   charts: Record<BeatDifficulty, BeatNote[]>;
 }
 
@@ -83,6 +86,7 @@ export function trackFromRow(row: BeatTrackRow): BeatTrack | null {
     bpm: Number.isFinite(bpm) && bpm >= 50 && bpm <= 220 ? bpm : 120,
     beatPhaseMs: Number.isFinite(Number(row.beat_phase_ms)) ? Math.max(0, Number(row.beat_phase_ms)) : 0,
     hue: hueFor(row.title || row.id),
+    level: (BEAT_DIFFICULTIES as readonly string[]).includes(row.level) ? row.level : 'medium',
     charts,
   };
 }
@@ -98,16 +102,21 @@ export function setBeatTracks(rows: BeatTrackRow[]): void {
     .sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
 }
 
-export function beatTracks(): BeatTrack[] {
-  return tracks;
+/** Musiques d'un niveau (toutes si aucun niveau n'est donné). */
+export function beatTracks(level?: BeatDifficulty): BeatTrack[] {
+  return level ? tracks.filter((t) => t.level === level) : tracks;
 }
 
 export function beatTrackById(id: string | null | undefined): BeatTrack | null {
   return (id && tracks.find((t) => t.id === id)) || null;
 }
 
-/** Morceau d'une partie tirée au hasard ou multijoueur : même graine, même morceau sur toutes les tablettes. */
-export function beatTrackForSeed(seed: number): BeatTrack | null {
-  if (tracks.length === 0) return null;
-  return tracks[(seed >>> 0) % tracks.length];
+/**
+ * Morceau d'une partie au hasard ou multijoueur : la graine choisit parmi les musiques du niveau joué,
+ * identiques sur toutes les tablettes. Aucune musique à ce niveau : morceaux de synthèse.
+ */
+export function beatTrackForSeed(seed: number, level: BeatDifficulty): BeatTrack | null {
+  const list = beatTracks(level);
+  if (list.length === 0) return null;
+  return list[(seed >>> 0) % list.length];
 }

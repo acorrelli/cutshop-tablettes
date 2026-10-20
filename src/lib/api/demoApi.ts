@@ -345,6 +345,16 @@ export function createDemoApi(): Api {
       save();
       return structuredClone(saved);
     },
+    async adminUpdate<T extends AdminTable>(table: T, id: string, patch: Partial<AdminTableRow[T]>) {
+      requireAdmin();
+      refresh();
+      const list = shared[table] as unknown as AdminTableRow[T][];
+      const idx = list.findIndex((r) => (r as { id: string }).id === id);
+      if (idx < 0) throw new Error('Élément introuvable');
+      list[idx] = { ...list[idx], ...patch, id } as AdminTableRow[T];
+      save();
+      return structuredClone(list[idx]);
+    },
     async adminDelete(table, id) {
       requireAdmin();
       refresh();

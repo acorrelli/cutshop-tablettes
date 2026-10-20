@@ -15,6 +15,8 @@ import { newSeed } from '../rng';
 import { GAME_KEYS, type ArcadeErrorCode, type GameKey, type GameResult, type ScoreRow, type SoloSession } from '../types';
 import { ArcadeBackdrop, formatScore, gameTagline, PseudoChip, SoundControl, useErrorText, useGameEnabled, usePseudoGate, variantLabel } from './common';
 import { GameScreen } from './GameScreen';
+import { asDifficulty } from '../games/beat/engine';
+import type { BeatDifficulty } from '../games/beat/songs';
 import { beatTrackById, beatTracks } from '../games/beat/tracks';
 import { preloadTrackAudio } from '../games/beat/trackAudio';
 
@@ -151,7 +153,7 @@ function Solo({ game }: { game: GameKey }) {
             </div>
           )}
 
-          {game === 'beat' && <TrackPicker value={track} onChange={setTrack} />}
+          {game === 'beat' && <TrackPicker level={asDifficulty(variant)} value={track} onChange={setTrack} />}
 
           {needsAudio && (
             <div className="flex items-center gap-4 rounded-2xl bg-[#7CE3A0]/10 px-4 py-3 ring-1 ring-[#7CE3A0]/40" data-testid="audio-gate">
@@ -302,16 +304,16 @@ function SoloResult({
   );
 }
 
-/** Beat Drop : choix de la musique parmi les morceaux importés dans l'admin (rien ne s'affiche s'il n'y en a pas). */
-function TrackPicker({ value, onChange }: { value: string | null; onChange: (id: string | null) => void }) {
+/** Beat Drop : choix de la musique parmi les morceaux importés du niveau choisi (rien ne s'affiche s'il n'y en a pas). */
+function TrackPicker({ level, value, onChange }: { level: BeatDifficulty; value: string | null; onChange: (id: string | null) => void }) {
   const { t } = useTranslation();
   const { content } = useApp();
   const rows = content?.beatTracks;
   const tracks = useMemo(() => {
     void rows;
-    return beatTracks();
-  }, [rows]);
-  // Morceau retiré entre temps : retour au hasard.
+    return beatTracks(level);
+  }, [rows, level]);
+  // Morceau retiré entre temps, ou d'un autre niveau : retour au hasard.
   useEffect(() => {
     if (value && !tracks.some((tr) => tr.id === value)) onChange(null);
   }, [tracks, value, onChange]);

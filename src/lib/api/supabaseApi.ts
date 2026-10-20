@@ -237,6 +237,12 @@ export function createSupabaseApi(sb: SupabaseClient): Api {
       return data as never;
     },
 
+    adminUpdate: async (table, id, patch) => {
+      const { data, error } = await sb.from(table).update(patch as never).eq('id', id).select().single();
+      check(error);
+      return data as never;
+    },
+
     adminDelete: async (table, id) => {
       const { error } = await sb.from(table).delete().eq('id', id);
       check(error);

@@ -59,7 +59,7 @@ Fonctionnement commun : bouton FR / EN et bouton grand texte toujours visibles, 
 
 Avec la ligne de commande Supabase, les étapes 2 et 3 se font aussi par `supabase link` puis `supabase db push` et l'exécution de `supabase/seed.sql`.
 
-**Base déjà installée et musiques Beat Drop** : colle le contenu de `supabase/ajout_musiques_beat_drop.sql` dans **SQL Editor** et clique sur **Run** (une seule fois suffit, relançable sans risque). Tant que ce fichier n'est pas lancé, Beat Drop joue ses morceaux d'origine.
+**Base déjà installée et musiques Beat Drop** : colle le contenu de `supabase/ajout_musiques_beat_drop.sql` dans **SQL Editor** et clique sur **Run** (relançable sans risque). Si ce fichier a déjà été lancé avant l'ajout des niveaux, lance aussi `supabase/ajout_niveau_musiques_beat_drop.sql`. Tant que ce fichier n'est pas lancé, Beat Drop joue ses morceaux d'origine.
 
 **Base déjà installée et nouvelles questions de quiz** : colle le contenu de `supabase/ajout_questions_quiz.sql` dans **SQL Editor** et clique sur **Run**. Seules les questions absentes sont ajoutées, tes modifications faites dans l'admin sont conservées, et le fichier peut être relancé sans risque. Le tableau affiché à la fin donne le nombre de questions par thème.
 
@@ -247,7 +247,8 @@ Toutes les tablettes d'une même partie reçoivent la même graine : mêmes verr
 
 * **Import** (admin, rubrique Musiques Beat Drop) : le navigateur découpe un extrait de 72 secondes (fondu de sortie compris), le compresse en MP3 128 kbit/s (+/ 1,2 Mo) et l'envoie dans le bucket `media` (dossier `beat/`). Le morceau complet n'est jamais envoyé.
 * **Analyse** (`src/arcade/games/beat/analysis.ts`) : attaques par bande de fréquences (basses, médiums, aigus), tempo par autocorrélation puis peigne de temps, grille de doubles croches. Les notes sont choisies sur les cases les plus fortes, avec la densité des morceaux d'origine et sous le plafond de score de chaque niveau : les classements et le Cutshop Challenge restent comparables. Basses à gauche, voix et instruments au centre, caisse claire à droite ; notes longues sur les sons tenus.
-* **Jeu** : en solo, le joueur choisit sa musique (ou « Au hasard ») ; en multijoueur, la graine désigne la musique, identique sur toutes les tablettes, et elle se télécharge dès le salon d'attente. Sans réseau, la partie continue sur la pulsation visuelle.
+* **Niveau** : chaque musique a un niveau (Facile, Moyen ou Difficile) choisi dans l'admin et n'apparaît que dans ce niveau. Un niveau sans musique garde les morceaux d'origine.
+* **Jeu** : en solo, le joueur choisit sa musique parmi celles du niveau (ou « Au hasard ») ; en multijoueur, la graine désigne la musique parmi celles du niveau, identique sur toutes les tablettes, et elle se télécharge dès le salon d'attente. Sans réseau, la partie continue sur la pulsation visuelle.
 * **Réglage** : l'écoute de contrôle fait entendre un bip sur chaque note. Si les bips sont en retard ou en avance, les boutons « Avancer de 20 ms » et « Retarder de 20 ms » décalent toutes les notes.
 * **Classements** : par niveau, toutes musiques confondues, comme avant.
 

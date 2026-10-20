@@ -108,7 +108,7 @@ describe('Beat Drop : analyse des musiques importées', () => {
   });
 
   it('joue un morceau importé : même morceau pour la même graine, partie parfaite au score maximal', () => {
-    const row = (id: string) => ({
+    const row = (id: string, level: 'easy' | 'medium' | 'hard' = 'hard') => ({
       id,
       title: `Titre ${id}`,
       artist: 'Artiste',
@@ -117,12 +117,22 @@ describe('Beat Drop : analyse des musiques importées', () => {
       bpm: a.bpm,
       beat_phase_ms: a.beatPhaseMs,
       charts: { easy: toCompact(a.charts.easy), medium: toCompact(a.charts.medium), hard: toCompact(a.charts.hard) },
+      level,
       active: true,
       sort: 0,
     });
-    setBeatTracks([row('b'), row('a'), { ...row('c'), active: false }]);
-    expect(beatTracks().map((t) => t.id)).toEqual(['a', 'b']);
-    expect(beatTrackForSeed(42)?.id).toBe(beatTrackForSeed(42)?.id);
+    setBeatTracks([row('b'), row('a'), { ...row('c'), active: false }, row('e', 'easy')]);
+    expect(beatTracks().map((t) => t.id)).toEqual(['a', 'b', 'e']);
+    // Filtre par niveau : seules les musiques du niveau choisi.
+    expect(beatTracks('hard').map((t) => t.id)).toEqual(['a', 'b']);
+    expect(beatTracks('easy').map((t) => t.id)).toEqual(['e']);
+    expect(beatTracks('medium')).toEqual([]);
+    expect(beatTrackForSeed(42, 'hard')?.id).toBe(beatTrackForSeed(42, 'hard')?.id);
+    expect(beatTrackForSeed(7, 'easy')?.id).toBe('e');
+    expect(beatTrackForSeed(7, 'medium')).toBeNull();
+    // Musique d'un autre niveau demandée : la graine choisit parmi celles du bon niveau.
+    expect(new BeatEngine(5, 'easy', 0, BEAT_MS, 'b').track?.id).toBe('e');
+    expect(new BeatEngine(5, 'medium', 0, BEAT_MS, 'b').track).toBeNull();
 
     const engine = new BeatEngine(42, 'hard', 0, BEAT_MS, 'b');
     expect(engine.track?.id).toBe('b');

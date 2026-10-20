@@ -13,6 +13,7 @@ import { GAMES } from '../registry';
 import type { GameResult, Room, RoomPlayer } from '../types';
 import { ArcadeBackdrop, formatScore, TABLE_COLORS, TableBadge, useErrorText, useTicker, variantLabel } from './common';
 import { GameScreen } from './GameScreen';
+import { asDifficulty } from '../games/beat/engine';
 import { beatTrackForSeed } from '../games/beat/tracks';
 import { preloadTrackAudio } from '../games/beat/trackAudio';
 
@@ -48,11 +49,12 @@ export default function RoomPage() {
   const room = snapshot?.room ?? null;
   // Beat Drop : la musique de la partie (tirée de la graine) se télécharge dès le salon d'attente.
   const beatSeed = room?.game === 'beat' ? room.seed : null;
+  const beatLevel = room?.game === 'beat' ? asDifficulty(room.variant) : null;
   useEffect(() => {
-    if (beatSeed === null || beatSeed === undefined) return;
-    const tr = beatTrackForSeed(beatSeed);
+    if (beatSeed === null || beatSeed === undefined || !beatLevel) return;
+    const tr = beatTrackForSeed(beatSeed, beatLevel);
     if (tr) void preloadTrackAudio(tr.audioUrl).catch(() => undefined);
-  }, [beatSeed]);
+  }, [beatSeed, beatLevel]);
 
   if (!snapshot) return <Page className="relative z-[1] grid min-h-[60vh] place-items-center text-xl">...</Page>;
   if (!room || !table) {

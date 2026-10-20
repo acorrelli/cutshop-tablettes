@@ -673,6 +673,12 @@ do $$ begin
     raise exception 'tempo hors limites accepté';
   exception when check_violation then null;
   end;
+  begin
+    insert into public.beat_tracks (title, audio_url, bpm, charts, level) values ('Niveau absurde', 'https://x.test/n.mp3', 120, '{}', 'expert');
+    raise exception 'niveau inconnu accepté';
+  exception when check_violation then null;
+  end;
+  assert (select level from public.beat_tracks where title = 'Morceau actif') = 'medium', 'niveau moyen par défaut';
 end $$;
 delete from public.beat_tracks;
 

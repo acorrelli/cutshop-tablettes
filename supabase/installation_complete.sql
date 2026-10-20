@@ -1,6 +1,6 @@
 -- Cutshop Mons : installation complète de la base (fichier généré par scripts/build-setup-sql.mjs).
 -- À coller en une fois dans SQL Editor d'un projet Supabase neuf, puis Run. Ne pas exécuter deux fois.
--- Contenu : supabase/migrations/20261015000001_init.sql, supabase/migrations/20261018000001_services.sql, supabase/migrations/20261018000002_arcade.sql, supabase/migrations/20261021000001_beat_tracks.sql, supabase/seed.sql
+-- Contenu : supabase/migrations/20261015000001_init.sql, supabase/migrations/20261018000001_services.sql, supabase/migrations/20261018000002_arcade.sql, supabase/migrations/20261021000001_beat_tracks.sql, supabase/migrations/20261022000001_beat_tracks_level.sql, supabase/seed.sql
 
 -- ===== supabase/migrations/20261015000001_init.sql =====
 -- =============================================================================
@@ -2082,6 +2082,14 @@ drop policy if exists beat_tracks_read on public.beat_tracks;
 create policy beat_tracks_read on public.beat_tracks for select to anon, authenticated using (active or public.is_admin());
 drop policy if exists beat_tracks_admin on public.beat_tracks;
 create policy beat_tracks_admin on public.beat_tracks for all to authenticated using (public.is_admin()) with check (public.is_admin());
+
+
+-- ===== supabase/migrations/20261022000001_beat_tracks_level.sql =====
+-- Beat Drop : niveau de chaque musique importée. Sur les tablettes, une musique n'apparaît que dans son niveau.
+-- Relançable sans risque.
+alter table public.beat_tracks add column if not exists level text not null default 'medium';
+alter table public.beat_tracks drop constraint if exists beat_tracks_level_check;
+alter table public.beat_tracks add constraint beat_tracks_level_check check (level in ('easy', 'medium', 'hard'));
 
 
 -- ===== supabase/seed.sql =====

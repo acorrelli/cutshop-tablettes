@@ -26,3 +26,8 @@ drop policy if exists beat_tracks_read on public.beat_tracks;
 create policy beat_tracks_read on public.beat_tracks for select to anon, authenticated using (active or public.is_admin());
 drop policy if exists beat_tracks_admin on public.beat_tracks;
 create policy beat_tracks_admin on public.beat_tracks for all to authenticated using (public.is_admin()) with check (public.is_admin());
+
+-- Niveau de chaque musique (copie de supabase/migrations/20261022000001_beat_tracks_level.sql).
+alter table public.beat_tracks add column if not exists level text not null default 'medium';
+alter table public.beat_tracks drop constraint if exists beat_tracks_level_check;
+alter table public.beat_tracks add constraint beat_tracks_level_check check (level in ('easy', 'medium', 'hard'));

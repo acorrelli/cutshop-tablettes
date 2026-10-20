@@ -135,6 +135,8 @@ export interface Api {
   // Administration
   adminList<T extends AdminTable>(table: T): Promise<AdminTableRow[T][]>;
   adminUpsert<T extends AdminTable>(table: T, row: Partial<AdminTableRow[T]>): Promise<AdminTableRow[T]>;
+  /** Modifie seulement les champs donnés d'une ligne existante. */
+  adminUpdate<T extends AdminTable>(table: T, id: string, patch: Partial<AdminTableRow[T]>): Promise<AdminTableRow[T]>;
   adminDelete(table: AdminTable, id: string): Promise<void>;
   saveSettings(settings: AppSettings): Promise<void>;
   getStaffPin(): Promise<string>;

@@ -52,6 +52,7 @@ test('Beat Drop : une musique importée dans l’admin se choisit et se joue sur
   await expect(page.getByTestId('beat-start')).toBeVisible({ timeout: 20000 });
   await expect(page.getByTestId('beat-title')).toHaveValue('Mons Anthem');
   await expect(page.getByTestId('beat-artist')).toHaveValue('DJ Test');
+  await page.getByTestId('beat-level-easy').click();
   await page.getByTestId('beat-save').click();
   const row = page.locator('[data-testid^="beat-row-"]');
   await expect(row).toHaveCount(1, { timeout: 90000 });
@@ -65,10 +66,27 @@ test('Beat Drop : une musique importée dans l’admin se choisit et se joue sur
   await preview.click();
   await expect(preview).toContainText('Écouter');
 
+  // Réglage fin des notes : enregistré sans erreur.
+  await page.getByRole('button', { name: 'Avancer de 20 ms' }).click();
+  await expect(row).toContainText('Notes avancées de 20 ms.');
+  // Pochette ajoutée après l'enregistrement.
+  const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==', 'base64');
+  await row.locator('[data-testid^="beat-cover-"]').setInputFiles({ name: 'pochette.png', mimeType: 'image/png', buffer: png });
+  await expect(row).toContainText('Pochette enregistrée.');
+  await expect(row.getByRole('button', { name: 'Retirer la pochette' })).toBeVisible();
+  await expect(row.locator('img')).toHaveCount(1);
+  await expectNoDashes(page);
+
   await page.getByRole('button', { name: 'Retour tablette' }).click();
   await page.evaluate(() => {
     window.location.hash = '#/arcade/jouer/beat';
   });
+  // La musique est classée en FACILE : elle n'apparaît que dans ce niveau.
+  await page.getByTestId('variant-medium').click();
+  await expect(page.getByTestId('beat-tracks')).toHaveCount(0);
+  await page.getByTestId('variant-hard').click();
+  await expect(page.getByTestId('beat-tracks')).toHaveCount(0);
+  await page.getByTestId('variant-easy').click();
   await expect(page.getByTestId('beat-tracks')).toBeVisible();
   const card = page.locator('[data-testid^="beat-track-"]:not([data-testid="beat-track-random"])');
   await expect(card).toHaveCount(1);
@@ -91,5 +109,22 @@ test('Beat Drop : une musique importée dans l’admin se choisit et se joue sur
     await page.waitForTimeout(250);
   }
   if (process.env.SHOTS) await page.screenshot({ path: `${process.env.SHOTS}/game-beat.png` });
+
+  // Changement de niveau dans l'admin : la musique passe en DIFFICILE.
+  await adminLogin(page);
+  await page.getByTestId('nav-musiques').click();
+  const saved = page.locator('[data-testid^="beat-row-"]');
+  await saved.locator('[data-testid$="-hard"]').click();
+  await saved.getByRole('button', { name: 'Enregistrer les modifications' }).click();
+  await expect(saved).toContainText('Enregistré.');
+  await page.getByRole('button', { name: 'Retour tablette' }).click();
+  await page.evaluate(() => {
+    window.location.hash = '#/arcade/jouer/beat';
+  });
+  await expect(page.getByTestId('solo-intro')).toBeVisible();
+  await page.getByTestId('variant-easy').click();
+  await expect(page.getByTestId('beat-tracks')).toHaveCount(0);
+  await page.getByTestId('variant-hard').click();
+  await expect(page.getByTestId('beat-tracks')).toContainText('Mons Anthem');
   expect(errors).toEqual([]);
 });

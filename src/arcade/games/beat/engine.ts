@@ -88,7 +88,8 @@ export class BeatEngine implements ArcadeGameEngine {
   constructor(seed: number, variant: string, offsetMs = 0, durationMs = BEAT_MS, trackId: string | null = null) {
     this.seed = seed;
     this.difficulty = asDifficulty(variant);
-    this.track = beatTrackById(trackId) ?? beatTrackForSeed(seed);
+    const chosen = beatTrackById(trackId);
+    this.track = chosen && chosen.level === this.difficulty ? chosen : beatTrackForSeed(seed, this.difficulty);
     let map: BeatNote[];
     if (this.track) {
       const tr = this.track;
