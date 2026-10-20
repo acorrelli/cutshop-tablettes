@@ -186,3 +186,28 @@ test('admin : chaque rubrique s’ouvre sans erreur ni tiret', async ({ page }) 
   await expect(page.getByText('Cutshop, ton moment à Mons')).toBeVisible();
   expect(errors).toEqual([]);
 });
+
+test('admin sur le Chromebook : ni veille ni déconnexion, même après 30 minutes', async ({ page }) => {
+  await page.clock.install();
+  await page.goto('/#/admin');
+  await adminLogin(page);
+  await page.getByTestId('nav-quiz').click();
+  await expect(page.getByRole('button', { name: 'Retour tablette' })).toHaveCount(0);
+  await page.clock.runFor(30 * 60000);
+  await expect(page.getByTestId('admin-logout')).toBeVisible();
+  await expect(page).toHaveURL(/#\/admin\/quiz$/);
+  // Déconnexion volontaire : on reste sur l'écran de connexion admin, jamais sur la configuration d'une tablette.
+  await page.getByTestId('admin-logout').click();
+  await expect(page.getByTestId('admin-login')).toBeVisible();
+  await page.clock.runFor(30 * 60000);
+  await expect(page.getByTestId('admin-login')).toBeVisible();
+});
+
+test('admin sur une tablette cliente : retour à l’écran client après 3 minutes', async ({ page }) => {
+  await page.clock.install();
+  await openTablet(page);
+  await adminLogin(page);
+  await page.clock.runFor(3 * 60000 + 1000);
+  await expect(page.getByTestId('admin-logout')).toHaveCount(0);
+  await expect(page.getByTestId('home-button')).toBeVisible();
+});

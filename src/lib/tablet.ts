@@ -42,3 +42,13 @@ export function applyTabletFromUrl(): void {
 }
 
 export const TABLET_NAMES = ['Tablette 1', 'Tablette 2', 'Tablette 3', 'Tablette 4'];
+
+/** Poste de l'équipe (Chromebook) : aucun nom de tablette, ni enregistré ni dans l'adresse. */
+export function isStaffDevice(): boolean {
+  if (getTabletName()) return false;
+  try {
+    return !new URLSearchParams(window.location.search).get('tablet');
+  } catch {
+    return true;
+  }
+}

@@ -22,6 +22,7 @@ import { useHoldAwake } from '../context/AppContext';
 import { api, type AdminSession } from '../lib/api';
 import { DEMO_PASSWORD } from '../lib/api/demoApi';
 import { IS_DEMO } from '../lib/env';
+import { isStaffDevice } from '../lib/tablet';
 import { ArcadeSection } from './sections/Arcade';
 import { DrinksSection, EventsSection, NewsletterSection, ProductsSection, QuizSection, ServicesSection } from './sections/Content';
 import { InvoiceRequestsSection, ProductRequestsSection } from './sections/Requests';
@@ -29,7 +30,9 @@ import { ModulesSection, SettingsSection } from './sections/Settings';
 import { StatsSection } from './sections/Stats';
 import { WheelSection } from './sections/Wheel';
 
-const ADMIN_IDLE_MS = 3 * 60000;
+// Sur une tablette cliente, l'admin se ferme après 3 minutes sans activité et rend l'écran aux clients.
+// Sur le poste de l'équipe (Chromebook), ni veille ni déconnexion automatique.
+const TABLET_ADMIN_IDLE_MS = 3 * 60000;
 
 const NAV = [
   { to: 'demandes-produits', label: 'Demandes produits', icon: MessageCircleHeart, el: <ProductRequestsSection /> },
@@ -84,9 +87,11 @@ function Login({ onDone }: { onDone: (s: AdminSession) => void }) {
             <p className="text-sm font-bold uppercase tracking-[0.2em] text-gold">Cutshop</p>
             <h1 className="text-2xl font-black uppercase">Espace admin</h1>
           </div>
-          <button type="button" className="grid h-12 w-12 place-items-center rounded-xl bg-white/10" onClick={() => navigate('/')} aria-label="Fermer">
-            <X />
-          </button>
+          {!isStaffDevice() && (
+            <button type="button" className="grid h-12 w-12 place-items-center rounded-xl bg-white/10" onClick={() => navigate('/')} aria-label="Fermer">
+              <X />
+            </button>
+          )}
         </div>
         <label className="block">
           <span className="mb-1 block text-sm font-bold">Adresse mail</span>
@@ -124,14 +129,14 @@ export default function AdminApp() {
   const logout = useCallback(async () => {
     await api.signOut();
     setSession(null);
-    navigate('/');
+    if (!isStaffDevice()) navigate('/');
   }, [navigate]);
 
   useEffect(() => {
-    if (!session) return;
+    if (!session || isStaffDevice()) return;
     const arm = () => {
       if (timer.current) clearTimeout(timer.current);
-      timer.current = setTimeout(() => void logout(), ADMIN_IDLE_MS);
+      timer.current = setTimeout(() => void logout(), TABLET_ADMIN_IDLE_MS);
     };
     arm();
     const evs = ['pointerdown', 'keydown'] as const;
@@ -168,9 +173,11 @@ export default function AdminApp() {
           ))}
         </nav>
         <div className="mt-4 flex gap-2 lg:flex-col">
-          <button type="button" className="flex min-h-[48px] flex-1 items-center justify-center gap-2 rounded-xl bg-white/10 font-bold" onClick={() => navigate('/')}>
-            Retour tablette
-          </button>
+          {!isStaffDevice() && (
+            <button type="button" className="flex min-h-[48px] flex-1 items-center justify-center gap-2 rounded-xl bg-white/10 font-bold" onClick={() => navigate('/')}>
+              Retour tablette
+            </button>
+          )}
           <button type="button" className="flex min-h-[48px] flex-1 items-center justify-center gap-2 rounded-xl bg-red-900/60 font-bold" onClick={logout} data-testid="admin-logout">
             <LogOut size={18} /> Déconnexion
           </button>

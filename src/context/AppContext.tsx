@@ -4,7 +4,7 @@ import i18n from '../i18n';
 import { api } from '../lib/api';
 import { createIdleTimer, IDLE_MS, type IdleTimer } from '../lib/idle';
 import { onQueueChange, startQueueWorker } from '../lib/queue';
-import { getTabletName, setTabletName } from '../lib/tablet';
+import { getTabletName, setTabletName, isStaffDevice } from '../lib/tablet';
 import type { Lang, PublicContent, SpinReason } from '../lib/types';
 
 export interface WheelGrant {
@@ -138,7 +138,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [resetSession]);
 
   useEffect(() => {
-    const timer = createIdleTimer(() => sleepNow(), () => idleMs.current);
+    // Le poste de l'équipe (Chromebook) n'a pas de veille : il sert uniquement à l'admin.
+    const timer = createIdleTimer(() => {
+      if (!isStaffDevice()) sleepNow();
+    }, () => idleMs.current);
     idle.current = timer;
     const poke = () => timer.poke();
     const events = ['pointerdown', 'keydown', 'touchstart', 'wheel'] as const;

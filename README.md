@@ -87,7 +87,7 @@ Avec la ligne de commande Supabase, les étapes 2 et 3 se font aussi par `supaba
 3. Ouvre l'application sur le Chromebook de l'équipe (voir la partie 6 bis) ou sur une tablette (**appui long de 5 secondes sur le logo**, ou `#/admin` à la fin de l'adresse) et connecte toi.
 4. **Première chose à faire** : dans **Réglages**, change le code PIN staff de la roue (par défaut `2468`).
 
-Tu peux répéter les étapes 1 et 2 pour chaque membre de l'équipe. L'admin se déconnecte tout seul après 3 minutes d'inactivité.
+Tu peux répéter les étapes 1 et 2 pour chaque membre de l'équipe. Sur une tablette cliente, l'admin se ferme tout seul après 3 minutes d'inactivité et rend l'écran aux clients. Sur le Chromebook de l'équipe, il n'y a ni veille ni déconnexion automatique : la session reste ouverte, même après la mise en veille du Chromebook, jusqu'au bouton Déconnexion.
 
 ## 6. Configurer les 4 tablettes (Fully Kiosk Browser)
 
@@ -139,7 +139,7 @@ L'admin ne s'installe pas sur les tablettes clientes : il s'utilise depuis le Ch
 
 1. Ouvre Chrome et va sur l'adresse de l'application suivie de `#/admin`, par exemple `https://ton-compte.github.io/cutshop-tablettes/#/admin`.
 2. Menu de Chrome (trois points), **Caster, enregistrer et partager**, **Créer un raccourci**, coche **Ouvrir dans une fenêtre**, nomme le « Admin Cutshop ». Le raccourci apparaît dans le lanceur et peut être épinglé à l'étagère.
-3. Connecte toi avec le compte créé à l'étape 5. Pour la sécurité, l'admin se déconnecte après 3 minutes sans activité : il suffit de se reconnecter.
+3. Connecte toi avec le compte créé à l'étape 5. La session reste ouverte en permanence sur le Chromebook (pas de veille, pas de déconnexion automatique). Utilise le bouton **Déconnexion** si quelqu'un d'extérieur à l'équipe doit utiliser le Chromebook, et verrouille la session Chromebook elle-même avec ton mot de passe Google.
 4. Ne donne jamais de nom de tablette au Chromebook : il ne fait pas partie des 4 tablettes clientes.
 
 ## 7. Modifier les contenus
