@@ -211,3 +211,13 @@ test('admin sur une tablette cliente : retour à l’écran client après 3 minu
   await expect(page.getByTestId('admin-logout')).toHaveCount(0);
   await expect(page.getByTestId('home-button')).toBeVisible();
 });
+
+test('Chromebook qui a reçu un nom de tablette par erreur : ouvert sur l’admin, il reste le poste de l’équipe', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('cutshop.tablet', 'Tablette 2'));
+  await page.clock.install();
+  await page.goto('/#/admin');
+  await adminLogin(page);
+  await expect(page.getByRole('button', { name: 'Retour tablette' })).toHaveCount(0);
+  await page.clock.runFor(30 * 60000);
+  await expect(page.getByTestId('admin-logout')).toBeVisible();
+});

@@ -43,12 +43,25 @@ export function applyTabletFromUrl(): void {
 
 export const TABLET_NAMES = ['Tablette 1', 'Tablette 2', 'Tablette 3', 'Tablette 4'];
 
-/** Poste de l'équipe (Chromebook) : aucun nom de tablette, ni enregistré ni dans l'adresse. */
+const STAFF_KEY = 'cutshop.staff';
+/** Adresse au chargement de la page : un appui long sur le logo d'une tablette ne compte pas comme ouverture directe. */
+const INITIAL_HASH = typeof window === 'undefined' ? '' : window.location.hash;
+
+/**
+ * Poste de l'équipe (Chromebook) : aucun nom de tablette, ou application ouverte directement sur l'admin
+ * (raccourci #/admin, sans ?tablet= dans l'adresse). Ce second cas est mémorisé : le poste reste reconnu
+ * même s'il a reçu un nom de tablette par erreur.
+ */
 export function isStaffDevice(): boolean {
-  if (getTabletName()) return false;
   try {
-    return !new URLSearchParams(window.location.search).get('tablet');
+    if (new URLSearchParams(window.location.search).get('tablet')) return false;
+    if (localStorage.getItem(STAFF_KEY) === '1') return true;
+    if (INITIAL_HASH.startsWith('#/admin') && !sessionStorage.getItem(KEY)) {
+      localStorage.setItem(STAFF_KEY, '1');
+      return true;
+    }
   } catch {
-    return true;
+    /* stockage indisponible : décision sur le nom de tablette */
   }
+  return !getTabletName();
 }

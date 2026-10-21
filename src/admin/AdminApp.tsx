@@ -124,6 +124,32 @@ export default function AdminApp() {
   useEffect(() => onUpdateReady(setUpdateReady), []);
   // La veille des tablettes est suspendue dans l'admin, qui a sa propre déconnexion automatique.
   useHoldAwake(true);
+  // L'écran reste allumé tant que l'admin est ouvert (Chromebook : pas de mise en veille de l'écran).
+  useEffect(() => {
+    type WakeLock = { release: () => Promise<void> };
+    const nav = navigator as Navigator & { wakeLock?: { request: (t: 'screen') => Promise<WakeLock> } };
+    if (!nav.wakeLock) return;
+    let lock: WakeLock | null = null;
+    let alive = true;
+    const request = () => {
+      if (document.visibilityState !== 'visible') return;
+      nav.wakeLock!.request('screen').then(
+        (l) => {
+          if (alive) lock = l;
+          else void l.release().catch(() => undefined);
+        },
+        () => undefined,
+      );
+    };
+    request();
+    // Le verrou tombe quand la fenêtre est cachée : on le reprend au retour.
+    document.addEventListener('visibilitychange', request);
+    return () => {
+      alive = false;
+      document.removeEventListener('visibilitychange', request);
+      void lock?.release().catch(() => undefined);
+    };
+  }, []);
 
   useEffect(() => {
     void api.getSession().then((s) => {
