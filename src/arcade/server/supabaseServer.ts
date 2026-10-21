@@ -1,3 +1,4 @@
+import { APP_VERSION } from '../../lib/version';
 // Serveur Supabase : chaque action passe par une fonction SQL (SECURITY DEFINER) qui applique les règles
 // officielles (voir supabase/migrations/20261018000002_arcade.sql). La tablette s'identifie par un jeton
 // d'appareil aléatoire, associé à une table par l'admin : l'interface client ne peut pas changer de table.
@@ -47,6 +48,7 @@ export function createSupabaseServer(): ArcadeServer {
   const channel = openChannel('cutshop-arcade', `${token.slice(0, 12)}${randomId()}`, ['changed']);
   channel.on('changed', () => listeners.forEach((cb) => cb()));
   const changed = () => channel.send('changed', {});
+  let versionSentAt = 0;
 
   async function mutate<T>(fn: string, args: Record<string, unknown>): Promise<T> {
     const out = await rpc<T>(fn, { p_token: token, ...args });
@@ -67,6 +69,18 @@ export function createSupabaseServer(): ArcadeServer {
     async snapshot() {
       const snap = await rpc<ArcadeSnapshot>('arcade_snapshot', { p_token: token });
       table = snap.table;
+      // Version de l'application transmise au serveur (au démarrage puis toutes les 10 minutes), pour l'admin.
+      if (Date.now() - versionSentAt > 10 * 60000 && supabase) {
+        versionSentAt = Date.now();
+        void supabase.rpc('arcade_report_version', { p_token: token, p_version: APP_VERSION }).then(
+          (r) => {
+            if (r.error) versionSentAt = Date.now() - 9 * 60000;
+          },
+          () => {
+            versionSentAt = 0;
+          },
+        );
+      }
       return snap;
     },
     createRoom: (input) =>
@@ -88,6 +102,12 @@ export function createSupabaseServer(): ArcadeServer {
     adminRenamePseudo: (from, to) => rpc<number>('arcade_admin_rename', { p_from: from, p_to: to }),
     adminResetScores: (game) => rpc<number>('arcade_admin_reset', { p_game: game }),
     adminRooms: (limit) => rpc<AdminRoomRow[]>('arcade_admin_rooms', { p_limit: limit }),
+    adminVersions: async () =>
+      (await rpc<{ table_no: TableNo; app_version: string | null; last_seen: number | null }[]>('arcade_admin_versions')).map((r) => ({
+        table: r.table_no,
+        version: r.app_version,
+        last_seen: r.last_seen === null ? null : Number(r.last_seen),
+      })),
     adminSaveChallenge: (c) => rpc('arcade_admin_save_challenge', { p_challenge: c }),
     adminDeleteChallenge: (id) => rpc('arcade_admin_delete_challenge', { p_id: id }),
     adminPairDevice: (t) => rpc('arcade_admin_pair_device', { p_token: token, p_table: t }),

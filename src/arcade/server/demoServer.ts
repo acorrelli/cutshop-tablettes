@@ -1,3 +1,4 @@
+import { APP_VERSION } from '../../lib/version';
 // Serveur de démonstration : l'état partagé est stocké dans le navigateur (localStorage), protégé par un verrou
 // (Web Locks) pour que plusieurs onglets, simulant plusieurs tablettes, ne s'écrasent jamais.
 // Les mêmes règles que le serveur Supabase s'appliquent (logic.ts). Pratique pour tester 4 tables
@@ -170,6 +171,9 @@ export function createDemoServer(): ArcadeServer {
         db.scores = game ? db.scores.filter((s) => s.game !== game) : [];
         return before - db.scores.length;
       }),
+    // Démonstration : toutes les tablettes simulées tournent dans ce navigateur, donc avec cette version.
+    adminVersions: async () =>
+      ([1, 2, 3, 4] as TableNo[]).map((t) => ({ table: t, version: APP_VERSION, last_seen: Date.now() })),
     adminRooms: (limit) =>
       tx(
         (db): AdminRoomRow[] =>

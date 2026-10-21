@@ -1,6 +1,6 @@
 -- Cutshop Mons : installation complète de la base (fichier généré par scripts/build-setup-sql.mjs).
 -- À coller en une fois dans SQL Editor d'un projet Supabase neuf, puis Run. Ne pas exécuter deux fois.
--- Contenu : supabase/migrations/20261015000001_init.sql, supabase/migrations/20261018000001_services.sql, supabase/migrations/20261018000002_arcade.sql, supabase/migrations/20261021000001_beat_tracks.sql, supabase/migrations/20261022000001_beat_tracks_level.sql, supabase/seed.sql
+-- Contenu : supabase/migrations/20261015000001_init.sql, supabase/migrations/20261018000001_services.sql, supabase/migrations/20261018000002_arcade.sql, supabase/migrations/20261021000001_beat_tracks.sql, supabase/migrations/20261022000001_beat_tracks_level.sql, supabase/migrations/20261023000001_arcade_app_version.sql, supabase/seed.sql
 
 -- ===== supabase/migrations/20261015000001_init.sql =====
 -- =============================================================================
@@ -2090,6 +2090,42 @@ create policy beat_tracks_admin on public.beat_tracks for all to authenticated u
 alter table public.beat_tracks add column if not exists level text not null default 'medium';
 alter table public.beat_tracks drop constraint if exists beat_tracks_level_check;
 alter table public.beat_tracks add constraint beat_tracks_level_check check (level in ('easy', 'medium', 'hard'));
+
+
+-- ===== supabase/migrations/20261023000001_arcade_app_version.sql =====
+-- Version de l'application sur chaque tablette, visible dans l'admin (Arcade, Tables) : permet de vérifier
+-- que toutes les tablettes ont bien la dernière version. Relançable sans risque.
+alter table public.arcade_devices add column if not exists app_version text;
+
+-- Appelée par chaque tablette (jeton de la tablette, version en cours).
+create or replace function public.arcade_report_version(p_token text, p_version text)
+returns void
+language sql
+volatile
+security definer
+set search_path = public
+as $$
+  update public.arcade_devices set app_version = left(coalesce(p_version, ''), 40) where token = p_token;
+$$;
+
+-- Admin : version et dernière activité de la tablette de chaque table.
+create or replace function public.arcade_admin_versions()
+returns table (table_no smallint, app_version text, last_seen bigint)
+language plpgsql
+stable
+security definer
+set search_path = public
+as $$
+begin
+  if not public.is_admin() then raise exception 'arcade:not_allowed'; end if;
+  return query select d.table_no, d.app_version, d.last_seen from public.arcade_devices d where d.table_no is not null order by d.table_no;
+end;
+$$;
+
+revoke all on function public.arcade_report_version(text, text) from public;
+revoke all on function public.arcade_admin_versions() from public;
+grant execute on function public.arcade_report_version(text, text) to anon, authenticated;
+grant execute on function public.arcade_admin_versions() to authenticated;
 
 
 -- ===== supabase/seed.sql =====

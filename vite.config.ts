@@ -2,12 +2,15 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
+import { appVersion } from './scripts/app-version.mjs';
 
 // BASE_PATH est fourni par le workflow GitHub Pages (ex : /cutshop-tablettes/).
 const base = process.env.BASE_PATH || '/';
 
 export default defineConfig({
   base,
+  // Version affichée dans l'admin pour chaque tablette (date de publication et commit).
+  define: { 'import.meta.env.VITE_APP_VERSION': JSON.stringify(appVersion()) },
   plugins: [
     react(),
     VitePWA({

@@ -128,6 +128,8 @@ test.describe('Jeux', () => {
     });
     await adminLogin(page);
     await page.getByTestId('nav-arcade').click();
+    // Version de l'application par table (démo : toutes les tables tournent dans ce navigateur).
+    for (const n of [1, 2, 3, 4]) await expect(page.getByTestId(`table-version-${n}`)).toHaveText('Application à jour');
     const list = page.getByTestId('stop10-admin-list');
     await expect(list).toContainText('Tricheur');
     await expect(list).toContainText('Flash');

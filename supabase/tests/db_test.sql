@@ -682,4 +682,28 @@ do $$ begin
 end $$;
 delete from public.beat_tracks;
 
+-- Version de l'application par tablette.
+reset role;
+delete from public.arcade_devices where table_no = 3 or token = 'jeton-version-table-3';
+insert into public.arcade_devices (token, table_no, last_seen) values ('jeton-version-table-3', 3, public.now_ms()) on conflict (token) do update set table_no = 3;
+set role anon;
+select set_config('request.jwt.claim.sub', '', false);
+select public.arcade_report_version('jeton-version-table-3', '2026-10-21T15:02Z abc1234');
+do $$ begin
+  begin
+    perform * from public.arcade_admin_versions();
+    raise exception 'anon a pu lire les versions';
+  exception when insufficient_privilege or raise_exception then
+    if sqlerrm = 'anon a pu lire les versions' then raise; end if;
+  end;
+end $$;
+reset role;
+set role authenticated;
+select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-00000000a001', false);
+do $$ begin
+  assert (select app_version from public.arcade_admin_versions() where table_no = 3) = '2026-10-21T15:02Z abc1234', 'version de la table 3';
+end $$;
+reset role;
+delete from public.arcade_devices where token = 'jeton-version-table-3';
+
 select 'TOUS LES TESTS BASE DE DONNÉES SONT PASSÉS' as resultat;

@@ -5,11 +5,12 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useArcade } from '../../arcade/ArcadeContext';
 import { periodStart } from '../../arcade/ranking';
 import { GAMES } from '../../arcade/registry';
-import type { AdminRoomRow } from '../../arcade/server/types';
+import type { AdminRoomRow, DeviceVersion } from '../../arcade/server/types';
 import { DEFAULT_ARCADE_CONFIG, GAME_KEYS, type ArcadeConfig, type GameKey, type ScoreRow, type TableNo, type WeeklyChallenge } from '../../arcade/types';
 import { useApp } from '../../context/AppContext';
 import { api } from '../../lib/api';
 import { formatSeconds } from '../../lib/stop10';
+import { APP_VERSION, versionLabel } from '../../lib/version';
 import type { AppSettings, Stop10Score } from '../../lib/types';
 import { AdminCard } from '../Crud';
 
@@ -118,17 +119,57 @@ function GamesCard({ settings, save }: { settings: AppSettings; save: (s: AppSet
 function TablesCard() {
   const { snapshot, server, table, refresh } = useArcade();
   const [msg, setMsg] = useState<string | null>(null);
+  const [versions, setVersions] = useState<DeviceVersion[] | null>(null);
+  const [versionError, setVersionError] = useState(false);
+  useEffect(() => {
+    let alive = true;
+    const load = () =>
+      server.adminVersions().then(
+        (v) => alive && (setVersions(v), setVersionError(false)),
+        () => alive && setVersionError(true),
+      );
+    void load();
+    const id = setInterval(load, 30000);
+    return () => {
+      alive = false;
+      clearInterval(id);
+    };
+  }, [server]);
+  const mine = APP_VERSION.split(' ')[0];
   return (
     <AdminCard title="Tables">
       <div className="grid gap-3 sm:grid-cols-4">
-        {(snapshot?.tables ?? []).map((t) => (
-          <div key={t.table} className="rounded-2xl bg-white/[0.06] p-4">
-            <p className="text-lg font-black">Table {t.table}</p>
-            <p className="text-sm text-cream/70">{t.status === 'offline' ? 'Hors ligne' : t.status === 'available' ? 'Disponible' : t.status === 'playing' ? 'En partie' : 'Dans un lobby'}</p>
-            <p className="text-xs text-cream/50">{t.last_seen ? `Vue à ${fmt(t.last_seen)}` : 'Jamais vue'}</p>
-          </div>
-        ))}
+        {(snapshot?.tables ?? []).map((t) => {
+          const v = versions?.find((x) => x.table === t.table);
+          const theirs = v?.version?.split(' ')[0] ?? null;
+          return (
+            <div key={t.table} className="rounded-2xl bg-white/[0.06] p-4" data-testid={`table-card-${t.table}`}>
+              <p className="text-lg font-black">Table {t.table}</p>
+              <p className="text-sm text-cream/70">{t.status === 'offline' ? 'Hors ligne' : t.status === 'available' ? 'Disponible' : t.status === 'playing' ? 'En partie' : 'Dans un lobby'}</p>
+              <p className="text-xs text-cream/50">{t.last_seen ? `Vue à ${fmt(t.last_seen)}` : 'Jamais vue'}</p>
+              {versions && v && (
+                <p
+                  className={`mt-2 text-sm font-bold ${theirs === mine ? 'text-[#9BE7B5]' : 'text-gold-300'}`}
+                  data-testid={`table-version-${t.table}`}
+                >
+                  {theirs === mine
+                    ? 'Application à jour'
+                    : !theirs
+                      ? 'Ancienne version : redémarre cette tablette une fois'
+                      : theirs < mine
+                        ? `Version du ${versionLabel(v.version)} : mise à jour à sa prochaine mise en veille`
+                        : 'Plus récente que ce poste : mets à jour ce poste'}
+                </p>
+              )}
+              {versions && !v && <p className="mt-2 text-sm text-cream/50">Aucune tablette associée</p>}
+            </div>
+          );
+        })}
       </div>
+      <p className="mt-3 text-xs text-cream/50">
+        Ce poste : version du {versionLabel(APP_VERSION) ?? 'développement'}.
+        {versionError && server.kind === 'supabase' && ' Versions des tablettes indisponibles : lance le fichier supabase/ajout_version_tablettes.sql dans Supabase.'}
+      </p>
       <p className="mt-4 text-sm text-cream/70">
         Cette tablette : {table ? <strong>Table {table}</strong> : <strong>non associée</strong>}.
         {server.kind === 'demo'

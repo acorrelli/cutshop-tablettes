@@ -47,4 +47,12 @@ export interface ArcadeServer {
   adminDeleteChallenge(id: string): Promise<void>;
   /** Associe cette tablette à une table (Supabase). En démonstration, la table vient du nom de la tablette. */
   adminPairDevice(table: TableNo): Promise<void>;
+  /** Version de l'application sur la tablette de chaque table (null : ancienne version qui ne la transmet pas). */
+  adminVersions(): Promise<DeviceVersion[]>;
+}
+
+export interface DeviceVersion {
+  table: TableNo;
+  version: string | null;
+  last_seen: number | null;
 }
