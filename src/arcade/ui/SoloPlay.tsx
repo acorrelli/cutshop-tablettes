@@ -307,8 +307,11 @@ function SoloResult({
 /** Beat Drop : choix de la musique parmi les morceaux importés du niveau choisi (rien ne s'affiche s'il n'y en a pas). */
 function TrackPicker({ level, value, onChange }: { level: BeatDifficulty; value: string | null; onChange: (id: string | null) => void }) {
   const { t } = useTranslation();
-  const { content } = useApp();
+  const { content, refreshBeatTracks } = useApp();
   const rows = content?.beatTracks;
+  useEffect(() => {
+    void refreshBeatTracks();
+  }, [refreshBeatTracks]);
   const tracks = useMemo(() => {
     void rows;
     return beatTracks(level);

@@ -207,6 +207,7 @@ Astuce : pour simuler plusieurs tablettes, ouvre plusieurs onglets avec `?tablet
   select cron.schedule('purge-rgpd', '30 3 * * *', 'select public.purge_personal_data()');
   ```
 
+* **Mises à jour** : chaque tablette vérifie toutes les 10 minutes si une nouvelle version est en ligne, la télécharge en arrière plan et l'installe à sa prochaine mise en veille (jamais pendant une partie). Sur le Chromebook, l'admin affiche alors un bouton « Mettre à jour ce poste ». Les musiques Beat Drop et les autres contenus ajoutés dans l'admin, eux, apparaissent sans mise à jour (à l'ouverture du jeu ou au réveil de la tablette).
 * **Coupure wifi courte** : l'application et les contenus sont en cache (service worker). Une inscription ou une demande envoyée sans réseau est gardée en mémoire et renvoyée automatiquement au retour du wifi ; un badge « Hors ligne » l'indique.
 
 ## 10. Structure du dépôt

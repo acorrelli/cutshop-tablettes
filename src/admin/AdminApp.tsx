@@ -23,6 +23,7 @@ import { useHoldAwake } from '../context/AppContext';
 import { api, type AdminSession } from '../lib/api';
 import { DEMO_PASSWORD } from '../lib/api/demoApi';
 import { IS_DEMO } from '../lib/env';
+import { applyUpdate, isUpdateReady, onUpdateReady } from '../lib/appUpdate';
 import { isStaffDevice } from '../lib/tablet';
 import { ArcadeSection } from './sections/Arcade';
 import { BeatTracksSection } from './sections/BeatTracks';
@@ -119,6 +120,8 @@ export default function AdminApp() {
   const [session, setSession] = useState<AdminSession | null>(null);
   const [checked, setChecked] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [updateReady, setUpdateReady] = useState(isUpdateReady);
+  useEffect(() => onUpdateReady(setUpdateReady), []);
   // La veille des tablettes est suspendue dans l'admin, qui a sa propre déconnexion automatique.
   useHoldAwake(true);
 
@@ -187,6 +190,14 @@ export default function AdminApp() {
         </div>
       </aside>
       <main className="min-w-0 flex-1 p-4 lg:p-8">
+        {updateReady && (
+          <div className="mb-4 flex flex-wrap items-center gap-3 rounded-xl bg-gold/15 p-3" data-testid="app-update">
+            <p className="flex-1 font-bold text-gold-300">Une nouvelle version de l’application est disponible. Les tablettes l’installent toutes seules à leur prochaine mise en veille.</p>
+            <button type="button" className="min-h-[48px] rounded-xl bg-gold px-4 font-black text-bottle-950" onClick={applyUpdate}>
+              Mettre à jour ce poste
+            </button>
+          </div>
+        )}
         {IS_DEMO && <p className="mb-4 rounded-xl bg-gold/15 p-3 text-sm font-bold text-gold-300">Mode démonstration : Supabase n’est pas configuré, les données restent dans ce navigateur.</p>}
         <Routes>
           <Route index element={<Navigate to="/admin/demandes-produits" replace />} />

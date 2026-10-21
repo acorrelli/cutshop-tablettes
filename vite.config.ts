@@ -11,7 +11,8 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      registerType: 'autoUpdate',
+      // Nouvelle version installée à la mise en veille de la tablette (src/lib/appUpdate.ts), jamais en pleine partie.
+      registerType: 'prompt',
       injectRegister: false,
       includeAssets: ['logo_cutshop.png', 'icons/*.png', 'favicon.svg'],
       manifest: {

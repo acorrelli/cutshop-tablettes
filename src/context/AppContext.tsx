@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import i18n from '../i18n';
 import { api } from '../lib/api';
 import { setBeatTracks } from '../arcade/games/beat/tracks';
+import { applyUpdate, isUpdateReady, onUpdateReady } from '../lib/appUpdate';
 import { createIdleTimer, IDLE_MS, type IdleTimer } from '../lib/idle';
 import { onQueueChange, startQueueWorker } from '../lib/queue';
 import { getTabletName, setTabletName, isStaffDevice } from '../lib/tablet';
@@ -21,6 +22,7 @@ interface AppContextValue {
   contentError: boolean;
   reloadContent: () => Promise<void>;
   refreshEvents: () => Promise<void>;
+  refreshBeatTracks: () => Promise<void>;
   lang: Lang;
   setLang: (l: Lang) => void;
   largeText: boolean;
@@ -85,6 +87,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  /** Musiques de Beat Drop relues à l'ouverture du jeu : un ajout dans l'admin apparaît tout de suite. */
+  const refreshBeatTracks = useCallback(async () => {
+    const beatTracks = await api.getBeatTracks().catch(() => null);
+    if (!beatTracks) return;
+    setBeatTracks(beatTracks);
+    setContent((c) => (c ? { ...c, beatTracks } : c));
+  }, []);
+
   const refreshEvents = useCallback(async () => {
     try {
       const events = await api.getEvents();
@@ -141,6 +151,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setAsleep(true);
   }, [resetSession]);
 
+  // Nouvelle version prête : installée pendant la veille (écran client vide, aucune partie en cours).
+  useEffect(() => {
+    const tryUpdate = () => {
+      if (asleep && isUpdateReady() && !isStaffDevice()) applyUpdate();
+    };
+    tryUpdate();
+    return onUpdateReady(tryUpdate);
+  }, [asleep]);
+
   useEffect(() => {
     // Le poste de l'équipe (Chromebook) n'a pas de veille : il sert uniquement à l'admin.
     const timer = createIdleTimer(() => {
@@ -192,6 +211,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       contentError,
       reloadContent: loadAll,
       refreshEvents,
+      refreshBeatTracks,
       lang,
       setLang,
       largeText,
@@ -208,7 +228,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       pending,
       onReset,
     }),
-    [tablet, setTablet, content, contentError, loadAll, refreshEvents, lang, setLang, largeText, sessionKey, asleep, wake, sleepNow, holdAwake, wheelGrant, online, pending, onReset],
+    [tablet, setTablet, content, contentError, loadAll, refreshEvents, refreshBeatTracks, lang, setLang, largeText, sessionKey, asleep, wake, sleepNow, holdAwake, wheelGrant, online, pending, onReset],
   );
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
