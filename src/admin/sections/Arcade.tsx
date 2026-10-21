@@ -9,7 +9,8 @@ import type { AdminRoomRow } from '../../arcade/server/types';
 import { DEFAULT_ARCADE_CONFIG, GAME_KEYS, type ArcadeConfig, type GameKey, type ScoreRow, type TableNo, type WeeklyChallenge } from '../../arcade/types';
 import { useApp } from '../../context/AppContext';
 import { api } from '../../lib/api';
-import type { AppSettings } from '../../lib/types';
+import { formatSeconds } from '../../lib/stop10';
+import type { AppSettings, Stop10Score } from '../../lib/types';
 import { AdminCard } from '../Crud';
 
 const btn = 'flex min-h-[48px] items-center gap-2 rounded-xl px-4 font-bold disabled:opacity-40';
@@ -39,6 +40,7 @@ export function ArcadeSection() {
       <TablesCard />
       <ChallengesCard />
       <ScoresCard />
+      <Stop10Card />
       <RoomsCard />
       <StatsCard />
     </div>
@@ -518,6 +520,105 @@ function StatsCard() {
           </tbody>
         </table>
       </div>
+    </AdminCard>
+  );
+}
+
+/** Stop à 10 secondes : classement du jour (remis à zéro chaque nuit), suppression d'un score ou de tout le jour. */
+function Stop10Card() {
+  const [rows, setRows] = useState<Stop10Score[] | null>(null);
+  const [msg, setMsg] = useState<string | null>(null);
+  const [confirmAll, setConfirmAll] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const load = useCallback(async () => {
+    try {
+      setRows(await api.listStop10Today());
+    } catch (e) {
+      setMsg(errText(e));
+    }
+  }, []);
+  useEffect(() => {
+    void load();
+  }, [load]);
+  const run = async (fn: () => Promise<string>) => {
+    setBusy(true);
+    setMsg(null);
+    try {
+      setMsg(await fn());
+      await load();
+    } catch (e) {
+      setMsg(errText(e));
+    } finally {
+      setBusy(false);
+      setConfirmAll(false);
+    }
+  };
+  return (
+    <AdminCard
+      title="Stop à 10 secondes"
+      actions={
+        <button type="button" className={`${btn} bg-white/10`} onClick={() => void load()} disabled={busy}>
+          <RotateCcw size={18} /> Actualiser
+        </button>
+      }
+    >
+      <p className="mb-3 text-sm text-cream/60">Classement du jour, tel qu’il s’affiche sur les tablettes (les 10 premiers). Il repart de zéro chaque nuit à minuit.</p>
+      {rows === null ? (
+        <p>Chargement...</p>
+      ) : rows.length === 0 ? (
+        <p className="text-cream/70">Aucun score aujourd’hui.</p>
+      ) : (
+        <ul className="divide-y divide-cream/10" data-testid="stop10-admin-list">
+          {rows.map((r, i) => (
+            <li key={r.id} className="flex flex-wrap items-center gap-3 py-2">
+              <span className={`w-10 text-center font-black ${i < 10 ? 'text-gold' : 'text-cream/40'}`}>{i + 1}</span>
+              <span className="min-w-[140px] flex-1 font-bold">{r.pseudo}</span>
+              <span className="w-28 tabular-nums">{r.delta_ms === 0 ? '10,00 s pile' : `écart ${formatSeconds(r.delta_ms)}`}</span>
+              <span className="w-24 text-sm text-cream/60">{r.tablet}</span>
+              <span className="w-28 text-sm text-cream/60">{fmt(new Date(r.created_at).getTime())}</span>
+              <button
+                type="button"
+                className={`${btn} bg-red-900/50 px-3`}
+                onClick={() => void run(async () => {
+                  await api.deleteStop10(r.id);
+                  return `Score de ${r.pseudo} retiré.`;
+                })}
+                disabled={busy}
+                aria-label={`Retirer le score de ${r.pseudo}`}
+                data-testid={`stop10-delete-${i}`}
+              >
+                <Trash2 size={18} />
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+      {rows && rows.length > 0 && (
+        <div className="mt-4 flex flex-wrap items-center gap-2">
+          {!confirmAll ? (
+            <button type="button" className={`${btn} bg-red-900/50`} onClick={() => setConfirmAll(true)} disabled={busy} data-testid="stop10-clear">
+              <Trash2 size={18} /> Réinitialiser le classement du jour
+            </button>
+          ) : (
+            <>
+              <span className="font-bold">Effacer les {rows.length} scores du jour ?</span>
+              <button
+                type="button"
+                className={`${btn} bg-red-700`}
+                onClick={() => void run(async () => `${await api.clearStop10Today()} scores effacés.`)}
+                disabled={busy}
+                data-testid="stop10-clear-confirm"
+              >
+                Oui, tout effacer
+              </button>
+              <button type="button" className={`${btn} bg-white/10`} onClick={() => setConfirmAll(false)} disabled={busy}>
+                Non
+              </button>
+            </>
+          )}
+        </div>
+      )}
+      {msg && <p className="mt-3 text-sm font-bold text-gold-300">{msg}</p>}
     </AdminCard>
   );
 }

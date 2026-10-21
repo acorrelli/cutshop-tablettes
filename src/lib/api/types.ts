@@ -152,6 +152,10 @@ export interface Api {
   setRequestStatus(table: RequestTable, id: string, status: RequestStatus): Promise<void>;
   deleteRequest(table: RequestTable, id: string): Promise<void>;
   statsSince(sinceIso: string): Promise<StatsRows>;
+  /** Stop à 10 secondes : tous les scores du jour (classement), suppression d'un score ou de toute la journée. */
+  listStop10Today(): Promise<Stop10Score[]>;
+  deleteStop10(id: string): Promise<void>;
+  clearStop10Today(): Promise<number>;
   uploadImage(file: File): Promise<string>;
   /** Extrait MP3 de Beat Drop : renvoie son adresse publique. */
   uploadAudio(file: Blob): Promise<string>;

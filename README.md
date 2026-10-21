@@ -160,7 +160,7 @@ Tout se fait dans l'admin (appui long de 5 secondes sur le logo) :
 | Boissons | Carte du bar et accords « Ta coupe, ta bière » |
 | Produits | Catalogue et étiquettes de correspondance (types de cheveux, cuir chevelu, barbe, effets) |
 | Musiques Beat Drop | Importer un MP3, choisir le passage de 72 secondes, analyse automatique (tempo et notes des trois niveaux), écoute de contrôle avec un bip sur chaque note, réglage fin des notes, pochette, ordre, activation |
-| Arcade | Jeux actifs, expiration et limite des invitations, délai de mise en veille, association des tablettes aux tables, challenge de la semaine, modération des scores et des pseudos, remise à zéro, parties récentes, statistiques anonymisées |
+| Arcade | Jeux actifs, expiration et limite des invitations, délai de mise en veille, association des tablettes aux tables, challenge de la semaine, modération des scores et des pseudos, classement du jour de Stop à 10 secondes (retirer un score ou tout réinitialiser), remise à zéro, parties récentes, statistiques anonymisées |
 | Modules | Afficher ou masquer chaque tuile, dont la roue de la fortune |
 | Réglages | Nom de la tablette, code PIN staff, lien Salonkee, adresse, horaires, contact, textes du concept, chèques cadeaux, factures pros, politique de confidentialité, photos, nettoyage RGPD |
 | Statistiques | Parties jouées, inscriptions par événement, tours de roue et demandes produits, par jour et par tablette |

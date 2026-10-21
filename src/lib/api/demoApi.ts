@@ -435,6 +435,29 @@ export function createDemoApi(): Api {
         productRequests: priv.product_requests.filter((r) => since(r.created_at)),
       };
     },
+    async listStop10Today() {
+      requireAdmin();
+      refresh();
+      const since = startOfBrusselsDay().getTime();
+      return shared.stop10
+        .filter((s) => new Date(s.created_at).getTime() >= since)
+        .sort((a, b) => a.delta_ms - b.delta_ms || a.created_at.localeCompare(b.created_at));
+    },
+    async deleteStop10(id) {
+      requireAdmin();
+      refresh();
+      shared.stop10 = shared.stop10.filter((s) => s.id !== id);
+      save();
+    },
+    async clearStop10Today() {
+      requireAdmin();
+      refresh();
+      const since = startOfBrusselsDay().getTime();
+      const before = shared.stop10.length;
+      shared.stop10 = shared.stop10.filter((s) => new Date(s.created_at).getTime() < since);
+      save();
+      return before - shared.stop10.length;
+    },
     async uploadImage(file) {
       requireAdmin();
       // En démo, l'image est convertie en data URL (pratique pour prévisualiser).

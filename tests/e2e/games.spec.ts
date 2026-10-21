@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
-import { adminLogin, enableModule, openTablet, watchConsole } from './helpers';
+import { adminLogin, enableModule, expectNoDashes, openTablet, watchConsole } from './helpers';
 
 async function answerUntilPodium(pages: Page[], skip: Set<Page> = new Set()) {
   const done = new Set<Page>();
@@ -116,6 +116,34 @@ test.describe('Jeux', () => {
     await page.locator('input[name="pseudo"]').fill('Flash');
     await page.getByTestId('stop10-save').click();
     await expect(page.getByTestId('stop10-board')).toContainText('Flash');
+
+    // Admin : retirer un score, puis réinitialiser le classement du jour.
+    await page.evaluate(() => {
+      const raw = localStorage.getItem('cutshop.demo.v6');
+      if (!raw) return;
+      const db = JSON.parse(raw);
+      db.stop10.push({ id: 'triche', pseudo: 'Tricheur', delta_ms: 0, elapsed_ms: 10000, tablet: 'Tablette 3', created_at: new Date().toISOString() });
+      db.stop10.push({ id: 'autre', pseudo: 'Lou', delta_ms: 420, elapsed_ms: 10420, tablet: 'Tablette 4', created_at: new Date().toISOString() });
+      localStorage.setItem('cutshop.demo.v6', JSON.stringify(db));
+    });
+    await adminLogin(page);
+    await page.getByTestId('nav-arcade').click();
+    const list = page.getByTestId('stop10-admin-list');
+    await expect(list).toContainText('Tricheur');
+    await expect(list).toContainText('Flash');
+    await page.getByRole('button', { name: 'Retirer le score de Tricheur' }).click();
+    await expect(list).not.toContainText('Tricheur');
+    await expect(list).toContainText('Lou');
+    await expectNoDashes(page);
+    await page.getByTestId('stop10-clear').click();
+    await page.getByTestId('stop10-clear-confirm').click();
+    await expect(page.getByText('Aucun score aujourd’hui.')).toBeVisible();
+    await page.getByRole('button', { name: 'Retour tablette' }).click();
+    await page.evaluate(() => {
+      window.location.hash = '#/stop10';
+    });
+    await expect(page.getByTestId('stop10-start')).toBeVisible();
+    await expect(page.getByText('Flash')).toHaveCount(0);
     expect(errors).toEqual([]);
   });
 

@@ -1,3 +1,4 @@
+import { startOfBrusselsDay } from '../stop10';
 import type { BeatTrackRow } from '../../arcade/games/beat/tracks';
 // Implémentation Supabase de la couche de données.
 
@@ -124,6 +125,7 @@ export function createSupabaseApi(sb: SupabaseClient): Api {
         const { data, error } = await sb
           .from('stop10_scores')
           .select('id, pseudo, delta_ms, elapsed_ms, tablet, created_at')
+          .gte('created_at', startOfBrusselsDay().toISOString())
           .order('delta_ms')
           .order('created_at')
           .limit(10);
@@ -328,6 +330,29 @@ export function createSupabaseApi(sb: SupabaseClient): Api {
         spins: spins.data ?? [],
         productRequests: reqs.data ?? [],
       };
+    },
+
+    listStop10Today: async () => {
+      const { data, error } = await sb
+        .from('stop10_scores')
+        .select('id, pseudo, delta_ms, elapsed_ms, tablet, created_at')
+        .gte('created_at', startOfBrusselsDay().toISOString())
+        .order('delta_ms')
+        .order('created_at')
+        .limit(500);
+      check(error);
+      return data ?? [];
+    },
+
+    deleteStop10: async (id) => {
+      const { error } = await sb.from('stop10_scores').delete().eq('id', id);
+      check(error);
+    },
+
+    clearStop10Today: async () => {
+      const { data, error } = await sb.from('stop10_scores').delete().gte('created_at', startOfBrusselsDay().toISOString()).select('id');
+      check(error);
+      return data?.length ?? 0;
     },
 
     uploadImage: async (file) => {
